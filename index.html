@@ -24,6 +24,16 @@
                     colors: {
                         emerald: { 50: '#ecfdf5', 100: '#d1fae5', 500: '#10b981', 600: '#059669', 700: '#047857', 800: '#065f46', 900: '#064e3b' },
                         gold: { 300: '#fcd34d', 400: '#fbbf24', 500: '#f59e0b', 600: '#d97706' },
+                    },
+                    animation: {
+                        'fade-in': 'fadeIn 0.3s ease-out',
+                        'slide-in': 'slideIn 0.3s ease-out',
+                        'float': 'float 6s ease-in-out infinite',
+                    },
+                    keyframes: {
+                        fadeIn: { '0%': { opacity: '0', transform: 'translateY(6px)' }, '100%': { opacity: '1', transform: 'translateY(0)' } },
+                        slideIn: { '0%': { opacity: '0', transform: 'translateX(20px)' }, '100%': { opacity: '1', transform: 'translateX(0)' } },
+                        float: { '0%,100%': { transform: 'translateY(0)' }, '50%': { transform: 'translateY(-6px)' } },
                     }
                 }
             }
@@ -37,9 +47,7 @@
             backdrop-filter: blur(12px);
             -webkit-backdrop-filter: blur(12px);
         }
-        .dark .glass {
-            background: rgba(15, 23, 42, 0.85);
-        }
+        .dark .glass { background: rgba(15, 23, 42, 0.85); }
         @media (max-width: 768px) {
             body { padding-bottom: 80px; }
         }
@@ -106,7 +114,13 @@
                     <div class="hidden md:flex gap-2 border-l border-slate-200 dark:border-slate-700 pl-2 ml-1">
                         <button onclick="openSettings()" class="px-3 py-2 rounded-xl text-xs font-bold bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 transition">Pengaturan</button>
                         <button onclick="backupJSON()" class="px-3 py-2 rounded-xl text-xs font-bold bg-blue-100 dark:bg-blue-900/30 text-blue-700 dark:text-blue-400 hover:bg-blue-200 transition">Backup JSON</button>
+                        <label class="px-3 py-2 rounded-xl text-xs font-bold bg-amber-100 dark:bg-amber-900/30 text-amber-700 dark:text-amber-400 hover:bg-amber-200 transition cursor-pointer">
+                            Restore <input type="file" id="restoreFile" accept=".json" onchange="restoreJSON(event)" class="hidden">
+                        </label>
                         <button onclick="exportToExcel()" class="px-3 py-2 rounded-xl text-xs font-bold bg-emerald-100 dark:bg-emerald-900/30 text-emerald-700 dark:text-emerald-400 hover:bg-emerald-200 transition">Ekspor Excel</button>
+                        <label class="px-3 py-2 rounded-xl text-xs font-bold bg-purple-100 dark:bg-purple-900/30 text-purple-700 dark:text-purple-400 hover:bg-purple-200 transition cursor-pointer">
+                            Impor <input type="file" id="importFile" accept=".xlsx" onchange="importData(event)" class="hidden">
+                        </label>
                     </div>
                 </div>
             </div>
@@ -122,20 +136,20 @@
                 </div>
                 <div class="relative z-10">
                     <p class="text-xs uppercase tracking-widest text-emerald-200 font-bold mb-1">Total Saldo Kas</p>
-                    <h2 id="heroSaldo" class="text-4xl md:text-5xl font-extrabold tracking-tight mb-6 text-white">Rp 0</h2>
+                    <h2 id="heroSaldo" class="text-4xl md:text-5xl font-extrabold tracking-tight mb-6 text-white drop-shadow-md">Rp 0</h2>
                     
                     <div class="grid grid-cols-1 sm:grid-cols-3 gap-3 pt-5 border-t border-emerald-600/50">
                         <div class="flex items-center space-x-3 bg-white/10 p-3 rounded-2xl backdrop-blur-sm border border-white/10">
                             <div class="bg-emerald-500/30 p-2 rounded-xl"><svg class="w-5 h-5 text-emerald-300" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M7 11l5-5m0 0l5 5m-5-5v12"></path></svg></div>
-                            <div><p class="text-[10px] text-emerald-200 font-bold uppercase">Pemasukan</p><p id="heroPemasukan" class="text-sm font-bold">Rp 0</p></div>
+                            <div><p class="text-[10px] text-emerald-200 font-bold uppercase tracking-wider">Pemasukan</p><p id="heroPemasukan" class="text-sm font-bold">Rp 0</p></div>
                         </div>
                         <div class="flex items-center space-x-3 bg-white/10 p-3 rounded-2xl backdrop-blur-sm border border-white/10">
                             <div class="bg-red-500/30 p-2 rounded-xl"><svg class="w-5 h-5 text-red-300" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M17 13l-5 5m0 0l-5-5m5 5V6"></path></svg></div>
-                            <div><p class="text-[10px] text-red-200 font-bold uppercase">Pengeluaran</p><p id="heroPengeluaran" class="text-sm font-bold">Rp 0</p></div>
+                            <div><p class="text-[10px] text-red-200 font-bold uppercase tracking-wider">Pengeluaran</p><p id="heroPengeluaran" class="text-sm font-bold">Rp 0</p></div>
                         </div>
                         <div class="flex items-center space-x-3 bg-white/10 p-3 rounded-2xl backdrop-blur-sm border border-white/10">
                             <div class="bg-amber-500/30 p-2 rounded-xl"><svg class="w-5 h-5 text-amber-300" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg></div>
-                            <div><p class="text-[10px] text-amber-200 font-bold uppercase">Tunggakan</p><p id="heroTunggakan" class="text-sm font-bold text-amber-300">Rp 0</p></div>
+                            <div><p class="text-[10px] text-amber-200 font-bold uppercase tracking-wider">Tunggakan</p><p id="heroTunggakan" class="text-sm font-bold text-amber-300">Rp 0</p></div>
                         </div>
                     </div>
                 </div>
@@ -173,14 +187,21 @@
                     </div>
                     
                     <div class="hidden lg:block bg-white dark:bg-slate-800 rounded-3xl border border-slate-200 dark:border-slate-700 p-6 shadow-sm h-fit">
-                        <h3 class="text-base font-bold mb-5 pb-3 border-b border-slate-100 dark:border-slate-700">Tambah Kas</h3>
+                        <h3 class="text-base font-bold mb-5 pb-3 border-b border-slate-100 dark:border-slate-700 flex items-center gap-2">
+                            <svg class="w-5 h-5 text-emerald-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path></svg>
+                            Tambah Kas
+                        </h3>
                         <form id="formKas" onsubmit="addKas(event)" class="space-y-4">
                             <select id="kasJenis" class="w-full px-3 py-2.5 rounded-xl border border-slate-300 dark:border-slate-600 bg-slate-50 dark:bg-slate-900 text-sm focus:ring-2 focus:ring-emerald-500">
                                 <option value="Masuk">Pemasukan (+)</option>
                                 <option value="Keluar">Pengeluaran (-)</option>
                             </select>
                             <input type="date" id="kasTanggal" required class="w-full px-3 py-2.5 rounded-xl border border-slate-300 dark:border-slate-600 bg-slate-50 dark:bg-slate-900 text-sm">
-                            <input type="text" id="kasKeterangan" placeholder="Keterangan" required class="w-full px-3 py-2.5 rounded-xl border border-slate-300 dark:border-slate-600 bg-slate-50 dark:bg-slate-900 text-sm">
+                            <input type="text" id="kasKeterangan" placeholder="Keterangan / Uraian" required class="w-full px-3 py-2.5 rounded-xl border border-slate-300 dark:border-slate-600 bg-slate-50 dark:bg-slate-900 text-sm">
+                            <div class="flex justify-between items-center text-xs font-bold text-slate-500 mb-1">
+                                <span>Kategori</span>
+                                <button type="button" onclick="openKelolaKategori()" class="text-emerald-600 hover:underline">+ Kelola</button>
+                            </div>
                             <select id="kasKategori" class="w-full px-3 py-2.5 rounded-xl border border-slate-300 dark:border-slate-600 bg-slate-50 dark:bg-slate-900 text-sm"></select>
                             <input type="number" id="kasNominal" placeholder="Nominal (Rp)" min="1" required class="w-full px-3 py-2.5 rounded-xl border border-slate-300 dark:border-slate-600 bg-slate-50 dark:bg-slate-900 text-sm">
                             <button type="submit" class="w-full bg-emerald-600 hover:bg-emerald-700 text-white py-3 rounded-xl font-bold text-sm transition">Simpan Kas</button>
@@ -214,8 +235,8 @@
                 <div class="bg-white dark:bg-slate-800 rounded-3xl border border-slate-200 dark:border-slate-700 p-5 shadow-sm">
                     <div class="bg-slate-50 dark:bg-slate-900/50 border border-slate-200 dark:border-slate-700 rounded-2xl p-4 mb-5 flex flex-col md:flex-row md:items-center justify-between gap-4">
                         <div>
-                            <p class="text-sm font-bold">Pengaturan SPP</p>
-                            <p class="text-xs text-slate-500">Atur nominal default sebelum generate.</p>
+                            <p class="text-sm font-bold flex items-center gap-2"><svg class="w-4 h-4 text-emerald-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>Pengaturan SPP</p>
+                            <p class="text-xs text-slate-500 mt-0.5">Atur nominal default sebelum generate.</p>
                         </div>
                         <div class="flex items-center gap-2">
                             <input type="number" id="nominalSppDefault" onchange="updateNominalDefault()" class="px-3 py-2 rounded-xl border w-28 text-sm font-bold">
@@ -224,7 +245,7 @@
                     </div>
 
                     <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-4 pb-4 border-b">
-                        <h3 class="text-base font-bold">Rekap Pembayaran</h3>
+                        <h3 class="text-base font-bold">Rekap Pembayaran SPP Murid</h3>
                         <div class="flex items-center gap-2">
                             <input type="text" id="tahunAjaranInput" onchange="updateTahunAjaran()" class="px-2 py-1.5 rounded-lg border text-xs w-24 text-center font-bold">
                             <button onclick="generateSppForAll()" class="bg-emerald-600 text-white px-4 py-2 rounded-xl text-xs font-bold shadow-md shadow-emerald-500/20">Generate SPP</button>
@@ -252,7 +273,6 @@
                 <div class="bg-white dark:bg-slate-800 rounded-3xl border border-slate-200 dark:border-slate-700 p-0 shadow-sm overflow-hidden flex flex-col">
                     <div class="p-5 border-b flex justify-between items-center">
                         <h3 class="text-base font-bold">Daftar Murid</h3>
-                        <button onclick="openMobileForm('murid')" class="hidden md:block bg-emerald-600 text-white px-4 py-2 rounded-xl text-xs font-bold">+ Tambah Murid</button>
                     </div>
                     <div class="p-4 bg-slate-50 dark:bg-slate-900/50 grid grid-cols-1 sm:grid-cols-2 gap-2 border-b">
                         <input type="text" id="searchMurid" onkeyup="renderMurid()" placeholder="Cari nama / NIS..." class="px-3 py-2 rounded-lg border text-sm">
@@ -260,7 +280,7 @@
                     </div>
                     <div class="overflow-x-auto">
                         <table class="w-full text-left">
-                            <thead><tr class="bg-slate-50 dark:bg-slate-900/50 text-xs uppercase text-slate-500 border-b"><th class="p-4">Nama</th><th class="p-4">Kelas</th><th class="p-4 text-center">Aksi</th></tr></thead>
+                            <thead><tr class="bg-slate-50 dark:bg-slate-900/50 text-xs uppercase text-slate-500 border-b"><th class="p-4">NIS</th><th class="p-4">Nama</th><th class="p-4">Kelas</th><th class="p-4 text-center">Aksi</th></tr></thead>
                             <tbody id="tabelMuridBody" class="divide-y divide-slate-100 dark:divide-slate-700/50 text-sm"></tbody>
                         </table>
                     </div>
@@ -272,14 +292,13 @@
                 <div class="bg-white dark:bg-slate-800 rounded-3xl border border-slate-200 dark:border-slate-700 p-0 shadow-sm overflow-hidden flex flex-col">
                     <div class="p-5 border-b flex justify-between items-center">
                         <h3 class="text-base font-bold">Daftar Guru</h3>
-                        <button onclick="openMobileForm('guru')" class="hidden md:block bg-emerald-600 text-white px-4 py-2 rounded-xl text-xs font-bold">+ Tambah Guru</button>
                     </div>
                     <div class="p-4 bg-slate-50 dark:bg-slate-900/50 border-b">
                         <input type="text" id="searchGuru" onkeyup="renderGuru()" placeholder="Cari nama / NIP..." class="w-full px-3 py-2 rounded-lg border text-sm">
                     </div>
                     <div class="overflow-x-auto">
                         <table class="w-full text-left">
-                            <thead><tr class="bg-slate-50 dark:bg-slate-900/50 text-xs uppercase text-slate-500 border-b"><th class="p-4">Nama</th><th class="p-4">Mapel</th><th class="p-4 text-center">Aksi</th></tr></thead>
+                            <thead><tr class="bg-slate-50 dark:bg-slate-900/50 text-xs uppercase text-slate-500 border-b"><th class="p-4">NIP</th><th class="p-4">Nama</th><th class="p-4">Mapel</th><th class="p-4">Kontak</th><th class="p-4 text-center">Aksi</th></tr></thead>
                             <tbody id="tabelGuruBody" class="divide-y divide-slate-100 dark:divide-slate-700/50 text-sm"></tbody>
                         </table>
                     </div>
@@ -287,11 +306,6 @@
             </div>
 
         </main>
-
-        <!-- FOOTER (DESKTOP) -->
-        <footer class="mt-auto py-6 text-center text-xs text-slate-500 dark:text-slate-400 border-t border-slate-200 dark:border-slate-700 hidden md:block">
-            Madrasah Manager Enterprise • 100% Offline
-        </footer>
 
         <!-- BOTTOM NAV (MOBILE ONLY) -->
         <nav class="md:hidden fixed bottom-0 left-0 right-0 bg-white/95 dark:bg-slate-800/95 backdrop-blur-lg border-t border-slate-200 dark:border-slate-700 z-50 flex justify-around items-center h-[65px] pb-safe">
@@ -323,7 +337,6 @@
     </div>
 
     <!-- ================= MODALS ================= -->
-    <!-- Toast -->
     <div id="toastContainer" class="fixed top-20 right-4 z-[100] flex flex-col gap-2 pointer-events-none"></div>
 
     <!-- Edit / Add Modal -->
@@ -351,14 +364,12 @@
                 <button onclick="closeSettings()" class="text-slate-400 bg-slate-100 dark:bg-slate-700 rounded-full p-2 leading-none">&times;</button>
             </div>
             <form id="settingsForm" onsubmit="saveSettings(event)" class="p-5 space-y-4">
-                <div><label class="block text-xs font-bold text-slate-500 mb-1">Nama Madrasah</label><input type="text" id="setNama" required class="w-full px-3 py-2 rounded-xl border"></div>
-                <div><label class="block text-xs font-bold text-slate-500 mb-1">Alamat</label><input type="text" id="setAlamat" class="w-full px-3 py-2 rounded-xl border"></div>
-                <div><label class="block text-xs font-bold text-slate-500 mb-1">Kepala Madrasah</label><input type="text" id="setKepala" class="w-full px-3 py-2 rounded-xl border"></div>
-                <div><label class="block text-xs font-bold text-slate-500 mb-1">Ganti PIN (6 digit)</label><input type="text" id="setPin" maxlength="6" placeholder="Biarkan kosong jika tidak diganti" class="w-full px-3 py-2 rounded-xl border"></div>
-                <div class="pt-2 flex flex-col gap-2">
-                    <button type="submit" class="w-full bg-emerald-600 text-white py-3 rounded-xl font-bold text-sm">Simpan Pengaturan</button>
-                    <button type="button" onclick="restoreJSON_Dummy()" class="w-full bg-amber-100 text-amber-700 py-3 rounded-xl font-bold text-sm">Restore dari File JSON</button>
-                    <button type="button" onclick="backupJSON()" class="w-full bg-blue-100 text-blue-700 py-3 rounded-xl font-bold text-sm">Backup Data JSON</button>
+                <div><label class="block text-xs font-bold text-slate-500 mb-1">Nama Madrasah</label><input type="text" id="setNama" required class="w-full px-3 py-2 rounded-xl border dark:bg-slate-900 dark:border-slate-700"></div>
+                <div><label class="block text-xs font-bold text-slate-500 mb-1">Alamat</label><input type="text" id="setAlamat" class="w-full px-3 py-2 rounded-xl border dark:bg-slate-900 dark:border-slate-700"></div>
+                <div><label class="block text-xs font-bold text-slate-500 mb-1">Kepala Madrasah</label><input type="text" id="setKepala" class="w-full px-3 py-2 rounded-xl border dark:bg-slate-900 dark:border-slate-700"></div>
+                <div><label class="block text-xs font-bold text-slate-500 mb-1">Ganti PIN (6 digit)</label><input type="text" id="setPin" maxlength="6" placeholder="Kosongkan jika tidak diganti" class="w-full px-3 py-2 rounded-xl border dark:bg-slate-900 dark:border-slate-700"></div>
+                <div class="pt-2">
+                    <button type="submit" class="w-full bg-emerald-600 text-white py-3 rounded-xl font-bold text-sm shadow-md">Simpan Pengaturan</button>
                 </div>
             </form>
         </div>
@@ -373,7 +384,7 @@
             </div>
             <div class="p-5">
                 <form onsubmit="addKategori(event)" class="flex gap-2 mb-4">
-                    <input type="text" id="newKategoriInput" required class="flex-1 px-3 py-2 rounded-xl border text-sm">
+                    <input type="text" id="newKategoriInput" required class="flex-1 px-3 py-2 rounded-xl border dark:bg-slate-900 dark:border-slate-700 text-sm">
                     <button type="submit" class="bg-emerald-600 text-white px-4 py-2 rounded-xl text-sm font-bold">Tambah</button>
                 </form>
                 <div id="kategoriList" class="space-y-2"></div>
@@ -386,25 +397,34 @@
         <div class="bg-white dark:bg-slate-800 rounded-t-3xl md:rounded-3xl shadow-2xl w-full max-w-md">
             <div class="p-5 border-b flex justify-between items-center"><h3 class="font-extrabold text-lg">Massal SPP</h3><button onclick="closeBulkNominal()" class="text-slate-400 text-2xl">&times;</button></div>
             <form onsubmit="applyBulkNominal(event)" class="p-5 space-y-4">
-                <select id="bulkTargetKelas" onchange="previewBulkNominal()" class="w-full px-3 py-2 rounded-xl border"><option value="">Semua Kelas</option></select>
-                <select id="bulkTargetStatus" onchange="previewBulkNominal()" class="w-full px-3 py-2 rounded-xl border"><option value="">Semua Status</option><option value="Belum">Belum</option><option value="Lunas">Lunas</option></select>
-                <input type="number" id="bulkNominalBaru" onchange="previewBulkNominal()" oninput="previewBulkNominal()" required class="w-full px-3 py-2 rounded-xl border font-bold">
-                <div id="bulkPreview" class="bg-amber-50 text-amber-900 p-3 rounded-xl text-xs">Isi nominal...</div>
-                <div class="flex gap-2 pt-2"><button type="button" onclick="closeBulkNominal()" class="flex-1 bg-slate-100 py-3 rounded-xl font-bold">Batal</button><button type="submit" class="flex-1 bg-emerald-600 text-white py-3 rounded-xl font-bold">Terapkan</button></div>
+                <select id="bulkTargetKelas" onchange="previewBulkNominal()" class="w-full px-3 py-2 rounded-xl border dark:bg-slate-900 dark:border-slate-700"><option value="">Semua Kelas</option></select>
+                <select id="bulkTargetStatus" onchange="previewBulkNominal()" class="w-full px-3 py-2 rounded-xl border dark:bg-slate-900 dark:border-slate-700"><option value="">Semua Status</option><option value="Belum">Belum</option><option value="Lunas">Lunas</option></select>
+                <input type="number" id="bulkNominalBaru" onchange="previewBulkNominal()" oninput="previewBulkNominal()" required class="w-full px-3 py-2 rounded-xl border dark:bg-slate-900 dark:border-slate-700 font-bold">
+                <div id="bulkPreview" class="bg-amber-50 dark:bg-amber-900/30 text-amber-900 dark:text-amber-400 p-3 rounded-xl text-xs">Isi nominal...</div>
+                <div class="flex gap-2 pt-2"><button type="button" onclick="closeBulkNominal()" class="flex-1 bg-slate-100 dark:bg-slate-700 py-3 rounded-xl font-bold">Batal</button><button type="submit" class="flex-1 bg-emerald-600 text-white py-3 rounded-xl font-bold">Terapkan</button></div>
             </form>
         </div>
     </div>
 
-    <!-- ================= JAVASCRIPT LOGIC ================= -->
+    <!-- ================= JAVASCRIPT LOGIC (GABUNGAN FULL) ================= -->
     <script>
     /* --- 1. SETUP DASAR & STATE --- */
-    const DB_VERSION = 5;
+    const DB_VERSION = 4;
     const DEFAULT_KATEGORI = ['SPP','BOS','Dana Bantuan','ATK','Gaji/Honor','Listrik/Air','Perbaikan','Konsumsi','Lainnya'];
     const BULAN_LIST = ['Juli','Agustus','September','Oktober','November','Desember','Januari','Februari','Maret','April','Mei','Juni'];
     
+    const CAT_COLORS = [
+        { bg: 'bg-emerald-100 dark:bg-emerald-900/30', text: 'text-emerald-800 dark:text-emerald-400', dot: 'bg-emerald-500', ring: 'ring-emerald-200' },
+        { bg: 'bg-blue-100 dark:bg-blue-900/30', text: 'text-blue-800 dark:text-blue-400', dot: 'bg-blue-500', ring: 'ring-blue-200' },
+        { bg: 'bg-amber-100 dark:bg-amber-900/30', text: 'text-amber-800 dark:text-amber-400', dot: 'bg-amber-500', ring: 'ring-amber-200' },
+        { bg: 'bg-rose-100 dark:bg-rose-900/30', text: 'text-rose-800 dark:text-rose-400', dot: 'bg-rose-500', ring: 'ring-rose-200' },
+        { bg: 'bg-violet-100 dark:bg-violet-900/30', text: 'text-violet-800 dark:text-violet-400', dot: 'bg-violet-500', ring: 'ring-violet-200' },
+        { bg: 'bg-cyan-100 dark:bg-cyan-900/30', text: 'text-cyan-800 dark:text-cyan-400', dot: 'bg-cyan-500', ring: 'ring-cyan-200' },
+    ];
+
     // State Settings
     let appSettings = JSON.parse(localStorage.getItem('madrasah_settings')) || { nama: 'Madrasah Manager', alamat: '', kepala: '', pin: '123456' };
-    
+
     // Init Theme
     if (localStorage.getItem('theme') === 'dark' || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
         document.documentElement.classList.add('dark');
@@ -413,26 +433,21 @@
         document.documentElement.classList.remove('dark');
         document.getElementById('iconMoon').classList.add('hidden');
     }
-
-    // Init App Name
     document.getElementById('appNameDisplay').innerText = appSettings.nama;
 
     // Lock Screen Logic
-    document.getElementById('pinInput').addEventListener('keypress', function (e) {
-        if (e.key === 'Enter') checkPin();
-    });
+    document.getElementById('pinInput').addEventListener('keypress', function (e) { if (e.key === 'Enter') checkPin(); });
     function checkPin() {
         const input = document.getElementById('pinInput').value;
         if (input === appSettings.pin) {
             document.getElementById('lockScreen').classList.add('hidden');
             document.getElementById('appContainer').classList.remove('hidden');
+            renderChart(); // Render chart after unlock so canvas has size
         } else {
-            alert('PIN Salah!');
-            document.getElementById('pinInput').value = '';
+            alert('PIN Salah!'); document.getElementById('pinInput').value = '';
         }
     }
 
-    // Tema Toggle
     function toggleTheme() {
         const html = document.documentElement;
         if (html.classList.contains('dark')) {
@@ -442,52 +457,70 @@
             html.classList.add('dark'); localStorage.setItem('theme', 'dark');
             document.getElementById('iconSun').classList.remove('hidden'); document.getElementById('iconMoon').classList.add('hidden');
         }
-        renderChart(); // Redraw chart colors
+        renderChart();
     }
 
-    // Formatting
+    function getCatColor(name) {
+        if (!name) name = 'Lainnya';
+        let hash = 0; for (let i = 0; i < name.length; i++) { hash = ((hash << 5) - hash) + name.charCodeAt(i); hash |= 0; }
+        return CAT_COLORS[Math.abs(hash) % CAT_COLORS.length];
+    }
+
     function formatRupiah(angka) { return new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR', minimumFractionDigits: 0 }).format(angka || 0); }
-    function escapeHtml(s) { return String(s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])); }
+    function escapeHtml(s) { if (s === null || s === undefined) return ''; return String(s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])); }
     
     function toast(msg, type = 'success') {
         const container = document.getElementById('toastContainer');
+        const icons = {
+            success: '<svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7"/></svg>',
+            error: '<svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M6 18L18 6M6 6l12 12"/></svg>'
+        };
         const el = document.createElement('div');
-        el.className = `${type === 'success' ? 'bg-emerald-600' : 'bg-red-500'} text-white px-4 py-3 rounded-xl shadow-lg text-sm font-bold m-2 pointer-events-auto animate-fade-in`;
-        el.innerText = msg; container.appendChild(el);
-        setTimeout(() => el.remove(), 3000);
+        el.className = `${type === 'success' ? 'bg-emerald-600 border-emerald-500' : 'bg-red-600 border-red-500'} text-white px-4 py-3 rounded-xl shadow-lg text-sm font-bold flex items-center gap-2 pointer-events-auto border-l-4 max-w-xs animate-slide-in`;
+        el.innerHTML = `${icons[type]}<span>${escapeHtml(msg)}</span>`;
+        container.appendChild(el);
+        setTimeout(() => { el.style.opacity = '0'; setTimeout(() => el.remove(), 300); }, 3000);
     }
 
-    /* --- 2. DATABASE LOCALSTORAGE --- */
+    /* --- 2. DATABASE LOCALSTORAGE (DARI KODE ASLI ANDA) --- */
     function getDefaultDb() {
         return {
             version: DB_VERSION, tahunAjaran: '2025/2026', nominalSppDefault: 50000, kategori: [...DEFAULT_KATEGORI], kategoriSpp: 'SPP',
-            kas: [{ id: 1, tanggal: new Date().toISOString().slice(0,10), keterangan: 'Saldo Awal', jenis: 'Masuk', nominal: 1000000, kategori: 'Lainnya' }],
-            spp: [], murid: [{ nis: '101', nama: 'Ahmad Fauzi', kelas: 'VII-A' }], guru: [{ nip: 'G001', nama: 'Ustadz Abdullah', mapel: 'Fikih', kontak: '0812' }]
+            kas: [{ id: 1, tanggal: '2026-05-01', keterangan: 'Saldo Awal Kas', jenis: 'Masuk', nominal: 5000000, kategori: 'Lainnya' }],
+            spp: [{ id: 1001, nis: '101', nama: 'Ahmad Fauzi', kelas: 'VII-A', bulan: 'Januari', tahun: 2026, nominal: 50000, status: 'Lunas', tanggalBayar: '2026-05-01', kasId: null }],
+            murid: [{ nis: '101', nama: 'Ahmad Fauzi', kelas: 'VII-A' }, { nis: '102', nama: 'Siti Aminah', kelas: 'VII-A' }],
+            guru: [{ nip: 'G001', nama: 'Drs. H. Abdullah', mapel: 'Fikih', kontak: '0812' }]
         };
     }
-    let db = JSON.parse(localStorage.getItem('madrasah_db')) || getDefaultDb();
+
+    function migrateDb(db) {
+        if (!db.version || db.version < DB_VERSION) {
+            db.tahunAjaran = db.tahunAjaran || '2025/2026';
+            db.nominalSppDefault = Number(db.nominalSppDefault) || 50000;
+            const [ta1] = db.tahunAjaran.split('/');
+            db.kas = (db.kas || []).map(k => ({ ...k, kategori: k.kategori || 'Lainnya' }));
+            db.spp = (db.spp || []).map(s => ({ ...s, tahun: s.tahun || parseInt(ta1), nominal: s.nominal || db.nominalSppDefault || 50000, tanggalBayar: s.tanggalBayar || null, kasId: s.kasId || null }));
+            db.murid = db.murid || []; db.guru = db.guru || [];
+            db.kategori = (Array.isArray(db.kategori) && db.kategori.length > 0) ? db.kategori : [...DEFAULT_KATEGORI];
+            if (!db.kategori.includes('Lainnya')) db.kategori.push('Lainnya');
+            db.kategoriSpp = (db.kategoriSpp && db.kategori.includes(db.kategoriSpp)) ? db.kategoriSpp : 'SPP';
+            db.version = DB_VERSION;
+        }
+        return db;
+    }
+
+    let db = migrateDb(JSON.parse(localStorage.getItem('madrasah_db')) || getDefaultDb());
     function saveData() { localStorage.setItem('madrasah_db', JSON.stringify(db)); renderAll(); }
 
     /* --- 3. NAVIGASI & TABS --- */
     function switchTab(tabId) {
         document.querySelectorAll('.tab-content').forEach(el => el.classList.add('hidden'));
-        
-        // Desktop Tabs
-        document.querySelectorAll('.tab-btn').forEach(el => {
-            el.classList.remove('border-emerald-500', 'text-emerald-700', 'dark:text-emerald-400');
-            el.classList.add('border-transparent', 'text-slate-500');
-        });
-        
-        // Mobile Nav
-        document.querySelectorAll('.nav-btn').forEach(el => {
-            el.classList.remove('text-emerald-600'); el.classList.add('text-slate-400');
-        });
+        document.querySelectorAll('.tab-btn').forEach(el => { el.classList.remove('border-emerald-500', 'text-emerald-700', 'dark:text-emerald-400'); el.classList.add('border-transparent', 'text-slate-500'); });
+        document.querySelectorAll('.nav-btn').forEach(el => { el.classList.remove('text-emerald-600'); el.classList.add('text-slate-400'); });
 
         document.getElementById('tab-' + tabId).classList.remove('hidden');
-        
         const btn = document.getElementById('tab-btn-' + tabId);
         if (btn) { btn.classList.remove('border-transparent', 'text-slate-500'); btn.classList.add('border-emerald-500', 'text-emerald-700', 'dark:text-emerald-400'); }
-        
         const navBtn = document.getElementById('nav-btn-' + tabId);
         if (navBtn) { navBtn.classList.remove('text-slate-400'); navBtn.classList.add('text-emerald-600'); }
 
@@ -495,273 +528,389 @@
         if(tabId === 'spp') fab.classList.add('hidden'); else fab.classList.remove('hidden');
     }
 
-    /* --- 4. RENDER FUNCTIONS --- */
-    function renderAll() {
-        renderKas();
-        renderSpp();
-        renderMurid();
-        renderGuru();
-        renderNotif();
-        renderChart();
+    /* --- 4. NOTIFIKASI --- */
+    function toggleNotif(e) { if(e) e.stopPropagation(); document.getElementById('notifPanel').classList.toggle('hidden'); }
+    function closeNotifOnOutside(e) { const p = document.getElementById('notifPanel'); if (!p) return; if (!e.target.closest('button[onclick="toggleNotif(event)"]') && !e.target.closest('#notifPanel')) p.classList.add('hidden'); }
+    
+    function renderNotif() {
+        const map = {};
+        db.spp.filter(s => s.status === 'Belum').forEach(s => {
+            if (!map[s.nis]) map[s.nis] = { nama: s.nama, kelas: s.kelas, list: [] };
+            map[s.nis].list.push(`${s.bulan} ${s.tahun}`);
+        });
+        const keys = Object.keys(map); const badge = document.getElementById('notifBadge');
+        badge.textContent = keys.length; badge.classList.toggle('hidden', keys.length === 0);
+        const list = document.getElementById('notifList');
+        if (keys.length === 0) { list.innerHTML = `<div class="p-8 text-center text-slate-500"><p class="text-sm font-bold">Tidak ada tunggakan 🎉</p></div>`; return; }
+        list.innerHTML = keys.map(k => `<div class="p-3 border-b dark:border-slate-700 text-sm"><p class="font-bold">${escapeHtml(map[k].nama)}</p><p class="text-xs text-red-500 mt-1">${map[k].list.length} bulan belum lunas</p></div>`).join('');
     }
 
-    // --- KAS ---
+    /* --- 5. RENDER FUNCTIONS --- */
+    function renderAll() { renderKas(); renderSpp(); renderMurid(); renderGuru(); renderNotif(); renderChart(); }
+
+    // CHART.JS
+    let chartInstance = null;
+    function renderChart() {
+        const ctx = document.getElementById('cashChart'); if (!ctx) return;
+        const months = []; for (let i = 5; i >= 0; i--) { const d = new Date(); d.setMonth(d.getMonth() - i); months.push({ label: d.toLocaleString('id-ID', {month:'short'}), year: d.getFullYear(), month: d.getMonth() }); }
+        const dataMasuk = [0,0,0,0,0,0], dataKeluar = [0,0,0,0,0,0];
+        db.kas.forEach(k => { const d = new Date(k.tanggal); const idx = months.findIndex(m => m.year === d.getFullYear() && m.month === d.getMonth()); if (idx > -1) { if (k.jenis === 'Masuk') dataMasuk[idx] += k.nominal; else dataKeluar[idx] += k.nominal; } });
+        if (chartInstance) chartInstance.destroy();
+        const isDark = document.documentElement.classList.contains('dark');
+        chartInstance = new Chart(ctx, { type: 'bar', data: { labels: months.map(m => m.label), datasets: [ { label: 'Masuk', data: dataMasuk, backgroundColor: '#10b981', borderRadius: 4 }, { label: 'Keluar', data: dataKeluar, backgroundColor: '#ef4444', borderRadius: 4 } ] }, options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { labels: { color: isDark ? '#fff' : '#333' } } }, scales: { x: { ticks: { color: isDark ? '#94a3b8' : '#64748b' }, grid: { display: false } }, y: { ticks: { color: isDark ? '#94a3b8' : '#64748b' }, grid: { color: isDark ? '#334155' : '#e2e8f0' } } } } });
+    }
+
+    // KAS
+    function populateKategoriSelects() {
+        const catOpts = db.kategori.map(k => `<option value="${escapeHtml(k)}">${escapeHtml(k)}</option>`).join('');
+        document.getElementById('kasKategori').innerHTML = catOpts;
+        document.getElementById('kasFilterKategori').innerHTML = `<option value="">Semua Kategori</option>${catOpts}`;
+    }
+
     function renderKas() {
-        let inK = 0, outK = 0;
-        db.kas.forEach(i => { if (i.jenis === 'Masuk') inK += i.nominal; else outK += i.nominal; });
+        let inK = 0, outK = 0; db.kas.forEach(i => { if (i.jenis === 'Masuk') inK += i.nominal; else outK += i.nominal; });
         document.getElementById('heroSaldo').innerText = formatRupiah(inK - outK);
         document.getElementById('heroPemasukan').innerText = formatRupiah(inK);
         document.getElementById('heroPengeluaran').innerText = formatRupiah(outK);
 
-        // Filter
-        const fJ = document.getElementById('kasFilterJenis').value, fK = document.getElementById('kasFilterKategori').value;
-        const fD = document.getElementById('kasFilterDari').value, fS = document.getElementById('kasFilterSampai').value;
+        const fJ = document.getElementById('kasFilterJenis').value, fK = document.getElementById('kasFilterKategori').value, fD = document.getElementById('kasFilterDari').value, fS = document.getElementById('kasFilterSampai').value;
         const filtered = db.kas.filter(i => (!fJ || i.jenis === fJ) && (!fK || i.kategori === fK) && (!fD || i.tanggal >= fD) && (!fS || i.tanggal <= fS));
-        
         const tbody = document.getElementById('tabelKasBody');
         if (!filtered.length) { tbody.innerHTML = '<tr><td colspan="5" class="p-8 text-center text-slate-400">Tidak ada data kas.</td></tr>'; return; }
         
-        tbody.innerHTML = [...filtered].sort((a,b) => new Date(b.tanggal) - new Date(a.tanggal)).map(item => `
-            <tr class="hover:bg-slate-50 dark:hover:bg-slate-800/50 transition border-b border-slate-100 dark:border-slate-700/50">
+        tbody.innerHTML = [...filtered].sort((a,b) => new Date(b.tanggal) - new Date(a.tanggal)).map(item => {
+            const color = getCatColor(item.kategori);
+            return `<tr class="hover:bg-slate-50 dark:hover:bg-slate-800/50 transition border-b border-slate-100 dark:border-slate-700/50">
                 <td class="p-4 text-xs text-slate-500 whitespace-nowrap">${escapeHtml(item.tanggal)}</td>
                 <td class="p-4 font-bold">${escapeHtml(item.keterangan)}</td>
-                <td class="p-4 hidden sm:table-cell"><span class="bg-slate-100 dark:bg-slate-900 px-2 py-1 rounded-md text-xs">${escapeHtml(item.kategori)}</span></td>
+                <td class="p-4 hidden sm:table-cell"><span class="inline-flex items-center gap-1.5 ${color.bg} ${color.text} px-2.5 py-1 rounded-lg text-[11px] font-bold"><span class="w-1.5 h-1.5 rounded-full ${color.dot}"></span>${escapeHtml(item.kategori)}</span></td>
                 <td class="p-4 text-right font-extrabold ${item.jenis === 'Masuk' ? 'text-emerald-500' : 'text-red-500'} whitespace-nowrap">${item.jenis === 'Masuk' ? '+' : '-'} ${formatRupiah(item.nominal)}</td>
                 <td class="p-4 text-center">
                     <button onclick="openEditKas(${item.id})" class="text-slate-400 hover:text-emerald-500 p-1">✏️</button>
                     <button onclick="deleteKas(${item.id})" class="text-slate-400 hover:text-red-500 p-1">🗑️</button>
                 </td>
-            </tr>
-        `).join('');
+            </tr>`;
+        }).join('');
     }
 
-    // --- SPP ---
+    function addKas(e) {
+        e.preventDefault();
+        db.kas.push({ id: Date.now(), tanggal: document.getElementById('kasTanggal').value, keterangan: document.getElementById('kasKeterangan').value, kategori: document.getElementById('kasKategori').value, jenis: document.getElementById('kasJenis').value, nominal: parseFloat(document.getElementById('kasNominal').value) });
+        document.getElementById('formKas').reset(); document.getElementById('kasTanggal').valueAsDate = new Date();
+        saveData(); toast('Transaksi Kas tersimpan');
+    }
+    function deleteKas(id) { if (!confirm('Hapus?')) return; db.kas = db.kas.filter(item => item.id !== id); saveData(); toast('Dihapus'); }
+    function resetKasFilter() { document.getElementById('kasFilterJenis').value = ''; document.getElementById('kasFilterKategori').value = ''; document.getElementById('kasFilterDari').value = ''; document.getElementById('kasFilterSampai').value = ''; renderKas(); }
+
+    // SPP (Logika Sinkronisasi Asli Anda Tetap Utuh)
+    function toggleSppStatus(id) {
+        const item = db.spp.find(s => s.id === id); if (!item) return;
+        if (item.status === 'Belum') {
+            item.status = 'Lunas'; item.tanggalBayar = new Date().toISOString().split('T')[0];
+            const kasId = Date.now() + Math.floor(Math.random() * 1000); item.kasId = kasId;
+            db.kas.push({ id: kasId, tanggal: item.tanggalBayar, keterangan: `SPP ${item.bulan} ${item.tahun} - ${item.nama} (${item.kelas})`, jenis: 'Masuk', nominal: item.nominal, kategori: db.kategoriSpp || 'SPP' });
+            toast(`SPP ${item.nama} LUNAS`);
+        } else {
+            item.status = 'Belum'; if (item.kasId) { db.kas = db.kas.filter(k => k.id !== item.kasId); item.kasId = null; }
+            item.tanggalBayar = null; toast(`SPP ${item.nama} Batal`);
+        }
+        saveData();
+    }
+
     function renderSpp() {
-        const kelasSet = new Set(db.spp.map(s => s.kelas));
-        const kelasSel = document.getElementById('sppFilterKelas');
-        kelasSel.innerHTML = '<option value="">Semua Kelas</option>' + Array.from(kelasSet).sort().map(k => `<option value="${k}">${k}</option>`).join('');
-        
-        document.getElementById('tahunAjaranInput').value = db.tahunAjaran;
-        document.getElementById('nominalSppDefault').value = db.nominalSppDefault;
-        
+        const kelasSet = new Set(db.spp.map(s => s.kelas)); const kelasSel = document.getElementById('sppFilterKelas');
+        const prevKelas = kelasSel.value; kelasSel.innerHTML = '<option value="">Semua Kelas</option>' + Array.from(kelasSet).sort().map(k => `<option value="${escapeHtml(k)}">${escapeHtml(k)}</option>`).join(''); kelasSel.value = prevKelas;
+        document.getElementById('tahunAjaranInput').value = db.tahunAjaran; document.getElementById('nominalSppDefault').value = db.nominalSppDefault;
+
         const kw = document.getElementById('searchSpp').value.toLowerCase(), fK = kelasSel.value, fS = document.getElementById('sppFilterStatus').value;
         const filtered = db.spp.filter(s => (!kw || s.nama.toLowerCase().includes(kw)) && (!fK || s.kelas === fK) && (!fS || s.status === fS));
+        const sorted = [...filtered].sort((a, b) => String(a.nis).localeCompare(String(b.nis)) || a.tahun - b.tahun || BULAN_LIST.indexOf(a.bulan) - BULAN_LIST.indexOf(b.bulan));
         
         const tbody = document.getElementById('tabelSppBody');
-        if (!filtered.length) { tbody.innerHTML = '<tr><td colspan="6" class="p-8 text-center text-slate-400">Belum ada data SPP.</td></tr>'; }
+        if (!sorted.length) { tbody.innerHTML = '<tr><td colspan="6" class="p-8 text-center text-slate-400">Belum ada data SPP.</td></tr>'; }
         else {
-            tbody.innerHTML = filtered.sort((a,b) => String(a.nis).localeCompare(String(b.nis))).map(item => `
+            tbody.innerHTML = sorted.map(item => `
                 <tr class="hover:bg-slate-50 dark:hover:bg-slate-800/50 transition border-b border-slate-100 dark:border-slate-700/50">
-                    <td class="p-3"><div class="font-bold">${escapeHtml(item.nama)}</div><div class="text-xs text-slate-500">${item.nis}</div></td>
+                    <td class="p-3"><div class="font-bold">${escapeHtml(item.nama)}</div><div class="text-xs text-slate-500 font-mono">${escapeHtml(item.nis)}</div></td>
                     <td class="p-3 hidden sm:table-cell text-xs">${escapeHtml(item.kelas)}</td>
                     <td class="p-3 text-xs whitespace-nowrap">${escapeHtml(item.bulan)} ${item.tahun}</td>
                     <td class="p-3 text-right font-medium text-xs whitespace-nowrap">${formatRupiah(item.nominal)}</td>
-                    <td class="p-3 text-center">
-                        <button onclick="toggleSppStatus(${item.id})" class="px-2 py-1 rounded-lg text-[10px] font-bold ${item.status === 'Lunas' ? 'bg-emerald-100 text-emerald-700' : 'bg-amber-100 text-amber-700'}">${item.status}</button>
-                    </td>
+                    <td class="p-3 text-center"><button onclick="toggleSppStatus(${item.id})" class="px-3 py-1 rounded-lg text-xs font-bold transition ${item.status === 'Lunas' ? 'bg-emerald-100 text-emerald-700' : 'bg-amber-100 text-amber-700'}">${item.status}</button></td>
                     <td class="p-3 text-center"><button onclick="openEditSpp(${item.id})" class="text-slate-400 hover:text-emerald-500 p-1">✏️</button></td>
                 </tr>
             `).join('');
         }
         const totalT = db.spp.filter(s => s.status === 'Belum').reduce((sum, s) => sum + s.nominal, 0);
-        document.getElementById('sppSummary').innerHTML = `Tunggakan: ${formatRupiah(totalT)}`;
-        document.getElementById('heroTunggakan').innerText = formatRupiah(totalT);
+        document.getElementById('sppSummary').innerHTML = `Tunggakan: ${formatRupiah(totalT)}`; document.getElementById('heroTunggakan').innerText = formatRupiah(totalT);
     }
 
-    // --- MURID & GURU ---
+    function updateNominalDefault() { const val = parseInt(document.getElementById('nominalSppDefault').value); if (!val || val < 0) return toast('Nominal salah', 'error'); db.nominalSppDefault = val; saveData(); toast('Default diperbarui'); }
+    function updateTahunAjaran() { const val = document.getElementById('tahunAjaranInput').value.trim(); if (!/^\d{4}\/\d{4}$/.test(val)) return alert('Format: 2025/2026'); db.tahunAjaran = val; saveData(); toast('Tahun ajaran disimpan'); }
+
+    function generateSppForAll() {
+        if (!db.murid.length) return toast('Belum ada murid', 'error');
+        const [ta1, ta2] = db.tahunAjaran.split('/'); const y1 = parseInt(ta1), y2 = parseInt(ta2); let created = 0;
+        db.murid.forEach(m => { BULAN_LIST.forEach((bulan, idx) => { const tahun = idx < 6 ? y1 : y2;
+            if (!db.spp.find(s => String(s.nis) === String(m.nis) && s.bulan === bulan && s.tahun === tahun)) {
+                db.spp.push({ id: Date.now() + Math.floor(Math.random() * 100000) + idx, nis: m.nis, nama: m.nama, kelas: m.kelas, bulan, tahun, nominal: db.nominalSppDefault || 50000, status: 'Belum', tanggalBayar: null, kasId: null }); created++;
+            }
+        }); });
+        if (created === 0) toast('Semua sudah punya tagihan lengkap', 'info'); else { saveData(); toast(`Membuat ${created} tagihan SPP`); }
+    }
+
+    // BULK NOMINAL (Logika Asli)
+    function openBulkNominal() {
+        const kelasSel = document.getElementById('bulkTargetKelas'); kelasSel.innerHTML = '<option value="">Semua Kelas</option>' + Array.from(new Set(db.spp.map(s => s.kelas))).sort().map(k => `<option value="${escapeHtml(k)}">${escapeHtml(k)}</option>`).join('');
+        document.getElementById('bulkTargetStatus').value = ''; document.getElementById('bulkNominalBaru').value = db.nominalSppDefault;
+        document.getElementById('bulkPreview').className = 'bg-amber-50 text-amber-900 p-3 rounded-xl text-xs'; document.getElementById('bulkPreview').innerHTML = 'Isi nominal untuk melihat preview.';
+        document.getElementById('bulkNominalModal').classList.remove('hidden'); previewBulkNominal();
+    }
+    function closeBulkNominal() { document.getElementById('bulkNominalModal').classList.add('hidden'); }
+    function getBulkMatching() { const k = document.getElementById('bulkTargetKelas').value, s = document.getElementById('bulkTargetStatus').value; return db.spp.filter(i => (!k || i.kelas === k) && (!s || i.status === s)); }
+    
+    function previewBulkNominal() {
+        const preview = document.getElementById('bulkPreview'); const nominal = parseInt(document.getElementById('bulkNominalBaru').value);
+        const matches = getBulkMatching(); const affected = matches.filter(s => s.nominal !== nominal).length;
+        if (matches.length === 0) { preview.innerHTML = '<strong>Tidak ada tagihan</strong> yang cocok.'; return; }
+        preview.innerHTML = `<div class="font-bold mb-1">📋 Preview Perubahan</div><div>Menemukan <strong>${matches.length} tagihan</strong>.</div>${nominal > 0 ? `<div>Total nilai tagihan setelah update: <strong>${formatRupiah(nominal * matches.length)}</strong>.</div>` : ''}`;
+    }
+    
+    function applyBulkNominal(e) {
+        e.preventDefault(); const nominal = parseInt(document.getElementById('bulkNominalBaru').value); if (!nominal || nominal < 0) return;
+        const matches = getBulkMatching(); let changed = 0, kasSynced = 0;
+        matches.forEach(s => { if (s.nominal === nominal) return; s.nominal = nominal; changed++;
+            if (s.status === 'Lunas' && s.kasId) { const l = db.kas.find(k => k.id === s.kasId); if (l) { l.nominal = nominal; kasSynced++; } }
+        });
+        saveData(); closeBulkNominal(); toast(`${changed} tagihan di-update`);
+    }
+
+    // MURID
+    function addMurid(e) {
+        e.preventDefault(); const nis = document.getElementById('muridNis').value.trim();
+        if (db.murid.find(m => String(m.nis) === nis)) return toast('NIS dipakai', 'error');
+        db.murid.push({ nis, nama: document.getElementById('muridNama').value, kelas: document.getElementById('muridKelas').value });
+        document.getElementById('formMurid').reset(); saveData(); toast('Murid ditambah');
+    }
+    function deleteMurid(nis) { if (!confirm('Hapus?')) return; db.murid = db.murid.filter(m => String(m.nis) !== String(nis)); db.spp = db.spp.filter(s => String(s.nis) !== String(nis)); saveData(); toast('Dihapus'); }
+    
     function renderMurid() {
-        const kelasSet = new Set(db.murid.map(m => m.kelas));
-        const kelasSel = document.getElementById('muridFilterKelas');
-        kelasSel.innerHTML = '<option value="">Semua Kelas</option>' + Array.from(kelasSet).sort().map(k => `<option value="${k}">${k}</option>`).join('');
-        
+        const kelasSet = new Set(db.murid.map(m => m.kelas)); const kelasSel = document.getElementById('muridFilterKelas');
+        const prevK = kelasSel.value; kelasSel.innerHTML = '<option value="">Semua Kelas</option>' + Array.from(kelasSet).sort().map(k => `<option value="${escapeHtml(k)}">${escapeHtml(k)}</option>`).join(''); kelasSel.value = prevK;
         const kw = document.getElementById('searchMurid').value.toLowerCase(), fK = kelasSel.value;
         const filtered = db.murid.filter(m => (!fK || m.kelas === fK) && (!kw || m.nama.toLowerCase().includes(kw)));
-        
         const tbody = document.getElementById('tabelMuridBody');
-        tbody.innerHTML = filtered.length ? filtered.map(item => `
-            <tr class="hover:bg-slate-50 dark:hover:bg-slate-800/50 transition border-b">
-                <td class="p-4"><div class="font-bold">${escapeHtml(item.nama)}</div><div class="text-xs text-slate-500">${item.nis}</div></td>
-                <td class="p-4"><span class="bg-slate-100 dark:bg-slate-900 px-2 py-1 rounded-md text-xs">${escapeHtml(item.kelas)}</span></td>
-                <td class="p-4 text-center"><button onclick="openEditMurid('${item.nis}')" class="text-slate-400 hover:text-emerald-500 p-1">✏️</button><button onclick="deleteMurid('${item.nis}')" class="text-slate-400 hover:text-red-500 p-1">🗑️</button></td>
-            </tr>
-        `).join('') : '<tr><td colspan="3" class="p-8 text-center text-slate-400">Tidak ada murid.</td></tr>';
+        if (!filtered.length) { tbody.innerHTML = '<tr><td colspan="4" class="p-8 text-center text-slate-400">Tidak ada murid.</td></tr>'; return; }
+        
+        const sorted = [...filtered].sort((a, b) => String(a.kelas).localeCompare(String(b.kelas)) || String(a.nama).localeCompare(String(b.nama)));
+        let curK = '';
+        tbody.innerHTML = sorted.map(item => {
+            let group = '';
+            if (item.kelas !== curK && !fK) { curK = item.kelas; group = `<tr><td colspan="4" class="bg-slate-50 dark:bg-slate-900 text-emerald-700 dark:text-emerald-400 font-extrabold text-[11px] uppercase px-4 py-2 tracking-widest">Kelas ${escapeHtml(item.kelas)}</td></tr>`; }
+            return group + `<tr class="hover:bg-slate-50 dark:hover:bg-slate-800/50 transition border-b border-slate-100 dark:border-slate-700/50">
+                <td class="p-4 text-slate-500 font-mono text-xs">${escapeHtml(item.nis)}</td>
+                <td class="p-4 font-bold">${escapeHtml(item.nama)}</td>
+                <td class="p-4 text-xs"><span class="bg-slate-100 dark:bg-slate-800 px-2 py-1 rounded-md font-semibold">${escapeHtml(item.kelas)}</span></td>
+                <td class="p-4 text-center whitespace-nowrap">
+                    <button onclick="openEditMurid('${escapeHtml(item.nis)}')" class="text-slate-400 hover:text-emerald-500 p-1">✏️</button>
+                    <button onclick="deleteMurid('${escapeHtml(item.nis)}')" class="text-slate-400 hover:text-red-500 p-1">🗑️</button>
+                </td></tr>`;
+        }).join('');
     }
 
+    // GURU
+    function addGuru(e) {
+        e.preventDefault(); const nip = document.getElementById('guruNip').value.trim();
+        if (db.guru.find(g => String(g.nip) === nip)) return toast('NIP dipakai', 'error');
+        db.guru.push({ nip, nama: document.getElementById('guruNama').value, mapel: document.getElementById('guruMapel').value, kontak: document.getElementById('guruKontak').value });
+        document.getElementById('formGuru').reset(); saveData(); toast('Guru ditambah');
+    }
+    function deleteGuru(nip) { if (!confirm('Hapus?')) return; db.guru = db.guru.filter(g => String(g.nip) !== String(nip)); saveData(); toast('Dihapus'); }
+    
     function renderGuru() {
         const kw = document.getElementById('searchGuru').value.toLowerCase();
         const filtered = db.guru.filter(g => !kw || g.nama.toLowerCase().includes(kw));
         const tbody = document.getElementById('tabelGuruBody');
-        tbody.innerHTML = filtered.length ? filtered.map(item => `
-            <tr class="hover:bg-slate-50 dark:hover:bg-slate-800/50 transition border-b">
-                <td class="p-4"><div class="font-bold">${escapeHtml(item.nama)}</div><div class="text-xs text-slate-500">${item.nip}</div></td>
-                <td class="p-4 text-xs">${escapeHtml(item.mapel)}</td>
-                <td class="p-4 text-center"><button onclick="openEditGuru('${item.nip}')" class="text-slate-400 hover:text-emerald-500 p-1">✏️</button><button onclick="deleteGuru('${item.nip}')" class="text-slate-400 hover:text-red-500 p-1">🗑️</button></td>
-            </tr>
-        `).join('') : '<tr><td colspan="3" class="p-8 text-center text-slate-400">Tidak ada guru.</td></tr>';
+        tbody.innerHTML = filtered.length ? filtered.map(item => `<tr class="hover:bg-slate-50 dark:hover:bg-slate-800/50 transition border-b border-slate-100 dark:border-slate-700/50">
+            <td class="p-4 text-slate-500 font-mono text-xs">${escapeHtml(item.nip)}</td>
+            <td class="p-4 font-bold">${escapeHtml(item.nama)}</td>
+            <td class="p-4 text-xs">${escapeHtml(item.mapel)}</td>
+            <td class="p-4 text-xs">${escapeHtml(item.kontak)}</td>
+            <td class="p-4 text-center whitespace-nowrap">
+                <button onclick="openEditGuru('${escapeHtml(item.nip)}')" class="text-slate-400 hover:text-emerald-500 p-1">✏️</button>
+                <button onclick="deleteGuru('${escapeHtml(item.nip)}')" class="text-slate-400 hover:text-red-500 p-1">🗑️</button>
+            </td></tr>`).join('') : '<tr><td colspan="5" class="p-8 text-center text-slate-400">Tidak ada guru.</td></tr>';
     }
 
-    // --- CHART.JS LOGIC ---
-    let chartInstance = null;
-    function renderChart() {
-        const ctx = document.getElementById('cashChart');
-        if (!ctx) return;
-        
-        // Kelompokkan per bulan (6 bulan terakhir)
-        const months = [];
-        for (let i = 5; i >= 0; i--) {
-            const d = new Date(); d.setMonth(d.getMonth() - i);
-            months.push({ label: d.toLocaleString('id-ID', {month:'short'}), year: d.getFullYear(), month: d.getMonth() });
-        }
-        
-        const dataMasuk = [0,0,0,0,0,0], dataKeluar = [0,0,0,0,0,0];
-        db.kas.forEach(k => {
-            const d = new Date(k.tanggal);
-            const idx = months.findIndex(m => m.year === d.getFullYear() && m.month === d.getMonth());
-            if (idx > -1) { if (k.jenis === 'Masuk') dataMasuk[idx] += k.nominal; else dataKeluar[idx] += k.nominal; }
-        });
-
-        if (chartInstance) chartInstance.destroy();
-        const isDark = document.documentElement.classList.contains('dark');
-        
-        chartInstance = new Chart(ctx, {
-            type: 'bar',
-            data: {
-                labels: months.map(m => m.label),
-                datasets: [
-                    { label: 'Pemasukan', data: dataMasuk, backgroundColor: '#10b981', borderRadius: 4 },
-                    { label: 'Pengeluaran', data: dataKeluar, backgroundColor: '#ef4444', borderRadius: 4 }
-                ]
-            },
-            options: {
-                responsive: true, maintainAspectRatio: false,
-                plugins: { legend: { labels: { color: isDark ? '#fff' : '#333' } } },
-                scales: {
-                    x: { ticks: { color: isDark ? '#94a3b8' : '#64748b' }, grid: { display: false } },
-                    y: { ticks: { color: isDark ? '#94a3b8' : '#64748b' }, grid: { color: isDark ? '#334155' : '#e2e8f0' } }
-                }
-            }
-        });
-    }
-
-    /* --- 5. CRUD LOGIC --- */
-    function addKas(e) {
-        e.preventDefault();
-        db.kas.push({ id: Date.now(), tanggal: document.getElementById('kasTanggal').value, keterangan: document.getElementById('kasKeterangan').value, kategori: document.getElementById('kasKategori').value, jenis: document.getElementById('kasJenis').value, nominal: parseFloat(document.getElementById('kasNominal').value) });
-        document.getElementById('formKas').reset(); document.getElementById('kasTanggal').valueAsDate = new Date();
-        saveData(); toast('Kas ditambahkan');
-    }
-    function deleteKas(id) { if(confirm('Hapus?')) { db.kas = db.kas.filter(i => i.id !== id); saveData(); toast('Dihapus'); } }
-
-    function toggleSppStatus(id) {
-        const item = db.spp.find(s => s.id === id);
-        if (item.status === 'Belum') {
-            item.status = 'Lunas'; item.tanggalBayar = new Date().toISOString().split('T')[0];
-            const kasId = Date.now(); item.kasId = kasId;
-            db.kas.push({ id: kasId, tanggal: item.tanggalBayar, keterangan: `SPP ${item.bulan} - ${item.nama}`, jenis: 'Masuk', nominal: item.nominal, kategori: 'SPP' });
-        } else {
-            item.status = 'Belum'; item.tanggalBayar = null;
-            if (item.kasId) db.kas = db.kas.filter(k => k.id !== item.kasId);
-        }
-        saveData(); toast('Status SPP diperbarui');
-    }
-
-    function generateSppForAll() {
-        if(!db.murid.length) return toast('Tambah murid dulu', 'error');
-        const [ta1, ta2] = db.tahunAjaran.split('/'); let created = 0;
-        db.murid.forEach(m => {
-            BULAN_LIST.forEach((b, idx) => {
-                const thn = idx < 6 ? parseInt(ta1) : parseInt(ta2);
-                if(!db.spp.find(s => s.nis === m.nis && s.bulan === b && s.tahun === thn)) {
-                    db.spp.push({ id: Date.now()+idx+Math.random(), nis: m.nis, nama: m.nama, kelas: m.kelas, bulan: b, tahun: thn, nominal: db.nominalSppDefault, status: 'Belum' }); created++;
-                }
-            });
-        });
-        saveData(); toast(created ? `${created} SPP dibuat` : 'Sudah lengkap');
-    }
-
-    // --- MODAL & FORM HANDLERS ---
+    /* --- 6. EDIT MODAL (DARI KODE ASLI ANDA) --- */
     let editContext = { type: null, id: null };
+    function closeEdit() { document.getElementById('editModal').classList.add('hidden'); editContext = { type: null, id: null }; }
+    
+    function openEditKas(id) {
+        const item = db.kas.find(k => k.id === id); if (!item) return; editContext = { type: 'kas', id };
+        document.getElementById('editTitle').textContent = 'Edit Transaksi Kas';
+        document.getElementById('editBody').innerHTML = `
+            <select name="jenis" class="w-full px-3 py-2 rounded-xl border mb-3 dark:bg-slate-900 dark:border-slate-700"><option value="Masuk" ${item.jenis === 'Masuk' ? 'selected' : ''}>Pemasukan</option><option value="Keluar" ${item.jenis === 'Keluar' ? 'selected' : ''}>Pengeluaran</option></select>
+            <input type="date" name="tanggal" value="${escapeHtml(item.tanggal)}" required class="w-full px-3 py-2 rounded-xl border mb-3 dark:bg-slate-900 dark:border-slate-700">
+            <input type="text" name="keterangan" value="${escapeHtml(item.keterangan)}" required class="w-full px-3 py-2 rounded-xl border mb-3 dark:bg-slate-900 dark:border-slate-700">
+            <select name="kategori" class="w-full px-3 py-2 rounded-xl border mb-3 dark:bg-slate-900 dark:border-slate-700">${db.kategori.map(k => `<option value="${escapeHtml(k)}" ${item.kategori === k ? 'selected' : ''}>${escapeHtml(k)}</option>`).join('')}</select>
+            <input type="number" name="nominal" value="${item.nominal}" min="1" required class="w-full px-3 py-2 rounded-xl border mb-3 dark:bg-slate-900 dark:border-slate-700">`;
+        document.getElementById('editModal').classList.remove('hidden');
+    }
+
+    function openEditMurid(nis) {
+        const item = db.murid.find(m => String(m.nis) === String(nis)); if (!item) return; editContext = { type: 'murid', id: nis };
+        document.getElementById('editTitle').textContent = 'Edit Murid';
+        document.getElementById('editBody').innerHTML = `
+            <input type="text" value="${escapeHtml(item.nis)}" disabled class="w-full px-3 py-2 rounded-xl border bg-slate-100 mb-3 dark:bg-slate-800">
+            <input type="text" name="nama" value="${escapeHtml(item.nama)}" required class="w-full px-3 py-2 rounded-xl border mb-3 dark:bg-slate-900 dark:border-slate-700">
+            <input type="text" name="kelas" value="${escapeHtml(item.kelas)}" required class="w-full px-3 py-2 rounded-xl border mb-3 dark:bg-slate-900 dark:border-slate-700">`;
+        document.getElementById('editModal').classList.remove('hidden');
+    }
+
+    function openEditGuru(nip) {
+        const item = db.guru.find(g => String(g.nip) === String(nip)); if (!item) return; editContext = { type: 'guru', id: nip };
+        document.getElementById('editTitle').textContent = 'Edit Guru';
+        document.getElementById('editBody').innerHTML = `
+            <input type="text" value="${escapeHtml(item.nip)}" disabled class="w-full px-3 py-2 rounded-xl border bg-slate-100 mb-3 dark:bg-slate-800">
+            <input type="text" name="nama" value="${escapeHtml(item.nama)}" required class="w-full px-3 py-2 rounded-xl border mb-3 dark:bg-slate-900 dark:border-slate-700">
+            <input type="text" name="mapel" value="${escapeHtml(item.mapel)}" required class="w-full px-3 py-2 rounded-xl border mb-3 dark:bg-slate-900 dark:border-slate-700">
+            <input type="text" name="kontak" value="${escapeHtml(item.kontak)}" required class="w-full px-3 py-2 rounded-xl border mb-3 dark:bg-slate-900 dark:border-slate-700">`;
+        document.getElementById('editModal').classList.remove('hidden');
+    }
+
+    function openEditSpp(id) {
+        const item = db.spp.find(s => s.id === id); if (!item) return; editContext = { type: 'spp', id };
+        document.getElementById('editTitle').textContent = 'Edit SPP';
+        document.getElementById('editBody').innerHTML = `
+            <div class="bg-slate-50 dark:bg-slate-900 p-3 rounded-xl text-sm mb-3"><p class="font-bold">${escapeHtml(item.nama)}</p><p class="text-xs">${escapeHtml(item.kelas)} • ${escapeHtml(item.bulan)} ${item.tahun}</p></div>
+            <input type="number" name="nominal" value="${item.nominal}" min="1" required class="w-full px-3 py-2 rounded-xl border mb-3 dark:bg-slate-900 dark:border-slate-700">`;
+        document.getElementById('editModal').classList.remove('hidden');
+    }
+
+    function saveEdit(e) {
+        e.preventDefault(); const data = Object.fromEntries(new FormData(e.target).entries());
+        if (editContext.type === 'kas') {
+            const item = db.kas.find(k => k.id === editContext.id); if (!item) return;
+            const oldN = item.nominal; Object.assign(item, { jenis: data.jenis, tanggal: data.tanggal, keterangan: data.keterangan, kategori: data.kategori, nominal: parseFloat(data.nominal) });
+            const linked = db.spp.find(s => s.kasId === item.id); if (linked && linked.status === 'Lunas' && oldN !== item.nominal) linked.nominal = item.nominal;
+        } else if (editContext.type === 'murid') {
+            const item = db.murid.find(m => String(m.nis) === String(editContext.id)); if (!item) return;
+            item.nama = data.nama; item.kelas = data.kelas; db.spp.forEach(s => { if (String(s.nis) === String(item.nis)) { s.nama = data.nama; s.kelas = data.kelas; } });
+        } else if (editContext.type === 'guru') {
+            const item = db.guru.find(g => String(g.nip) === String(editContext.id)); if (!item) return;
+            item.nama = data.nama; item.mapel = data.mapel; item.kontak = data.kontak;
+        } else if (editContext.type === 'spp') {
+            const item = db.spp.find(s => s.id === editContext.id); if (!item) return;
+            const n = parseFloat(data.nominal); if (item.status === 'Lunas' && item.kasId) { const k = db.kas.find(x => x.id === item.kasId); if (k) k.nominal = n; } item.nominal = n;
+        }
+        closeEdit(); saveData(); toast('Perubahan disimpan');
+    }
+
+    /* --- 7. KATEGORI (LOGIKA ASLI ANDA) --- */
+    function openKelolaKategori() { renderKategoriList(); document.getElementById('kategoriModal').classList.remove('hidden'); }
+    function closeKelolaKategori() { document.getElementById('kategoriModal').classList.add('hidden'); populateKategoriSelects(); renderKas(); }
+    function renderKategoriList() {
+        document.getElementById('kategoriList').innerHTML = db.kategori.map(k => {
+            const isProtected = (k === db.kategoriSpp) || (k === 'Lainnya');
+            const color = getCatColor(k);
+            const delBtn = isProtected ? '' : `<button type="button" onclick="deleteKategori('${escapeHtml(k)}')" class="text-red-400 hover:text-red-600 p-1.5 bg-red-50 dark:bg-red-900/20 rounded-lg">🗑️</button>`;
+            return `<div class="flex items-center gap-2 p-2 bg-slate-50 dark:bg-slate-900 rounded-xl border border-slate-200 dark:border-slate-700 mb-2">
+                <span class="w-3 h-3 rounded-full ${color.dot} flex-shrink-0"></span>
+                <input type="text" value="${escapeHtml(k)}" onchange="renameKategori('${escapeHtml(k)}', this.value)" class="flex-1 px-2 py-1.5 rounded-lg border bg-transparent text-sm font-medium focus:outline-none">
+                ${delBtn}</div>`;
+        }).join('');
+    }
+    function addKategori(e) {
+        e.preventDefault(); const val = document.getElementById('newKategoriInput').value.trim(); if (!val) return; if (db.kategori.includes(val)) return toast('Sudah ada', 'error');
+        db.kategori.push(val); document.getElementById('newKategoriInput').value = ''; saveData(); renderKategoriList(); populateKategoriSelects(); toast('Ditambah');
+    }
+    function renameKategori(o, n) {
+        n = (n || '').trim(); if (!n) return renderKategoriList(); if (n === o) return; if (db.kategori.includes(n)) return toast('Nama dipakai', 'error');
+        db.kategori[db.kategori.indexOf(o)] = n; if (db.kategoriSpp === o) db.kategoriSpp = n; db.kas.forEach(k => { if (k.kategori === o) k.kategori = n; });
+        saveData(); renderKategoriList(); populateKategoriSelects();
+    }
+    function deleteKategori(n) {
+        if (n === db.kategoriSpp || n === 'Lainnya') return toast('Kategori sistem', 'error'); if (!confirm(`Hapus kategori "${n}"?`)) return;
+        db.kategori = db.kategori.filter(k => k !== n); db.kas.forEach(k => { if (k.kategori === n) k.kategori = 'Lainnya'; });
+        saveData(); renderKategoriList(); populateKategoriSelects(); renderKas(); toast('Dihapus');
+    }
+
+    /* --- 8. BACKUP, RESTORE & EXCEL (LOGIKA ASLI ANDA 100%) --- */
+    function backupJSON() { const b = new Blob([JSON.stringify(db, null, 2)], { type: 'application/json' }); const a = document.createElement('a'); a.href = URL.createObjectURL(b); a.download = `backup_madrasah_${new Date().toISOString().slice(0, 10)}.json`; a.click(); toast('Backup diunduh'); }
+    function restoreJSON(e) {
+        const f = e.target.files[0]; if (!f) return; if (!confirm('Data diganti?')) { e.target.value = ''; return; }
+        const r = new FileReader(); r.onload = ev => { try { const p = JSON.parse(ev.target.result); if (!p.kas || !p.murid) throw new Error('Format salah'); db = migrateDb(p); localStorage.setItem('madrasah_db', JSON.stringify(db)); saveData(); toast('Restore berhasil'); } catch (err) { toast(err.message, 'error'); } e.target.value = ''; }; r.readAsText(f);
+    }
+
+    function exportToExcel() {
+        const wb = XLSX.utils.book_new();
+        const wsK = XLSX.utils.json_to_sheet(db.kas.map(k => ({ 'Tanggal': k.tanggal, 'Keterangan': k.keterangan, 'Kategori': k.kategori, 'Jenis': k.jenis, 'Nominal (Rp)': k.nominal })));
+        XLSX.utils.book_append_sheet(wb, wsK, 'Jurnal Kas');
+        const wsS = XLSX.utils.json_to_sheet(db.spp.map(s => ({ 'NIS': s.nis, 'Nama': s.nama, 'Kelas': s.kelas, 'Bulan': s.bulan, 'Tahun': s.tahun, 'Nominal': s.nominal, 'Status': s.status })));
+        XLSX.utils.book_append_sheet(wb, wsS, 'Data SPP');
+        const wsM = XLSX.utils.json_to_sheet(db.murid.map(m => ({ 'NIS': m.nis, 'Nama': m.nama, 'Kelas': m.kelas })));
+        XLSX.utils.book_append_sheet(wb, wsM, 'Data Murid');
+        XLSX.writeFile(wb, `Madrasah_${new Date().toISOString().slice(0, 10)}.xlsx`); toast('Excel dibuat');
+    }
+
+    function importData(e) {
+        const f = e.target.files[0]; if (!f) return; if (!confirm('Data per sheet akan diganti. Lanjut?')) { e.target.value = ''; return; }
+        const r = new FileReader();
+        r.onload = function(ev) {
+            try {
+                const data = new Uint8Array(ev.target.result); const wb = XLSX.read(data, { type: 'array' });
+                if (wb.SheetNames.includes('Jurnal Kas')) db.kas = XLSX.utils.sheet_to_json(wb.Sheets['Jurnal Kas']).map((r, i) => ({ id: Date.now() + i, tanggal: r['Tanggal'] || new Date().toISOString().slice(0, 10), keterangan: r['Keterangan'] || '-', kategori: r['Kategori'] || 'Lainnya', jenis: (r['Jenis']) === 'Keluar' ? 'Keluar' : 'Masuk', nominal: Number(r['Nominal (Rp)']) || 0 }));
+                if (wb.SheetNames.includes('Data SPP')) db.spp = XLSX.utils.sheet_to_json(wb.Sheets['Data SPP']).map((r, i) => ({ id: Date.now() + 1000 + i, nis: String(r['NIS'] || ''), nama: r['Nama Murid'] || '-', kelas: r['Kelas'] || '-', bulan: r['Bulan SPP'] || 'Januari', tahun: Number(r['Tahun']) || 2026, nominal: Number(r['Nominal (Rp)']) || 50000, status: (r['Status']) === 'Lunas' ? 'Lunas' : 'Belum', tanggalBayar: null, kasId: null }));
+                if (wb.SheetNames.includes('Data Murid')) db.murid = XLSX.utils.sheet_to_json(wb.Sheets['Data Murid']).map(r => ({ nis: String(r['NIS'] || ''), nama: r['Nama Murid'] || '-', kelas: r['Kelas'] || '-' })).filter(m => m.nis);
+                saveData(); toast('Import berhasil!');
+            } catch (err) { toast('Gagal baca file.', 'error'); } e.target.value = '';
+        };
+        r.readAsArrayBuffer(f);
+    }
+
+    /* --- 9. MOBILE FORM HANDLERS & SETTINGS --- */
     function openMobileForm(type = null) {
-        let tab = document.querySelector('.tab-content:not(.hidden)').id.replace('tab-','');
-        if(type) tab = type;
-        
+        let tab = document.querySelector('.tab-content:not(.hidden)').id.replace('tab-',''); if(type) tab = type;
         if(tab === 'kas') {
             editContext = { type: 'kas_new' }; document.getElementById('editTitle').innerText = 'Tambah Kas';
-            document.getElementById('editBody').innerHTML = `
-                <select name="jenis" class="w-full px-3 py-2 rounded-xl border mb-3"><option value="Masuk">Pemasukan</option><option value="Keluar">Pengeluaran</option></select>
-                <input type="date" name="tanggal" value="${new Date().toISOString().slice(0,10)}" required class="w-full px-3 py-2 rounded-xl border mb-3">
-                <input type="text" name="keterangan" placeholder="Keterangan" required class="w-full px-3 py-2 rounded-xl border mb-3">
-                <input type="number" name="nominal" placeholder="Nominal" required class="w-full px-3 py-2 rounded-xl border mb-3">
-                <select name="kategori" class="w-full px-3 py-2 rounded-xl border mb-3">${db.kategori.map(k=>`<option value="${k}">${k}</option>`).join('')}</select>`;
+            document.getElementById('editBody').innerHTML = `<select name="jenis" class="w-full px-3 py-2 rounded-xl border mb-3 dark:bg-slate-900 dark:border-slate-700"><option value="Masuk">Masuk</option><option value="Keluar">Keluar</option></select><input type="date" name="tanggal" value="${new Date().toISOString().slice(0,10)}" required class="w-full px-3 py-2 rounded-xl border mb-3 dark:bg-slate-900 dark:border-slate-700"><input type="text" name="keterangan" required class="w-full px-3 py-2 rounded-xl border mb-3 dark:bg-slate-900 dark:border-slate-700" placeholder="Keterangan"><input type="number" name="nominal" required class="w-full px-3 py-2 rounded-xl border mb-3 dark:bg-slate-900 dark:border-slate-700" placeholder="Nominal"><select name="kategori" class="w-full px-3 py-2 rounded-xl border mb-3 dark:bg-slate-900 dark:border-slate-700">${db.kategori.map(k=>`<option value="${k}">${k}</option>`).join('')}</select>`;
         } else if (tab === 'murid') {
             editContext = { type: 'murid_new' }; document.getElementById('editTitle').innerText = 'Tambah Murid';
-            document.getElementById('editBody').innerHTML = `
-                <input type="text" name="nis" placeholder="NIS" required class="w-full px-3 py-2 rounded-xl border mb-3">
-                <input type="text" name="nama" placeholder="Nama Lengkap" required class="w-full px-3 py-2 rounded-xl border mb-3">
-                <input type="text" name="kelas" placeholder="Kelas (Cth: VII-A)" required class="w-full px-3 py-2 rounded-xl border mb-3">`;
+            document.getElementById('editBody').innerHTML = `<input type="text" name="nis" required class="w-full px-3 py-2 rounded-xl border mb-3 dark:bg-slate-900 dark:border-slate-700" placeholder="NIS"><input type="text" name="nama" required class="w-full px-3 py-2 rounded-xl border mb-3 dark:bg-slate-900 dark:border-slate-700" placeholder="Nama"><input type="text" name="kelas" required class="w-full px-3 py-2 rounded-xl border mb-3 dark:bg-slate-900 dark:border-slate-700" placeholder="Kelas">`;
         } else if (tab === 'guru') {
             editContext = { type: 'guru_new' }; document.getElementById('editTitle').innerText = 'Tambah Guru';
-            document.getElementById('editBody').innerHTML = `
-                <input type="text" name="nip" placeholder="NIP" required class="w-full px-3 py-2 rounded-xl border mb-3">
-                <input type="text" name="nama" placeholder="Nama & Gelar" required class="w-full px-3 py-2 rounded-xl border mb-3">
-                <input type="text" name="mapel" placeholder="Mapel" required class="w-full px-3 py-2 rounded-xl border mb-3">`;
+            document.getElementById('editBody').innerHTML = `<input type="text" name="nip" required class="w-full px-3 py-2 rounded-xl border mb-3 dark:bg-slate-900 dark:border-slate-700" placeholder="NIP"><input type="text" name="nama" required class="w-full px-3 py-2 rounded-xl border mb-3 dark:bg-slate-900 dark:border-slate-700" placeholder="Nama"><input type="text" name="mapel" required class="w-full px-3 py-2 rounded-xl border mb-3 dark:bg-slate-900 dark:border-slate-700" placeholder="Mapel"><input type="text" name="kontak" required class="w-full px-3 py-2 rounded-xl border mb-3 dark:bg-slate-900 dark:border-slate-700" placeholder="Kontak">`;
         }
         document.getElementById('editModal').classList.remove('hidden');
     }
 
-    function closeEdit() { document.getElementById('editModal').classList.add('hidden'); }
-    
-    function saveEdit(e) {
-        e.preventDefault();
-        const data = Object.fromEntries(new FormData(e.target).entries());
-        if (editContext.type === 'kas_new') db.kas.push({ id: Date.now(), ...data, nominal: parseFloat(data.nominal) });
-        else if (editContext.type === 'murid_new') db.murid.push(data);
-        else if (editContext.type === 'guru_new') db.guru.push(data);
-        closeEdit(); saveData(); toast('Data disimpan');
-    }
+    // Override saveEdit to handle 'new' from mobile FAB
+    const originalSaveEdit = saveEdit;
+    saveEdit = function(e) {
+        e.preventDefault(); const data = Object.fromEntries(new FormData(e.target).entries());
+        if (editContext.type === 'kas_new') { db.kas.push({ id: Date.now(), ...data, nominal: parseFloat(data.nominal) }); closeEdit(); saveData(); toast('Kas ditambah'); return; }
+        if (editContext.type === 'murid_new') { db.murid.push(data); closeEdit(); saveData(); toast('Murid ditambah'); return; }
+        if (editContext.type === 'guru_new') { db.guru.push(data); closeEdit(); saveData(); toast('Guru ditambah'); return; }
+        originalSaveEdit(e);
+    };
 
-    // --- SETTINGS ---
     function openSettings() {
-        document.getElementById('setNama').value = appSettings.nama;
-        document.getElementById('setAlamat').value = appSettings.alamat;
-        document.getElementById('setKepala').value = appSettings.kepala;
-        document.getElementById('setPin').value = '';
+        document.getElementById('setNama').value = appSettings.nama; document.getElementById('setAlamat').value = appSettings.alamat;
+        document.getElementById('setKepala').value = appSettings.kepala; document.getElementById('setPin').value = '';
         document.getElementById('settingsModal').classList.remove('hidden');
     }
     function closeSettings() { document.getElementById('settingsModal').classList.add('hidden'); }
     function saveSettings(e) {
-        e.preventDefault();
-        appSettings.nama = document.getElementById('setNama').value;
-        appSettings.alamat = document.getElementById('setAlamat').value;
-        appSettings.kepala = document.getElementById('setKepala').value;
-        const newPin = document.getElementById('setPin').value;
-        if (newPin && newPin.length === 6) appSettings.pin = newPin;
-        
-        localStorage.setItem('madrasah_settings', JSON.stringify(appSettings));
-        document.getElementById('appNameDisplay').innerText = appSettings.nama;
+        e.preventDefault(); appSettings.nama = document.getElementById('setNama').value;
+        appSettings.alamat = document.getElementById('setAlamat').value; appSettings.kepala = document.getElementById('setKepala').value;
+        const newPin = document.getElementById('setPin').value; if (newPin && newPin.length === 6) appSettings.pin = newPin;
+        localStorage.setItem('madrasah_settings', JSON.stringify(appSettings)); document.getElementById('appNameDisplay').innerText = appSettings.nama;
         closeSettings(); toast('Pengaturan disimpan');
     }
 
-    // --- BACKUP / EXCEL ---
-    function backupJSON() {
-        const b = new Blob([JSON.stringify(db, null, 2)], {type:'application/json'});
-        const a = document.createElement('a'); a.href = URL.createObjectURL(b); a.download = `backup_madrasah_${new Date().toISOString().slice(0,10)}.json`; a.click();
-        toast('Backup diunduh');
-    }
-    function restoreJSON_Dummy() { alert('Fitur restore akan membaca file JSON. (Gunakan input file di kode Anda sebelumnya)'); }
-
-    function exportToExcel() {
-        const wb = XLSX.utils.book_new();
-        XLSX.utils.book_append_sheet(wb, XLSX.utils.json_to_sheet(db.kas), 'Kas');
-        XLSX.utils.book_append_sheet(wb, XLSX.utils.json_to_sheet(db.spp), 'SPP');
-        XLSX.utils.book_append_sheet(wb, XLSX.utils.json_to_sheet(db.murid), 'Murid');
-        XLSX.writeFile(wb, `Data_Madrasah_${new Date().toISOString().slice(0,10)}.xlsx`);
-        toast('Excel diunduh');
-    }
-
-    // INIT
+    /* --- 10. INIT --- */
+    populateKategoriSelects();
     document.getElementById('kasTanggal').valueAsDate = new Date();
-    document.getElementById('kasKategori').innerHTML = db.kategori.map(k=>`<option value="${k}">${k}</option>`).join('');
     renderAll();
     </script>
 </body>

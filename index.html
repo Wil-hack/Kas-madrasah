@@ -2,235 +2,208 @@
 <html lang="id">
 <head>
 <meta charset="UTF-8">
-<!-- META PWA & MOBILE APP -->
-<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
-<meta name="theme-color" content="#0f766e">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+<meta name="theme-color" content="#4f46e5">
 <meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<title>Kas Madrasah</title>
+<title>Kas Madrasah Pro</title>
 
-<!-- FONT GOOGLE (Plus Jakarta Sans) -->
+<!-- Font Premium -->
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 
 <style>
 /* ============================================================
-   DESIGN SYSTEM (ELEGANT & PROFESSIONAL)
+   DESIGN SYSTEM (PRO & ELEGAN)
    ============================================================ */
 :root {
-  --primary: #0f766e;        /* Teal / Emerald */
-  --primary-hover: #115e59;
-  --primary-light: #ccfbf1;
-  --bg-body: #f8fafc;        /* Slate 50 */
+  --primary: #4f46e5;
+  --primary-gradient: linear-gradient(135deg, #4f46e5, #9333ea);
+  --primary-light: #e0e7ff;
+  --bg-body: #f3f4f6; 
   --bg-card: #ffffff;
-  --text-main: #0f172a;      /* Slate 900 */
-  --text-muted: #64748b;     /* Slate 500 */
-  --border: #e2e8f0;
+  --text-main: #111827; 
+  --text-muted: #6b7280; 
+  --border: #e5e7eb;
   --danger: #ef4444;
   --success: #10b981;
   --warning: #f59e0b;
-  --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
-  --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
-  --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
-  --radius-md: 12px;
-  --radius-lg: 16px;
+  --shadow-sm: 0 1px 3px rgba(0,0,0,0.1);
+  --shadow-md: 0 4px 6px -1px rgba(0,0,0,0.1);
+  --shadow-lg: 0 10px 25px -3px rgba(0,0,0,0.1);
+  --radius-md: 14px;
+  --radius-lg: 20px;
   --radius-full: 9999px;
   --nav-height: 70px;
 }
 
 [data-theme="dark"] {
-  --primary: #14b8a6;        /* Teal Light */
-  --primary-hover: #0d9488;
-  --primary-light: #134e4a;
-  --bg-body: #0f172a;        /* Slate 900 */
-  --bg-card: #1e293b;        /* Slate 800 */
-  --text-main: #f1f5f9;      /* Slate 100 */
-  --text-muted: #94a3b8;     /* Slate 400 */
-  --border: #334155;         /* Slate 700 */
-  --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.3);
-  --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.4);
-  --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.5);
+  --primary: #6366f1;
+  --primary-gradient: linear-gradient(135deg, #6366f1, #a855f7);
+  --primary-light: #312e81;
+  --bg-body: #0f172a; 
+  --bg-card: #1e293b; 
+  --text-main: #f8fafc; 
+  --text-muted: #94a3b8; 
+  --border: #334155; 
+  --shadow-sm: 0 1px 3px rgba(0,0,0,0.3);
+  --shadow-md: 0 4px 6px -1px rgba(0,0,0,0.4);
 }
 
 * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
 body {
-  margin: 0; padding: 0;
-  font-family: 'Plus Jakarta Sans', system-ui, sans-serif;
+  margin: 0; font-family: 'Plus Jakarta Sans', system-ui, sans-serif;
   background-color: var(--bg-body); color: var(--text-main);
-  font-size: 14px; line-height: 1.5;
-  transition: background-color 0.3s, color 0.3s;
+  font-size: 14px; line-height: 1.5; transition: background 0.3s;
 }
 
-h1, h2, h3, h4 { margin: 0 0 8px 0; font-weight: 700; color: var(--text-main); }
-h1 { font-size: 22px; letter-spacing: -0.5px; }
-h2 { font-size: 18px; letter-spacing: -0.3px; }
-h3 { font-size: 16px; }
+h1, h2, h3 { margin: 0 0 8px 0; font-weight: 700; letter-spacing: -0.3px; }
+h1 { font-size: 24px; } h2 { font-size: 18px; } h3 { font-size: 16px; }
 
-/* Typography & Utilities */
-.text-muted { color: var(--text-muted); font-size: 13px; }
-.font-bold { font-weight: 700; }
-.text-center { text-align: center; }
+/* SVG Icons */
+.icon { width: 20px; height: 20px; stroke: currentColor; fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+.icon-sm { width: 16px; height: 16px; }
+.icon-lg { width: 32px; height: 32px; }
 
 /* Forms */
 input, select, textarea, button { font-family: inherit; font-size: 14px; }
 input, select, textarea {
-  width: 100%; padding: 12px 14px;
-  border: 1px solid var(--border); border-radius: var(--radius-md);
-  background-color: var(--bg-card); color: var(--text-main);
-  transition: all 0.2s; margin-bottom: 4px;
+  width: 100%; padding: 14px 16px; border: 1.5px solid var(--border);
+  border-radius: var(--radius-md); background: var(--bg-body); color: var(--text-main);
+  transition: all 0.2s; margin-bottom: 4px; font-weight: 500;
 }
 input:focus, select:focus, textarea:focus {
-  outline: none; border-color: var(--primary);
-  box-shadow: 0 0 0 3px var(--primary-light);
+  outline: none; border-color: var(--primary); background: var(--bg-card);
+  box-shadow: 0 0 0 4px var(--primary-light);
 }
 .fld { margin-bottom: 16px; }
-.fld label { display: block; font-weight: 600; font-size: 13px; margin-bottom: 6px; color: var(--text-muted); }
+.fld label { display: block; font-size: 13px; font-weight: 600; color: var(--text-muted); margin-bottom: 8px; }
 
 /* Buttons */
 button {
-  padding: 10px 16px; border-radius: var(--radius-md);
-  font-weight: 600; border: 1px solid transparent;
-  cursor: pointer; transition: all 0.2s;
-  display: inline-flex; align-items: center; justify-content: center; gap: 6px;
+  padding: 12px 20px; border-radius: var(--radius-md); font-weight: 700;
+  border: none; cursor: pointer; transition: all 0.2s;
+  display: inline-flex; align-items: center; justify-content: center; gap: 8px;
 }
-button:active { transform: scale(0.97); }
-button.primary { background: var(--primary); color: #fff; box-shadow: var(--shadow-sm); }
-button.primary:hover { background: var(--primary-hover); }
-button.outline { background: transparent; border-color: var(--border); color: var(--text-main); }
-button.outline:hover { background: var(--bg-body); }
+button:active { transform: scale(0.96); }
+button.primary { background: var(--primary-gradient); color: #fff; box-shadow: var(--shadow-md); }
+button.outline { background: transparent; border: 1.5px solid var(--border); color: var(--text-main); }
 button.danger { background: var(--danger); color: #fff; }
 button.success { background: var(--success); color: #fff; }
-button.sm { padding: 6px 12px; font-size: 12px; }
-button.xs { padding: 4px 8px; font-size: 11px; border-radius: 6px; }
+button.sm { padding: 8px 14px; font-size: 12px; border-radius: 8px; }
 
 /* Cards */
 .card {
-  background: var(--bg-card); border: 1px solid var(--border);
-  border-radius: var(--radius-lg); padding: 20px;
-  box-shadow: var(--shadow-sm); margin-bottom: 16px;
+  background: var(--bg-card); border-radius: var(--radius-lg);
+  padding: 20px; box-shadow: var(--shadow-sm); margin-bottom: 16px;
+  border: 1px solid var(--border);
 }
 
-/* Badges */
-.badge { padding: 4px 10px; border-radius: var(--radius-full); font-size: 11px; font-weight: 700; letter-spacing: 0.3px; }
-.badge.s { background: #d1fae5; color: #065f46; }
-.badge.d { background: #fee2e2; color: #991b1b; }
-.badge.w { background: #fef3c7; color: #92400e; }
-
-/* Tables */
-.table-wrap { overflow-x: auto; border-radius: var(--radius-md); border: 1px solid var(--border); background: var(--bg-card); }
-table { width: 100%; border-collapse: collapse; text-align: left; }
-th, td { padding: 14px 16px; border-bottom: 1px solid var(--border); }
-th { background: var(--bg-body); font-size: 12px; text-transform: uppercase; letter-spacing: 0.5px; color: var(--text-muted); font-weight: 700; }
-tr:last-child td { border-bottom: none; }
-tr:hover td { background: var(--bg-body); }
-
-/* Money */
-.money { font-family: 'SF Mono', Consolas, monospace; font-weight: 600; white-space: nowrap; }
-.money.pos { color: var(--success); }
-.money.neg { color: var(--danger); }
-
-/* ============================================================
-   LAYOUT: DESKTOP (SIDEBAR) & MOBILE (BOTTOM NAV)
-   ============================================================ */
+/* Layout App */
 #app { display: flex; min-height: 100vh; }
 
-/* -- SIDEBAR (Desktop) -- */
+/* Sidebar Desktop */
 .sidebar {
   width: 260px; background: var(--bg-card); border-right: 1px solid var(--border);
   display: flex; flex-direction: column; position: fixed; top: 0; bottom: 0; left: 0; z-index: 100;
 }
-.brand { padding: 24px 20px; font-size: 18px; font-weight: 800; border-bottom: 1px solid var(--border); color: var(--primary); }
-.brand small { display: block; font-size: 12px; color: var(--text-muted); font-weight: 500; margin-top: 4px; }
-.nav { flex: 1; padding: 16px 12px; overflow-y: auto; }
+.brand { padding: 24px; font-size: 20px; font-weight: 800; display: flex; align-items: center; gap: 10px; color: var(--primary); }
+.brand-icon { background: var(--primary-gradient); color: #fff; padding: 8px; border-radius: 10px; }
+.nav { flex: 1; padding: 0 12px; overflow-y: auto; }
 .nav a {
   display: flex; align-items: center; gap: 12px; padding: 12px 16px;
   color: var(--text-muted); text-decoration: none; border-radius: var(--radius-md);
-  font-weight: 600; margin-bottom: 4px; cursor: pointer; transition: all 0.2s;
+  font-weight: 600; margin-bottom: 4px; cursor: pointer; transition: 0.2s;
 }
-.nav a:hover { background: var(--bg-body); color: var(--text-main); }
-.nav a.active { background: var(--primary-light); color: var(--primary); }
-.nav .ico { font-size: 18px; }
-.sidebar .foot { padding: 20px; border-top: 1px solid var(--border); display: flex; flex-direction: column; gap: 12px; }
-.sidebar .foot a { font-size: 13px; font-weight: 600; color: var(--text-muted); cursor: pointer; display: flex; gap: 8px; align-items: center;}
+.nav a:hover, .nav a.active { background: var(--primary-light); color: var(--primary); }
+.sidebar .foot { padding: 20px; border-top: 1px solid var(--border); display: flex; flex-direction: column; gap: 10px; }
+.sidebar .foot a { display: flex; align-items: center; gap: 10px; color: var(--text-muted); font-weight: 600; font-size: 13px; cursor: pointer; text-decoration: none;}
 .sidebar .foot a:hover { color: var(--primary); }
 
-/* -- MAIN CONTENT -- */
+/* Main Content */
 main { flex: 1; margin-left: 260px; padding: 24px 32px; max-width: 100%; min-width: 0; }
 .topbar { display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px; flex-wrap: wrap; gap: 16px; }
 
-/* ============================================================
-   STAT CARDS (DASHBOARD)
-   ============================================================ */
-.stat-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 16px; margin-bottom: 24px; }
-.stat { background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius-lg); padding: 20px; box-shadow: var(--shadow-sm); }
-.stat .lbl { font-size: 13px; font-weight: 600; color: var(--text-muted); margin-bottom: 8px; }
+/* Dashboard Stats */
+.stat-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 16px; margin-bottom: 24px; }
+.stat { 
+  background: var(--bg-card); border-radius: var(--radius-lg); padding: 20px; 
+  box-shadow: var(--shadow-sm); border: 1px solid var(--border); position: relative; overflow: hidden;
+}
+.stat::before { content:''; position:absolute; top:0; left:0; width: 4px; height: 100%; background: var(--primary); }
+.stat.success::before { background: var(--success); }
+.stat.danger::before { background: var(--danger); }
+.stat .lbl { font-size: 13px; font-weight: 600; color: var(--text-muted); margin-bottom: 8px; display:flex; align-items:center; gap:6px;}
 .stat .val { font-size: 24px; font-weight: 800; letter-spacing: -0.5px; }
-.stat .val.pos { color: var(--success); }
-.stat .val.neg { color: var(--danger); }
+.text-success { color: var(--success); } .text-danger { color: var(--danger); }
 
-/* ============================================================
-   DIALOGS & TOASTS
-   ============================================================ */
-dialog { border: none; border-radius: var(--radius-lg); padding: 0; background: var(--bg-card); color: var(--text-main); box-shadow: var(--shadow-lg); max-width: 500px; width: calc(100% - 32px); }
-dialog::backdrop { background: rgba(15, 23, 42, 0.6); backdrop-filter: blur(4px); }
-.dlg-hd { padding: 20px; border-bottom: 1px solid var(--border); font-weight: 700; font-size: 16px; }
-.dlg-bd { padding: 20px; max-height: 70vh; overflow-y: auto; }
-.dlg-ft { padding: 16px 20px; border-top: 1px solid var(--border); display: flex; justify-content: flex-end; gap: 12px; background: var(--bg-body); border-radius: 0 0 var(--radius-lg) var(--radius-lg); }
+/* Tables & Lists */
+.list-group { display: flex; flex-direction: column; gap: 10px; }
+.list-item {
+  display: flex; justify-content: space-between; align-items: center;
+  background: var(--bg-card); padding: 16px; border-radius: var(--radius-md);
+  border: 1px solid var(--border); box-shadow: var(--shadow-sm);
+}
+.list-item .title { font-weight: 700; font-size: 15px; margin-bottom: 4px; }
+.list-item .sub { font-size: 12px; color: var(--text-muted); }
 
-.toast { position: fixed; bottom: 90px; left: 50%; transform: translateX(-50%) translateY(20px); padding: 12px 24px; border-radius: var(--radius-full); color: #fff; background: var(--text-main); font-weight: 600; box-shadow: var(--shadow-lg); opacity: 0; transition: all 0.3s; z-index: 9999; white-space: nowrap; }
+/* Dialog / Modal Bottom Sheet */
+dialog {
+  border: none; border-radius: 24px 24px 0 0; padding: 0; background: var(--bg-card);
+  color: var(--text-main); box-shadow: var(--shadow-lg); width: 100%; max-width: 500px;
+  margin: 0; position: fixed; bottom: 0; left: 50%; transform: translateX(-50%);
+  animation: slideUp 0.3s ease-out;
+}
+@keyframes slideUp { from { transform: translate(-50%, 100%); } to { transform: translate(-50%, 0); } }
+dialog::backdrop { background: rgba(17, 24, 39, 0.7); backdrop-filter: blur(4px); }
+.dlg-hd { padding: 20px 24px; border-bottom: 1px solid var(--border); font-weight: 800; font-size: 18px; display: flex; justify-content: space-between; align-items: center;}
+.dlg-bd { padding: 24px; max-height: 65vh; overflow-y: auto; }
+.dlg-ft { padding: 16px 24px 32px 24px; display: flex; gap: 12px; }
+
+/* Toast */
+.toast {
+  position: fixed; top: 20px; left: 50%; transform: translateX(-50%) translateY(-20px);
+  padding: 12px 24px; border-radius: var(--radius-full); color: #fff;
+  font-weight: 700; box-shadow: var(--shadow-lg); opacity: 0; transition: all 0.3s; z-index: 9999;
+}
 .toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
 .toast.success { background: var(--success); }
 .toast.error { background: var(--danger); }
 
-/* ============================================================
-   MOBILE APP UI (BOTTOM NAV & FAB)
-   ============================================================ */
+/* MOBILE RESPONSIVE (BOTTOM NAV & FAB) */
 .bottom-nav { display: none; }
 .fab { display: none; }
 
 @media (max-width: 900px) {
   .sidebar { display: none; }
   main { margin-left: 0; padding: 20px 16px 100px 16px; }
-  .topbar { margin-bottom: 16px; }
-  h1 { font-size: 20px; }
   
-  /* Bottom Nav Layout */
   .bottom-nav {
     display: flex; position: fixed; bottom: 0; left: 0; right: 0;
-    background: var(--bg-card); border-top: 1px solid var(--border);
-    height: var(--nav-height); justify-content: space-around; align-items: center;
-    z-index: 100; padding-bottom: env(safe-area-inset-bottom);
-    box-shadow: 0 -4px 10px rgba(0,0,0,0.05);
+    background: rgba(255, 255, 255, 0.9); backdrop-filter: blur(10px);
+    border-top: 1px solid var(--border); height: var(--nav-height);
+    justify-content: space-around; align-items: center; z-index: 100;
+    padding-bottom: env(safe-area-inset-bottom);
   }
-  .bottom-nav a {
-    display: flex; flex-direction: column; align-items: center; justify-content: center;
-    color: var(--text-muted); text-decoration: none; font-size: 10px; font-weight: 600;
-    flex: 1; height: 100%; gap: 4px; cursor: pointer;
-  }
-  .bottom-nav a .ico { font-size: 20px; }
-  .bottom-nav a.active { color: var(--primary); }
-  .bottom-nav a.active .ico { transform: translateY(-2px); transition: transform 0.2s; }
-
-  /* FAB (Tombol Tambah Melayang) */
-  .fab {
-    display: flex; position: fixed; bottom: calc(var(--nav-height) + 16px); right: 20px;
-    width: 56px; height: 56px; border-radius: var(--radius-full);
-    background: var(--primary); color: #fff; font-size: 24px;
-    box-shadow: var(--shadow-lg); z-index: 101; border: none;
-    align-items: center; justify-content: center; cursor: pointer;
-  }
-  .fab:active { transform: scale(0.9); }
+  [data-theme="dark"] .bottom-nav { background: rgba(30, 41, 59, 0.9); }
   
-  /* Penyesuaian Table di HP */
-  .table-wrap { border-radius: var(--radius-md); }
-  th, td { padding: 12px; font-size: 13px; }
-}
-
-@media print {
-  .sidebar, .topbar, .bottom-nav, .fab, .no-print { display: none !important; }
-  main { margin: 0; padding: 0; }
-  .card { box-shadow: none; border: 1px solid #ddd; }
+  .bottom-nav a {
+    display: flex; flex-direction: column; align-items: center; gap: 4px;
+    color: var(--text-muted); font-size: 10px; font-weight: 600; cursor: pointer;
+  }
+  .bottom-nav a.active { color: var(--primary); }
+  .bottom-nav a .icon { width: 24px; height: 24px; }
+  
+  .fab {
+    display: flex; position: fixed; bottom: calc(var(--nav-height) + 20px); right: 20px;
+    width: 60px; height: 60px; border-radius: 50%; background: var(--primary-gradient);
+    color: #fff; align-items: center; justify-content: center; box-shadow: var(--shadow-lg);
+    z-index: 101; border: none;
+  }
+  .fab .icon { width: 28px; height: 28px; }
+  
+  dialog { max-width: 100%; border-radius: 24px 24px 0 0; }
+  .hide-mobile { display: none !important; }
 }
 </style>
 </head>
@@ -239,10 +212,27 @@ dialog::backdrop { background: rgba(15, 23, 42, 0.6); backdrop-filter: blur(4px)
 
 <script>
 /* ============================================================
-   LOGIKA APLIKASI (TIDAK BERUBAH)
+   ICONS (SVG PHOSPHOR)
+   ============================================================ */
+const Icons = {
+  dashboard: `<svg class="icon" viewBox="0 0 256 256"><path d="M104,48V208a8,8,0,0,1-8,8H48a8,8,0,0,1-8-8V48a8,8,0,0,1,8-8h48A8,8,0,0,1,104,48ZM208,48H160a8,8,0,0,0-8,8V136a8,8,0,0,0,8,8h48a8,8,0,0,0,8-8V56A8,8,0,0,0,208,48ZM216,176H160a8,8,0,0,0-8,8v24a8,8,0,0,0,8,8h56a8,8,0,0,0,8-8V184A8,8,0,0,0,216,176Z"/></svg>`,
+  users: `<svg class="icon" viewBox="0 0 256 256"><path d="M117.25,157.92a60,60,0,1,0-34.5,0A95.83,95.83,0,0,0,12,245.5a8,8,0,0,0,8,7.5h216a8,8,0,0,0,8-7.5A95.83,95.83,0,0,0,117.25,157.92Z"/></svg>`,
+  wallet: `<svg class="icon" viewBox="0 0 256 256"><path d="M216,64H56a8,8,0,0,1,0-16H192a8,8,0,0,0,0-16H56A24,24,0,0,0,32,56V184a24,24,0,0,0,24,24H216a16,16,0,0,0,16-16V80A16,16,0,0,0,216,64Zm-32,80a12,12,0,1,1,12-12A12,12,0,0,1,184,144Z"/></svg>`,
+  receipt: `<svg class="icon" viewBox="0 0 256 256"><path d="M216,40H40A16,16,0,0,0,24,56V208a8,8,0,0,0,12.8,6.4L64,193.4l27.2,21a8,8,0,0,0,9.6,0l27.2-21,27.2,21a8,8,0,0,0,9.6,0l27.2-21,27.2,21A8,8,0,0,0,232,208V56A16,16,0,0,0,216,40ZM176,144H80a8,8,0,0,1,0-16h96a8,8,0,0,1,0,16Zm0-32H80a8,8,0,0,1,0-16h96a8,8,0,0,1,0,16Z"/></svg>`,
+  chart: `<svg class="icon" viewBox="0 0 256 256"><path d="M232,208a8,8,0,0,1-8,8H32a8,8,0,0,1,0-16H224A8,8,0,0,1,232,208ZM64,184a8,8,0,0,0,8-8V88a8,8,0,0,0-16,0v88A8,8,0,0,0,64,184Zm48,0a8,8,0,0,0,8-8V40a8,8,0,0,0-16,0V176A8,8,0,0,0,112,184Zm48,0a8,8,0,0,0,8-8V136a8,8,0,0,0-16,0v40A8,8,0,0,0,160,184Zm48,0a8,8,0,0,0,8-8V64a8,8,0,0,0-16,0V176A8,8,0,0,0,208,184Z"/></svg>`,
+  settings: `<svg class="icon" viewBox="0 0 256 256"><path d="M237.2,145.8l-25.5-14.7a92.6,92.6,0,0,0,0-6.2l25.5-14.7a8,8,0,0,0,2.9-10.9L213.9,53.7a8,8,0,0,0-10.9-2.9l-25.5,14.7a94.7,94.7,0,0,0-5.3-3.1V31.9a8,8,0,0,0-8-8H91.8a8,8,0,0,0-8,8V62.4a94.7,94.7,0,0,0-5.3,3.1L53,50.8a8,8,0,0,0-10.9,2.9L15.4,99.3a8,8,0,0,0,2.9,10.9l25.5,14.7a92.6,92.6,0,0,0,0,6.2L18.3,145.8a8,8,0,0,0-2.9,10.9l26.7,45.6a8,8,0,0,0,10.9,2.9l25.5-14.7a94.7,94.7,0,0,0,5.3,3.1v30.5a8,8,0,0,0,8,8H164.2a8,8,0,0,0,8-8V193.6a94.7,94.7,0,0,0,5.3-3.1l25.5,14.7a8,8,0,0,0,10.9-2.9l26.7-45.6A8,8,0,0,0,237.2,145.8ZM128,160a32,32,0,1,1,32-32A32,32,0,0,1,128,160Z"/></svg>`,
+  plus: `<svg class="icon" viewBox="0 0 256 256"><path d="M224,128a8,8,0,0,1-8,8H136v80a8,8,0,0,1-16,0V136H40a8,8,0,0,1,0-16h80V40a8,8,0,0,1,16,0v80h80A8,8,0,0,1,224,128Z"/></svg>`,
+  logout: `<svg class="icon" viewBox="0 0 256 256"><path d="M112,216a8,8,0,0,1-8,8H48a16,16,0,0,1-16-16V48A16,16,0,0,1,48,32h56a8,8,0,0,1,0,16H48V208h56A8,8,0,0,1,112,216Zm109.66-93.66-40-40a8,8,0,0,0-11.32,11.32L196.69,120H104a8,8,0,0,0,0,16h92.69l-26.35,26.34a8,8,0,0,0,11.32,11.32l40-40A8,8,0,0,0,221.66,122.34Z"/></svg>`,
+  moon: `<svg class="icon" viewBox="0 0 256 256"><path d="M233.54,142.23a8,8,0,0,0-8-2,88.08,88.08,0,0,1-109.8-109.8,8,8,0,0,0-10-10,104.84,104.84,0,0,0-52.91,37A104,104,0,0,0,136,224a103.09,103.09,0,0,0,62.52-20.88,104.84,104.84,0,0,0,37-52.91A8,8,0,0,0,233.54,142.23Z"/></svg>`,
+  trash: `<svg class="icon icon-sm" viewBox="0 0 256 256"><path d="M216,48H176V40a24,24,0,0,0-24-24H104A24,24,0,0,0,80,40v8H40a8,8,0,0,0,0,16H56V208a16,16,0,0,0,16,16H184a16,16,0,0,0,16-16V64h16a8,8,0,0,0,0-16ZM112,184a8,8,0,0,1-16,0V88a8,8,0,0,1,16,0Zm48,0a8,8,0,0,1-16,0V88a8,8,0,0,1,16,0Z"/></svg>`,
+  edit: `<svg class="icon icon-sm" viewBox="0 0 256 256"><path d="M227.31,73.37,182.63,28.68a16,16,0,0,0-22.63,0L36.69,152A15.86,15.86,0,0,0,32,163.31V208a16,16,0,0,0,16,16H92.69A15.86,15.86,0,0,0,104,219.31L227.31,96a16,16,0,0,0,0-22.63ZM92.69,208H48V163.31l88-88L180.69,120ZM192,108.68,147.31,64l24-24L216,84.68Z"/></svg>`
+};
+
+/* ============================================================
+   CORE LOGIC (STORE, AUTH, APP)
    ============================================================ */
 const Store = {
-  KEY: 'kas_madrasah_v2',
+  KEY: 'kas_madrasah_v3',
   data: null,
   default() {
     const y = new Date().getFullYear();
@@ -257,7 +247,7 @@ const Store = {
     const def = this.default();
     for (const k in def) if (d[k] === undefined) d[k] = def[k];
     for (const k in def.settings) if (d.settings[k] === undefined) d.settings[k] = def.settings[k];
-    this.data = d; return d;
+    this.data = d;
   },
   save() { localStorage.setItem(this.KEY, JSON.stringify(this.data)); },
   id() { return Date.now().toString(36) + Math.random().toString(36).slice(2,7); },
@@ -269,12 +259,17 @@ const Store = {
 
 const BULAN = ['Januari','Februari','Maret','April','Mei','Juni','Juli','Agustus','September','Oktober','November','Desember'];
 const BULAN_S = ['Jan','Feb','Mar','Apr','Mei','Jun','Jul','Agu','Sep','Okt','Nov','Des'];
+
 const UI = {
   fmt(n){ return 'Rp ' + (Number(n)||0).toLocaleString('id-ID'); },
   today(){ return new Date().toISOString().slice(0,10); },
   fmtDate(d){ if(!d) return '-'; const x = new Date(d); return isNaN(x) ? '-' : x.toLocaleDateString('id-ID',{day:'2-digit',month:'short',year:'numeric'}); },
   esc(s){ return String(s ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])); },
-  toast(msg,type=''){ const t=document.createElement('div'); t.className='toast '+type; t.textContent=msg; document.body.appendChild(t); requestAnimationFrame(()=>t.classList.add('show')); setTimeout(()=>{t.classList.remove('show');setTimeout(()=>t.remove(),300);},2600); },
+  toast(msg,type='success'){ 
+    const t=document.createElement('div'); t.className='toast '+type; t.textContent=msg; 
+    document.body.appendChild(t); requestAnimationFrame(()=>t.classList.add('show')); 
+    setTimeout(()=>{t.classList.remove('show');setTimeout(()=>t.remove(),300);},2600); 
+  },
   confirm(m){ return window.confirm(m); }
 };
 
@@ -296,90 +291,89 @@ const App = {
     root.innerHTML = Views.shell();
     const v = document.getElementById('view');
     v.innerHTML = Views[this.view] ? Views[this.view]() : '<div class="empty">Halaman tidak ditemukan</div>';
-    
-    // Update active state di Sidebar Desktop & Bottom Nav Mobile
     document.querySelectorAll('[data-nav]').forEach(a => a.classList.toggle('active', a.dataset.nav === this.view));
   },
   nav(v){ this.view = v; location.hash = v; this.render(); window.scrollTo(0,0); }
 };
 
+/* ============================================================
+   VIEWS (HALAMAN)
+   ============================================================ */
 const Views = {
   setup() {
-    return `<div style="position:fixed;inset:0;display:flex;align-items:center;justify-content:center;background:var(--bg-body);padding:20px;z-index:9999">
-      <div class="card" style="width:100%;max-width:400px">
-        <div class="text-center" style="margin-bottom:24px">
-          <div style="font-size:40px;margin-bottom:8px">🌱</div>
-          <h2>Setup Awal</h2>
-          <p class="text-muted">Buat PIN keamanan untuk pertama kali</p>
+    return `<div style="position:fixed;inset:0;display:flex;align-items:center;justify-content:center;background:var(--primary-gradient);padding:20px;z-index:9999">
+      <div class="card" style="width:100%;max-width:400px;padding:32px">
+        <div style="text-align:center;margin-bottom:24px">
+          <div style="width:64px;height:64px;background:var(--primary-gradient);border-radius:20px;display:flex;align-items:center;justify-content:center;margin:0 auto 16px;color:#fff">${Icons.wallet}</div>
+          <h2>Selamat Datang</h2>
+          <p class="text-muted">Setup awal aplikasi Kas Madrasah</p>
         </div>
         <form data-form="setup">
           <div class="fld"><label>Nama Madrasah</label><input name="nama" required placeholder="MI Al-Hidayah"></div>
           <div class="fld"><label>Tahun Ajaran</label><input name="tahun" value="${UI.esc(Store.data.settings.tahunAjaran)}" required></div>
-          <div class="fld"><label>PIN Admin</label><input name="pin" type="password" inputmode="numeric" minlength="4" required></div>
+          <div class="fld"><label>PIN Admin (min 4 digit)</label><input name="pin" type="password" inputmode="numeric" minlength="4" required></div>
           <div class="fld"><label>Ulangi PIN</label><input name="pin2" type="password" inputmode="numeric" minlength="4" required></div>
-          <button class="primary" style="width:100%;margin-top:8px">Simpan & Masuk</button>
+          <button class="primary" style="width:100%;margin-top:8px">Mulai Aplikasi</button>
         </form>
       </div>
     </div>`;
   },
   login() {
-    return `<div style="position:fixed;inset:0;display:flex;align-items:center;justify-content:center;background:var(--bg-body);padding:20px;z-index:9999">
-      <div class="card" style="width:100%;max-width:360px;text-align:center">
-        <div style="font-size:48px;margin-bottom:16px">🔐</div>
+    return `<div style="position:fixed;inset:0;display:flex;align-items:center;justify-content:center;background:var(--primary-gradient);padding:20px;z-index:9999">
+      <div class="card" style="width:100%;max-width:360px;padding:32px;text-align:center">
+        <div style="width:64px;height:64px;background:var(--primary-light);color:var(--primary);border-radius:20px;display:flex;align-items:center;justify-content:center;margin:0 auto 16px">${Icons.settings}</div>
         <h2 style="margin-bottom:4px">Kas Madrasah</h2>
         <p class="text-muted" style="margin-bottom:24px">${UI.esc(Store.data.settings.namaMadrasah || 'Silakan masuk')}</p>
         <form data-form="login">
-          <div class="fld"><input name="pin" type="password" inputmode="numeric" placeholder="Masukkan PIN" style="text-align:center;font-size:20px;letter-spacing:4px" required autofocus></div>
-          <button class="primary" style="width:100%">Buka Aplikasi</button>
+          <div class="fld"><input name="pin" type="password" inputmode="numeric" placeholder="Masukkan PIN" style="text-align:center;font-size:24px;letter-spacing:6px;padding:16px" required autofocus></div>
+          <button class="primary" style="width:100%;margin-top:8px">Buka Aplikasi</button>
         </form>
       </div>
     </div>`;
   },
   shell() {
     const nav = [
-      ['dashboard','📊','Dashboard'],
-      ['murid','👦','Data Murid'],
-      ['guru','👨‍🏫','Data Guru'],
-      ['kelas','🏫','Data Kelas'],
-      ['kategori','🏷️','Kategori'],
-      ['transaksi','💵','Transaksi Kas'],
-      ['spp','🎓','Pembayaran SPP'],
-      ['tabungan','🏦','Tabungan Siswa'],
-      ['laporan','📄','Laporan'],
-      ['backup','💾','Backup'],
-      ['settings','⚙️','Pengaturan']
+      ['dashboard','Dashboard', Icons.dashboard],
+      ['murid','Data Murid', Icons.users],
+      ['transaksi','Transaksi Kas', Icons.wallet],
+      ['spp','Pembayaran SPP', Icons.receipt],
+      ['laporan','Laporan', Icons.chart],
+      ['settings','Pengaturan', Icons.settings]
     ];
     
-    // Menu Fokus untuk Bottom Nav di HP (Maks 5)
+    // Menu HP (Maksimal 4-5)
     const mobileNav = [
-      ['dashboard','📊','Home'],
-      ['transaksi','💵','Kas'],
-      ['spp','🎓','SPP'],
-      ['laporan','📄','Laporan'],
-      ['settings','⚙️','Setting']
+      ['dashboard','Home', Icons.dashboard],
+      ['transaksi','Kas', Icons.wallet],
+      ['spp','SPP', Icons.receipt],
+      ['laporan','Laporan', Icons.chart],
+      ['settings','Setting', Icons.settings]
     ];
 
     return `
-    <!-- SIDEBAR (DESKTOP) -->
     <aside class="sidebar">
-      <div class="brand">Kas Madrasah<small>${UI.esc(Store.data.settings.namaMadrasah || 'Sistem Informasi')}</small></div>
-      <nav class="nav">${nav.map(([k,i,t]) => `<a data-nav="${k}" href="#${k}"><span class="ico">${i}</span>${t}</a>`).join('')}</nav>
+      <div class="brand">
+        <div class="brand-icon">${Icons.wallet}</div>
+        Kas Madrasah
+      </div>
+      <nav class="nav">
+        ${nav.map(([k,t,i]) => `<a data-nav="${k}" href="#${k}">${i} ${t}</a>`).join('')}
+      </nav>
       <div class="foot">
-        <a data-action="toggle-theme"><span class="ico">${Store.data.settings.theme==='dark'?'☀️':'🌙'}</span> Mode ${Store.data.settings.theme==='dark'?'Terang':'Gelap'}</a>
-        <a data-action="logout"><span class="ico">🚪</span> Keluar</a>
+        <a data-action="toggle-theme">${Icons.moon} Ubah Tema</a>
+        <a data-action="logout" style="color:var(--danger)">${Icons.logout} Keluar</a>
       </div>
     </aside>
 
-    <!-- KONTEN UTAMA -->
     <main><div id="view"></div></main>
 
     <!-- BOTTOM NAV (MOBILE) -->
     <nav class="bottom-nav">
-      ${mobileNav.map(([k,i,t]) => `<a data-nav="${k}" href="#${k}"><span class="ico">${i}</span>${t}</a>`).join('')}
+      ${mobileNav.map(([k,t,i]) => `<a data-nav="${k}" href="#${k}">${i} ${t}</a>`).join('')}
     </nav>
     
-    <!-- FAB (Tombol Melayang Khusus HP) -->
-    <button class="fab" data-action="fab-action">+</button>
+    <!-- FAB (TOMBOL TAMBAH MELAYANG) -->
+    <button class="fab" data-action="fab-action">${Icons.plus}</button>
     `;
   },
 
@@ -387,39 +381,58 @@ const Views = {
     const d = Store.data;
     const now = new Date();
     const saldo = d.transaksi.reduce((s,t) => s + (t.jenis==='masuk'?1:-1)*(+t.jumlah||0), 0);
-    const bulan = d.transaksi.filter(t => { const x=new Date(t.tanggal); return x.getMonth()===now.getMonth() && x.getFullYear()===now.getFullYear(); });
-    const inBln = bulan.filter(t=>t.jenis==='masuk').reduce((s,t)=>s+(+t.jumlah||0),0);
-    const outBln = bulan.filter(t=>t.jenis==='keluar').reduce((s,t)=>s+(+t.jumlah||0),0);
+    const inBln = d.transaksi.filter(t=>new Date(t.tanggal).getMonth()===now.getMonth() && t.jenis==='masuk').reduce((s,t)=>s+(+t.jumlah||0),0);
+    const outBln = d.transaksi.filter(t=>new Date(t.tanggal).getMonth()===now.getMonth() && t.jenis==='keluar').reduce((s,t)=>s+(+t.jumlah||0),0);
     const tunggakan = d.spp.filter(s=>s.status==='belum').reduce((s,x)=>s+(+x.nominal||0),0);
     const recent = [...d.transaksi].sort((a,b)=>(b.tanggal||'').localeCompare(a.tanggal||'')).slice(0,5);
 
     return `<div class="topbar">
       <div>
-        <h1>Dashboard</h1>
-        <span class="text-muted">Ringkasan keuangan madrasah</span>
-      </div>
-      <div class="card" style="padding:10px 16px;margin:0;border-radius:var(--radius-full);font-weight:600;font-size:13px;background:var(--primary-light);color:var(--primary)">
-        📅 ${UI.fmtDate(new Date())}
+        <h1>Halo, Admin 👋</h1>
+        <span class="text-muted">${UI.esc(Store.data.settings.namaMadrasah || 'Madrasah')}</span>
       </div>
     </div>
     
     <div class="stat-grid">
-      <div class="stat"><div class="lbl">Saldo Kas</div><div class="val ${saldo>=0?'pos':'neg'}">${UI.fmt(saldo)}</div></div>
-      <div class="stat"><div class="lbl">Pemasukan Bulan Ini</div><div class="val pos">${UI.fmt(inBln)}</div></div>
-      <div class="stat"><div class="lbl">Pengeluaran Bulan Ini</div><div class="val neg">${UI.fmt(outBln)}</div></div>
-      <div class="stat"><div class="lbl">Tunggakan SPP</div><div class="val ${tunggakan>0?'neg':''}">${UI.fmt(tunggakan)}</div></div>
+      <div class="stat">
+        <div class="lbl">${Icons.wallet} Total Saldo Kas</div>
+        <div class="val ${saldo>=0?'':'text-danger'}">${UI.fmt(saldo)}</div>
+      </div>
+      <div class="stat success">
+        <div class="lbl">Pemasukan Bulan Ini</div>
+        <div class="val text-success">${UI.fmt(inBln)}</div>
+      </div>
+      <div class="stat danger">
+        <div class="lbl">Pengeluaran Bulan Ini</div>
+        <div class="val text-danger">${UI.fmt(outBln)}</div>
+      </div>
+      <div class="stat danger">
+        <div class="lbl">${Icons.receipt} Tunggakan SPP</div>
+        <div class="val text-danger">${UI.fmt(tunggakan)}</div>
+      </div>
     </div>
 
-    <div class="card">
+    <div class="card" style="padding:20px">
       <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px">
         <h3>Transaksi Terakhir</h3>
-        <a href="#transaksi" data-nav="transaksi" style="font-size:13px;color:var(--primary);font-weight:600;cursor:pointer">Lihat Semua →</a>
+        <a href="#transaksi" data-nav="transaksi" style="font-size:13px;color:var(--primary);font-weight:700;cursor:pointer">Lihat Semua</a>
       </div>
-      ${recent.length ? `<div class="table-wrap"><table><thead><tr><th>Tanggal</th><th>Keterangan</th><th class="text-right">Jumlah</th></tr></thead><tbody>
-        ${recent.map(t=>`<tr><td>${UI.fmtDate(t.tanggal)}</td>
-          <td><div style="font-weight:600">${UI.esc(t.keterangan||'-')}</div><div class="text-muted" style="font-size:11px">${UI.esc(t.kategori||'-')}</div></td>
-          <td class="money ${t.jenis==='masuk'?'pos':'neg'} text-right">${t.jenis==='masuk'?'+':'-'} ${UI.fmt(t.jumlah)}</td></tr>`).join('')}
-      </tbody></table></div>` : `<div class="text-center text-muted" style="padding:32px 0">Belum ada transaksi.</div>`}
+      ${recent.length ? `<div class="list-group">
+        ${recent.map(t=>`<div class="list-item">
+          <div style="display:flex;gap:12px;align-items:center">
+            <div style="width:40px;height:40px;border-radius:12px;background:var(--primary-light);color:var(--primary);display:flex;align-items:center;justify-content:center">
+              ${t.jenis==='masuk'?Icons.wallet:Icons.receipt}
+            </div>
+            <div>
+              <div class="title">${UI.esc(t.keterangan||'-')}</div>
+              <div class="sub">${UI.fmtDate(t.tanggal)} • ${UI.esc(t.kategori||'-')}</div>
+            </div>
+          </div>
+          <div class="font-bold ${t.jenis==='masuk'?'text-success':'text-danger'}" style="font-size:14px">
+            ${t.jenis==='masuk'?'+':'-'} ${UI.fmt(t.jumlah)}
+          </div>
+        </div>`).join('')}
+      </div>` : `<div class="text-center text-muted" style="padding:32px 0">Belum ada transaksi.</div>`}
     </div>`;
   },
 
@@ -433,52 +446,31 @@ const Views = {
 
     return `<div class="topbar">
       <h1>Data Murid</h1>
-      <button class="primary hide-mobile" data-action="murid-add">+ Tambah Murid</button>
+      <button class="primary hide-mobile" data-action="murid-add">${Icons.plus} Tambah</button>
     </div>
-    <div class="filter-bar card" style="padding:12px;display:flex;gap:8px;flex-wrap:wrap">
-      <select data-filter="muridKelas" style="flex:1;min-width:120px;margin:0"><option value="">Semua Kelas</option>${kelasList.map(k=>`<option ${f.kelas===k?'selected':''}>${UI.esc(k)}</option>`).join('')}</select>
-      <input placeholder="Cari nama / NIS..." data-filter="muridQ" value="${UI.esc(f.q)}" style="flex:2;min-width:150px;margin:0">
-      <button class="outline" data-action="export-xls-murid" style="margin:0" title="Ekspor Excel">📊</button>
+    <div class="card" style="padding:12px;display:flex;gap:8px;flex-wrap:wrap;margin-bottom:16px">
+      <select data-filter="muridKelas" style="flex:1;margin:0"><option value="">Semua Kelas</option>${kelasList.map(k=>`<option ${f.kelas===k?'selected':''}>${UI.esc(k)}</option>`).join('')}</select>
+      <input placeholder="Cari nama..." data-filter="muridQ" value="${UI.esc(f.q)}" style="flex:2;margin:0">
     </div>
-    ${list.length ? `<div class="table-wrap"><table><thead><tr><th>Nama</th><th>Kelas</th><th></th></tr></thead><tbody>
-      ${list.map(m=>`<tr>
-        <td><div style="font-weight:600">${UI.esc(m.nama||'-')}</div><div class="text-muted" style="font-size:11px">${UI.esc(m.nis||'-')}</div></td>
-        <td><span class="badge w">${UI.esc(m.kelas||'-')}</span></td>
-        <td class="actions-cell text-right">
-          <button class="sm outline" data-action="murid-edit" data-id="${m.id}">✏️</button>
-          <button class="sm outline" style="color:var(--danger);border-color:var(--danger)" data-action="murid-del" data-id="${m.id}">🗑️</button>
-        </td></tr>`).join('')}
-    </tbody></table></div>` : `<div class="card text-center text-muted">Belum ada data murid.</div>`}`;
-  },
-
-  // Modul guru, kelas, kategori disederhanakan tampilannya agar rapi (sama polanya)
-  guru() {
-    const list = [...Store.data.guru].sort((a,b)=>(a.nama||'').localeCompare(b.nama||''));
-    return `<div class="topbar"><h1>Data Guru</h1><button class="primary hide-mobile" data-action="guru-add">+ Tambah</button></div>
-    ${list.length ? `<div class="table-wrap"><table><thead><tr><th>Nama / NIP</th><th>Jabatan</th><th></th></tr></thead><tbody>
-      ${list.map(g=>`<tr>
-        <td><div style="font-weight:600">${UI.esc(g.nama||'-')}</div><div class="text-muted" style="font-size:11px">${UI.esc(g.nip||'-')}</div></td>
-        <td><span class="badge s">${UI.esc(g.jabatan||'Guru')}</span></td>
-        <td class="text-right"><button class="sm outline" data-action="guru-edit" data-id="${g.id}">✏️</button> <button class="sm outline" style="color:var(--danger);border-color:var(--danger)" data-action="guru-del" data-id="${g.id}">🗑️</button></td></tr>`).join('')}
-    </tbody></table></div>` : `<div class="card text-center text-muted">Belum ada data guru.</div>`}`;
-  },
-
-  // ... (View kelas, kategori, transaksi, spp, tabungan, laporan, backup menggunakan pola UI yang sama)
-  // Untuk menghemat tempat, saya satukan logika View yang belum berubah di bawah ini:
-  kelas() { return Views._genericList('kelas', 'Data Kelas', 'kelas-add', (k) => ({ title: k.nama, sub: k.wali||'-', badge: '-' })); },
-  kategori() { return Views._genericList('kategori', 'Kategori Transaksi', 'kategori-add', (k) => ({ title: k.nama, sub: k.jenis, badge: '-' })); },
-  
-  _genericList(coll, title, addAction, mapper) {
-    const list = Store.data[coll];
-    return `<div class="topbar"><h1>${title}</h1><button class="primary hide-mobile" data-action="${addAction}">+ Tambah</button></div>
-    ${list.length ? `<div class="table-wrap"><table><thead><tr><th>Nama</th><th></th></tr></thead><tbody>
-      ${list.map(x=>{ const d=mapper(x); return `<tr><td><div style="font-weight:600">${UI.esc(d.title)}</div><div class="text-muted" style="font-size:11px">${UI.esc(d.sub)}</div></td>
-        <td class="text-right"><button class="sm outline" data-action="${coll}-edit" data-id="${x.id}">✏️</button> <button class="sm outline" style="color:var(--danger);border-color:var(--danger)" data-action="${coll}-del" data-id="${x.id}">🗑️</button></td></tr>`; }).join('')}
-    </tbody></table></div>` : `<div class="card text-center text-muted">Belum ada data.</div>`}`;
+    ${list.length ? `<div class="list-group">
+      ${list.map(m=>`<div class="list-item">
+        <div style="display:flex;gap:12px;align-items:center">
+          <div style="width:40px;height:40px;border-radius:50%;background:var(--bg-body);border:1px solid var(--border);display:flex;align-items:center;justify-content:center;font-weight:700;color:var(--primary)">${UI.esc(m.nama.charAt(0))}</div>
+          <div>
+            <div class="title">${UI.esc(m.nama)}</div>
+            <div class="sub">${UI.esc(m.nis||'-')} • Kelas ${UI.esc(m.kelas||'-')}</div>
+          </div>
+        </div>
+        <div style="display:flex;gap:4px">
+          <button class="outline sm" data-action="murid-edit" data-id="${m.id}">${Icons.edit}</button>
+          <button class="outline sm" style="color:var(--danger);border-color:var(--danger)" data-action="murid-del" data-id="${m.id}">${Icons.trash}</button>
+        </div>
+      </div>`).join('')}
+    </div>` : `<div class="card text-center text-muted">Belum ada data murid.</div>`}`;
   },
 
   transaksi() {
-    const f = App.txFilter || (App.txFilter = { bulan:new Date().toISOString().slice(0,7), jenis:'', kategori:'', q:'' });
+    const f = App.txFilter || (App.txFilter = { bulan:new Date().toISOString().slice(0,7), jenis:'', q:'' });
     let list = [...Store.data.transaksi];
     if (f.bulan) list = list.filter(t=>(t.tanggal||'').startsWith(f.bulan));
     if (f.jenis) list = list.filter(t=>t.jenis===f.jenis);
@@ -487,35 +479,41 @@ const Views = {
     const tIn = list.filter(t=>t.jenis==='masuk').reduce((s,t)=>s+(+t.jumlah||0),0);
     const tOut = list.filter(t=>t.jenis==='keluar').reduce((s,t)=>s+(+t.jumlah||0),0);
 
-    return `<div class="topbar"><h1>Transaksi Kas</h1><button class="primary hide-mobile" data-action="tx-add">+ Tambah</button></div>
-    
-    <div class="card" style="padding:12px;margin-bottom:16px;display:flex;gap:8px;flex-wrap:wrap">
+    return `<div class="topbar"><h1>Transaksi Kas</h1><button class="primary hide-mobile" data-action="tx-add">${Icons.plus} Tambah</button></div>
+    <div class="card" style="padding:12px;display:flex;gap:8px;flex-wrap:wrap;margin-bottom:16px">
       <input type="month" data-filter="bulan" value="${UI.esc(f.bulan)}" style="width:auto;margin:0">
       <select data-filter="jenis" style="width:auto;margin:0"><option value="">Semua</option><option value="masuk" ${f.jenis==='masuk'?'selected':''}>Masuk</option><option value="keluar" ${f.jenis==='keluar'?'selected':''}>Keluar</option></select>
       <input placeholder="Cari..." data-filter="txQ" value="${UI.esc(f.q)}" style="flex:1;margin:0;min-width:100px">
     </div>
 
     <div class="stat-grid" style="grid-template-columns:1fr 1fr 1fr;gap:8px;margin-bottom:16px">
-      <div class="stat" style="padding:12px"><div class="lbl" style="font-size:11px">Masuk</div><div class="val pos" style="font-size:14px">${UI.fmt(tIn)}</div></div>
-      <div class="stat" style="padding:12px"><div class="lbl" style="font-size:11px">Keluar</div><div class="val neg" style="font-size:14px">${UI.fmt(tOut)}</div></div>
+      <div class="stat" style="padding:12px"><div class="lbl" style="font-size:11px">Masuk</div><div class="val text-success" style="font-size:14px">${UI.fmt(tIn)}</div></div>
+      <div class="stat" style="padding:12px"><div class="lbl" style="font-size:11px">Keluar</div><div class="val text-danger" style="font-size:14px">${UI.fmt(tOut)}</div></div>
       <div class="stat" style="padding:12px"><div class="lbl" style="font-size:11px">Selisih</div><div class="val" style="font-size:14px">${UI.fmt(tIn-tOut)}</div></div>
     </div>
 
-    ${list.length ? `<div class="table-wrap"><table><thead><tr><th>Tanggal / Ket</th><th class="text-right">Jumlah</th><th></th></tr></thead><tbody>
-      ${list.map(t=>`<tr>
-        <td>
-          <div style="font-weight:600">${UI.esc(t.keterangan||'-')}</div>
-          <div class="text-muted" style="font-size:11px">${UI.fmtDate(t.tanggal)} • ${UI.esc(t.kategori||'-')}</div>
-        </td>
-        <td class="money ${t.jenis==='masuk'?'pos':'neg'} text-right">
-          ${t.jenis==='masuk'?'+':'-'} ${UI.fmt(t.jumlah)}
-        </td>
-        <td class="text-right">
-          <button class="sm outline" data-action="tx-edit" data-id="${t.id}">✏️</button>
-          <button class="sm outline" style="color:var(--danger);border-color:var(--danger)" data-action="tx-del" data-id="${t.id}">🗑️</button>
-        </td>
-      </tr>`).join('')}
-    </tbody></table></div>` : `<div class="card text-center text-muted">Tidak ada transaksi.</div>`}`;
+    ${list.length ? `<div class="list-group">
+      ${list.map(t=>`<div class="list-item">
+        <div style="display:flex;gap:12px;align-items:center">
+          <div style="width:40px;height:40px;border-radius:12px;background:${t.jenis==='masuk'?'#d1fae5':'#fee2e2'};color:${t.jenis==='masuk'?'#065f46':'#991b1b'};display:flex;align-items:center;justify-content:center">
+            ${t.jenis==='masuk'?Icons.wallet:Icons.receipt}
+          </div>
+          <div>
+            <div class="title">${UI.esc(t.keterangan||'-')}</div>
+            <div class="sub">${UI.fmtDate(t.tanggal)} • ${UI.esc(t.kategori||'-')}</div>
+          </div>
+        </div>
+        <div style="text-align:right">
+          <div class="font-bold ${t.jenis==='masuk'?'text-success':'text-danger'}" style="font-size:14px;margin-bottom:4px">
+            ${t.jenis==='masuk'?'+':'-'} ${UI.fmt(t.jumlah)}
+          </div>
+          <div style="display:flex;gap:4px;justify-content:flex-end">
+            <button class="outline sm" data-action="tx-edit" data-id="${t.id}" style="padding:4px">${Icons.edit}</button>
+            <button class="outline sm" style="padding:4px;color:var(--danger);border-color:var(--danger)" data-action="tx-del" data-id="${t.id}">${Icons.trash}</button>
+          </div>
+        </div>
+      </div>`).join('')}
+    </div>` : `<div class="card text-center text-muted">Tidak ada transaksi.</div>`}`;
   },
 
   spp() {
@@ -529,15 +527,13 @@ const Views = {
     const kelasList = [...new Set(Store.data.murid.map(m=>m.kelas).filter(Boolean))].sort();
 
     return `<div class="topbar"><h1>Pembayaran SPP</h1>
-      <div class="row hide-mobile">
-        <button class="outline" data-action="spp-generate">⚙️ Generate ${tahun}</button>
-      </div>
+      <button class="primary hide-mobile" data-action="spp-generate">Generate SPP ${tahun}</button>
     </div>
     
-    <div class="card" style="padding:12px;margin-bottom:16px;display:flex;gap:8px;flex-wrap:wrap">
+    <div class="card" style="padding:12px;display:flex;gap:8px;flex-wrap:wrap;margin-bottom:16px">
       <select data-filter="sppTahun" style="width:auto;margin:0">${tahunList.map(y=>`<option ${+y===+tahun?'selected':''}>${y}</option>`).join('')}</select>
       <select data-filter="sppKelas" style="width:auto;margin:0"><option value="">Semua Kelas</option>${kelasList.map(k=>`<option ${f.kelas===k?'selected':''}>${UI.esc(k)}</option>`).join('')}</select>
-      <button class="primary sm show-mobile-only" data-action="spp-generate">Generate</button>
+      <button class="primary sm" style="margin-left:auto" data-action="spp-generate">Generate</button>
     </div>
 
     ${murid.length ? murid.map(m => {
@@ -548,16 +544,16 @@ const Views = {
         <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:12px">
           <div>
             <div style="font-weight:700;font-size:15px">${UI.esc(m.nama)}</div>
-            <div class="text-muted" style="font-size:12px">${UI.esc(m.kelas||'-')} · ${lunas}/12 Lunas</div>
+            <div class="sub">Kelas ${UI.esc(m.kelas||'-')} • ${lunas}/12 Lunas</div>
           </div>
-          <button class="sm outline" data-action="spp-bulk" data-id="${m.id}">✓ Lunas 1 Thn</button>
+          <button class="outline sm" data-action="spp-bulk" data-id="${m.id}">Lunas 1 Thn</button>
         </div>
-        <div style="display:grid;grid-template-columns:repeat(auto-fill, minmax(45px, 1fr));gap:6px">
-          ${Array.from({length:12},(_,i)=>{ const s = rows.find(r=>+r.bulan===i+1); if(!s) return `<button disabled class="xs outline" style="opacity:.4">${BULAN_S[i]}</button>`;
-            return `<button class="xs ${s.status==='lunas'?'success':'outline'}" data-action="spp-toggle" data-id="${s.id}">${BULAN_S[i]} ${s.status==='lunas'?'✓':''}</button>`; }).join('')}
+        <div style="display:grid;grid-template-columns:repeat(auto-fill, minmax(50px, 1fr));gap:6px">
+          ${Array.from({length:12},(_,i)=>{ const s = rows.find(r=>+r.bulan===i+1); if(!s) return `<button disabled class="outline sm" style="opacity:.4;padding:6px">${BULAN_S[i]}</button>`;
+            return `<button class="sm ${s.status==='lunas'?'success':'outline'}" style="padding:6px" data-action="spp-toggle" data-id="${s.id}">${BULAN_S[i]} ${s.status==='lunas'?'✓':''}</button>`; }).join('')}
         </div>
       </div>`;
-    }).join('') : `<div class="card text-center text-muted">Belum ada murid atau SPP belum di-generate.</div>`}`;
+    }).join('') : `<div class="card text-center text-muted">Belum ada data murid atau SPP belum di-generate.</div>`}`;
   },
 
   laporan() {
@@ -569,43 +565,39 @@ const Views = {
     const totalIn = list.filter(t=>t.jenis==='masuk').reduce((s,t)=>s+(+t.jumlah||0),0);
     const totalOut = list.filter(t=>t.jenis==='keluar').reduce((s,t)=>s+(+t.jumlah||0),0);
 
-    return `<div class="topbar"><h1>Laporan</h1><button class="primary hide-mobile" data-action="print">🖨️ Cetak</button></div>
-    <div class="card" style="padding:12px;margin-bottom:16px;display:flex;gap:8px;flex-wrap:wrap">
+    return `<div class="topbar"><h1>Laporan Kas</h1><button class="primary hide-mobile" data-action="print">Cetak</button></div>
+    <div class="card" style="padding:12px;display:flex;gap:8px;flex-wrap:wrap;margin-bottom:16px">
       <input type="date" data-filter="lapDari" value="${UI.esc(f.dari)}" style="width:auto;margin:0">
-      <span style="align-self:center">-</span>
+      <span style="align-self:center">s/d</span>
       <input type="date" data-filter="lapSampai" value="${UI.esc(f.sampai)}" style="width:auto;margin:0">
-      <button class="outline" data-action="lap-csv" style="margin:0">CSV</button>
     </div>
 
     <div class="card">
-      <h3 class="text-center">${UI.esc(Store.data.settings.namaMadrasah || 'Madrasah')}</h3>
-      <p class="text-center text-muted" style="font-size:12px;margin-bottom:16px">Laporan Kas · ${UI.fmtDate(f.dari)} s/d ${UI.fmtDate(f.sampai)}</p>
-      <div class="table-wrap"><table><thead><tr><th>Tanggal</th><th>Keterangan</th><th class="text-right">Saldo</th></tr></thead><tbody>
-        <tr><td colspan="2"><i>Saldo awal</i></td><td class="money text-right">${UI.fmt(saldoAwal)}</td></tr>
-        ${rows.map(t=>`<tr>
-          <td>${UI.fmtDate(t.tanggal)}</td>
-          <td><div style="font-weight:600">${UI.esc(t.keterangan||'-')}</div><div class="text-muted" style="font-size:11px">${t.jenis==='masuk'?'+':'-'} ${UI.fmt(t.jumlah)}</div></td>
-          <td class="money text-right">${UI.fmt(t.saldo)}</td></tr>`).join('')}
-        <tr style="font-weight:700;background:var(--bg-body)"><td colspan="2">TOTAL MASUK / KELUAR</td>
-          <td class="money text-right">+${UI.fmt(totalIn)}<br>-${UI.fmt(totalOut)}</td></tr>
-      </tbody></table></div>
+      <div style="text-align:center;margin-bottom:20px">
+        <h2 style="margin:0">${UI.esc(Store.data.settings.namaMadrasah || 'Madrasah')}</h2>
+        <span class="text-muted">${UI.fmtDate(f.dari)} - ${UI.fmtDate(f.sampai)}</span>
+      </div>
+      <div class="list-group">
+        <div class="list-item" style="background:var(--bg-body);border:none;box-shadow:none;padding:8px 0"><div class="sub">Saldo Awal</div><div class="font-bold">${UI.fmt(saldoAwal)}</div></div>
+        ${rows.map(t=>`<div class="list-item" style="box-shadow:none;border:none;border-bottom:1px solid var(--border);padding:12px 0;border-radius:0">
+          <div>
+            <div class="title" style="font-size:14px">${UI.esc(t.keterangan||'-')}</div>
+            <div class="sub">${UI.fmtDate(t.tanggal)}</div>
+          </div>
+          <div style="text-align:right">
+            <div class="font-bold ${t.jenis==='masuk'?'text-success':'text-danger'}">${t.jenis==='masuk'?'+':'-'} ${UI.fmt(t.jumlah)}</div>
+            <div class="sub">Sisa: ${UI.fmt(t.saldo)}</div>
+          </div>
+        </div>`).join('')}
+        <div class="list-item" style="background:var(--bg-body);border:none;margin-top:8px">
+          <div class="font-bold">Total Masuk / Keluar</div>
+          <div style="text-align:right;font-weight:700">
+            <div class="text-success">+${UI.fmt(totalIn)}</div>
+            <div class="text-danger">-${UI.fmt(totalOut)}</div>
+          </div>
+        </div>
+      </div>
     </div>`;
-  },
-
-  backup() {
-    return `<div class="topbar"><h1>Backup / Restore</h1></div>
-    <div class="card"><h3>📤 Backup Data (JSON)</h3>
-      <p class="text-muted" style="font-size:13px;margin-bottom:12px">Unduh seluruh data sebagai file cadangan.</p>
-      <button class="primary" data-action="backup-export">⬇️ Unduh Backup JSON</button></div>
-    <div class="card"><h3>📥 Restore Data</h3>
-      <p class="text-muted" style="font-size:13px;margin-bottom:12px">Pilih file JSON. Data saat ini akan diganti.</p>
-      <input type="file" accept="application/json" data-action="backup-import"></div>
-    <div class="card"><h3>📊 Ekspor Excel (.xls)</h3>
-      <p class="text-muted" style="font-size:13px;margin-bottom:12px">Buka di Excel dengan rapi.</p>
-      <div class="row"><button class="success sm" data-action="export-xls-tx">Transaksi</button><button class="success sm" data-action="export-xls-spp">SPP</button><button class="success sm" data-action="export-xls-murid">Murid</button></div></div>
-    <div class="card" style="border-color:var(--danger)"><h3 style="color:var(--danger)">⚠️ Reset Data</h3>
-      <p class="text-muted" style="font-size:13px;margin-bottom:12px">Menghapus SEMUA data kecuali PIN.</p>
-      <button class="danger" data-action="reset">Hapus Semua Data</button></div>`;
   },
 
   settings() {
@@ -614,10 +606,10 @@ const Views = {
     
     <div class="card">
       <div style="display:flex;align-items:center;gap:16px;margin-bottom:24px;padding-bottom:16px;border-bottom:1px solid var(--border)">
-        <div style="width:60px;height:60px;border-radius:var(--radius-full);background:var(--primary-light);color:var(--primary);display:flex;align-items:center;justify-content:center;font-size:24px;font-weight:800">${UI.esc((s.namaMadrasah||'M').charAt(0).toUpperCase())}</div>
+        <div style="width:64px;height:64px;border-radius:var(--radius-full);background:var(--primary-gradient);color:#fff;display:flex;align-items:center;justify-content:center;font-size:24px;font-weight:800">${UI.esc((s.namaMadrasah||'M').charAt(0).toUpperCase())}</div>
         <div>
           <h2 style="margin:0">${UI.esc(s.namaMadrasah || 'Madrasah')}</h2>
-          <p class="text-muted" style="margin:0">Tahun Ajaran ${UI.esc(s.tahunAjaran)}</p>
+          <p class="sub" style="margin:0">Tahun Ajaran ${UI.esc(s.tahunAjaran)}</p>
         </div>
       </div>
       
@@ -627,50 +619,48 @@ const Views = {
         <div class="fld"><label>Kepala Madrasah</label><input name="kepala" value="${UI.esc(s.kepala)}"></div>
         <div class="fld"><label>Tahun Ajaran</label><input name="tahunAjaran" value="${UI.esc(s.tahunAjaran)}"></div>
         <div class="fld"><label>Nominal SPP Default (Rp)</label><input name="nominalSPP" type="number" min="0" value="${+s.nominalSPP||0}"></div>
-        <button class="primary" style="width:100%">Simpan Profil</button>
+        <button class="primary" style="width:100%">Simpan Perubahan</button>
       </form>
     </div>
 
     <div class="card">
-      <h3>🔐 Keamanan</h3>
-      <form data-form="changePin">
+      <h3>Keamanan</h3>
+      <form data-form="changePin" style="margin-top:16px">
         <div class="fld"><label>PIN Lama</label><input name="old" type="password" inputmode="numeric" required></div>
         <div class="fld"><label>PIN Baru (min 4 digit)</label><input name="new" type="password" inputmode="numeric" minlength="4" required></div>
-        <button class="primary" style="width:100%;background:var(--bg-body);color:var(--text-main);border:1px solid var(--border)">Ganti PIN</button></form>
+        <button class="outline" style="width:100%;border-color:var(--primary);color:var(--primary)">Ganti PIN</button></form>
     </div>
 
-    <div class="card show-mobile-only">
-      <h3>🎨 Tema & Aksi</h3>
-      <button class="outline" data-action="toggle-theme" style="width:100%;margin-bottom:12px">${Store.data.settings.theme==='dark'?'☀️ Ubah ke Mode Terang':'🌙 Ubah ke Mode Gelap'}</button>
-      <button class="outline" data-action="logout" style="width:100%;color:var(--danger);border-color:var(--danger)">🚪 Keluar Aplikasi</button>
+    <div class="card" style="display:flex;flex-direction:column;gap:12px">
+      <h3>Aksi Cepat</h3>
+      <button class="outline" data-action="toggle-theme" style="width:100%">${Icons.moon} Ubah Tema Tampilan</button>
+      <button class="outline" data-action="logout" style="width:100%;color:var(--danger);border-color:var(--danger)">${Icons.logout} Keluar Aplikasi</button>
     </div>
     `;
   }
 };
 
-// Sisa fungsi logic (Dialog, Actions, Download, Event) tetap SAMA seperti sebelumnya.
-// Ditempatkan di bawah sini agar kode ringkas (copy-paste file utuh).
+/* ============================================================
+   LOGIKA FORM & AKSI (CRUD, DIALOG, EXPORT)
+   ============================================================ */
 function openDialog({ title, body, formName, submitText='Simpan', onSubmit }) {
   const dlg = document.createElement('dialog');
   dlg.innerHTML = `<form method="dialog" data-form="${formName}">
-    <div class="dlg-hd">${title}</div><div class="dlg-bd">${body}</div>
-    <div class="dlg-ft"><button type="button" value="cancel" data-action="dlg-cancel" class="outline">Batal</button><button class="primary" value="ok">${submitText}</button></div></form>`;
+    <div class="dlg-hd">${title}<button type="button" data-action="dlg-cancel" style="background:none;padding:4px;color:var(--text-muted)">✕</button></div>
+    <div class="dlg-bd">${body}</div>
+    <div class="dlg-ft"><button type="button" value="cancel" data-action="dlg-cancel" class="outline" style="flex:1">Batal</button><button class="primary" value="ok" style="flex:2">${submitText}</button></div></form>`;
   document.body.appendChild(dlg); dlg._onSubmit = onSubmit; dlg.showModal(); return dlg;
 }
 
 const Actions = {
-  logout(){ if(UI.confirm('Keluar?')) Auth.logout(); },
+  logout(){ if(UI.confirm('Keluar dari aplikasi?')) Auth.logout(); },
   'toggle-theme'(){ Store.data.settings.theme = Store.data.settings.theme==='dark'?'light':'dark'; Store.save(); App.render(); },
   'dlg-cancel'(id, el){ el.closest('dialog').close(); el.closest('dialog').remove(); },
   
-  // Aksi FAB (Tombol Melayang)
   'fab-action'() {
     if (App.view === 'murid') Actions['murid-add']();
-    else if (App.view === 'guru') Actions['guru-add']();
-    else if (App.view === 'kelas') Actions['kelas-add']();
-    else if (App.view === 'kategori') Actions['kategori-add']();
-    else if (App.view === 'tabungan') Actions['tabung-add']();
-    else Actions['tx-add'](); // Default tambah transaksi
+    else if (App.view === 'transaksi') Actions['tx-add']();
+    else Actions['tx-add']();
   },
 
   'submit_setup'(fd){
@@ -699,51 +689,16 @@ const Actions = {
     const m = id ? Store.find('murid',id) : {};
     const dlg = openDialog({ title: id?'Edit Murid':'Tambah Murid', formName:'murid',
       body: `<div class="fld"><label>Nama Lengkap *</label><input name="nama" value="${UI.esc(m.nama||'')}" required></div>
-        <div class="row"><div class="fld" style="flex:1"><label>NIS</label><input name="nis" value="${UI.esc(m.nis||'')}"></div>
+        <div style="display:flex;gap:12px"><div class="fld" style="flex:1"><label>NIS</label><input name="nis" value="${UI.esc(m.nis||'')}"></div>
         <div class="fld" style="flex:1"><label>Kelas</label><input name="kelas" value="${UI.esc(m.kelas||'')}"></div></div>
         <div class="fld"><label>Jenis Kelamin</label><select name="jk"><option value="">-</option><option ${m.jk==='L'?'selected':''} value="L">Laki-laki</option><option ${m.jk==='P'?'selected':''} value="P">Perempuan</option></select></div>
-        <div class="row"><div class="fld" style="flex:1"><label>Wali Murid</label><input name="wali" value="${UI.esc(m.wali||'')}"></div>
-        <div class="fld" style="flex:1"><label>Telepon</label><input name="telepon" value="${UI.esc(m.telepon||'')}"></div></div>
-        <div class="fld"><label>Alamat</label><textarea name="alamat" rows="2">${UI.esc(m.alamat||'')}</textarea></div>
-        <div class="fld"><label><input type="checkbox" name="aktif" ${m.aktif!==false?'checked':''} style="width:auto;margin-right:8px"> Status Aktif</label></div>` });
+        <div class="fld"><label>Wali Murid</label><input name="wali" value="${UI.esc(m.wali||'')}"></div>
+        <div class="fld"><label>Status</label><label><input type="checkbox" name="aktif" ${m.aktif!==false?'checked':''} style="width:auto;margin-right:8px"> Siswa Aktif</label></div>` });
     if (id) dlg.querySelector('form').dataset.id = id;
   },
-  'murid-del'(id){ if(!UI.confirm('Hapus murid ini? SPP & tabungan terkait juga dihapus.')) return;
-    Store.remove('murid',id); Store.data.spp=Store.data.spp.filter(s=>s.muridId!==id); Store.data.tabungan=Store.data.tabungan.filter(t=>t.muridId!==id); Store.save();
+  'murid-del'(id){ if(!UI.confirm('Hapus murid ini?')) return;
+    Store.remove('murid',id); Store.data.spp=Store.data.spp.filter(s=>s.muridId!==id); Store.save();
     UI.toast('Murid dihapus','success'); App.render(); },
-
-  'guru-add'(){ Actions._guruForm(); }, 'guru-edit'(id){ Actions._guruForm(id); },
-  _guruForm(id){
-    const g = id ? Store.find('guru',id) : {};
-    const dlg = openDialog({ title: id?'Edit Guru':'Tambah Guru', formName:'guru',
-      body: `<div class="fld"><label>Nama Lengkap *</label><input name="nama" value="${UI.esc(g.nama||'')}" required></div>
-        <div class="fld"><label>NIP</label><input name="nip" value="${UI.esc(g.nip||'')}"></div>
-        <div class="row"><div class="fld" style="flex:1"><label>Mapel</label><input name="mapel" value="${UI.esc(g.mapel||'')}"></div>
-        <div class="fld" style="flex:1"><label>Jabatan</label><input name="jabatan" value="${UI.esc(g.jabatan||'')}"></div></div>
-        <div class="fld"><label>Telepon</label><input name="telepon" value="${UI.esc(g.telepon||'')}"></div>` });
-    if (id) dlg.querySelector('form').dataset.id = id;
-  },
-  'guru-del'(id){ if(!UI.confirm('Hapus guru ini?')) return; Store.remove('guru',id); UI.toast('Dihapus','success'); App.render(); },
-
-  'kelas-add'(){ Actions._kelasForm(); }, 'kelas-edit'(id){ Actions._kelasForm(id); },
-  _kelasForm(id){
-    const k = id ? Store.find('kelas',id) : {};
-    const dlg = openDialog({ title: id?'Edit Kelas':'Tambah Kelas', formName:'kelas',
-      body: `<div class="fld"><label>Nama Kelas *</label><input name="nama" value="${UI.esc(k.nama||'')}" required></div>
-        <div class="fld"><label>Wali Kelas</label><input name="wali" value="${UI.esc(k.wali||'')}"></div>` });
-    if (id) dlg.querySelector('form').dataset.id = id;
-  },
-  'kelas-del'(id){ if(!UI.confirm('Hapus kelas ini?')) return; Store.remove('kelas',id); UI.toast('Dihapus','success'); App.render(); },
-
-  'kategori-add'(){ Actions._kategoriForm(); }, 'kategori-edit'(id){ Actions._kategoriForm(id); },
-  _kategoriForm(id){
-    const k = id ? Store.find('kategori',id) : {};
-    const dlg = openDialog({ title: id?'Edit Kategori':'Tambah Kategori', formName:'kategori',
-      body: `<div class="fld"><label>Nama Kategori *</label><input name="nama" value="${UI.esc(k.nama||'')}" required></div>
-        <div class="fld"><label>Jenis</label><select name="jenis"><option value="masuk" ${k.jenis==='masuk'?'selected':''}>Masuk</option><option value="keluar" ${k.jenis==='keluar'?'selected':''}>Keluar</option></select></div>` });
-    if (id) dlg.querySelector('form').dataset.id = id;
-  },
-  'kategori-del'(id){ if(!UI.confirm('Hapus kategori ini?')) return; Store.remove('kategori',id); UI.toast('Dihapus','success'); App.render(); },
 
   'tx-add'(){ Actions._txForm(); }, 'tx-edit'(id){ Actions._txForm(id); },
   _txForm(id){
@@ -751,7 +706,7 @@ const Actions = {
     const kats = Store.data.kategori.map(k=>k.nama);
     const dlg = openDialog({ title: id?'Edit Transaksi':'Tambah Transaksi', formName:'tx',
       body: `<div class="fld"><label>Tanggal *</label><input type="date" name="tanggal" value="${UI.esc(t.tanggal||UI.today())}" required></div>
-        <div class="fld"><label>Jenis *</label><select name="jenis"><option value="masuk" ${t.jenis==='masuk'?'selected':''}>Pemasukan</option><option value="keluar" ${t.jenis==='keluar'?'selected':''}>Pengeluaran</option></select></div>
+        <div class="fld"><label>Jenis *</label><select name="jenis"><option value="masuk" ${t.jenis==='masuk'?'selected':''}>Pemasukan (Masuk)</option><option value="keluar" ${t.jenis==='keluar'?'selected':''}>Pengeluaran (Keluar)</option></select></div>
         <div class="fld"><label>Kategori</label><input name="kategori" list="kats" value="${UI.esc(t.kategori||'')}"><datalist id="kats">${kats.map(k=>`<option value="${UI.esc(k)}">`).join('')}</datalist></div>
         <div class="fld"><label>Jumlah (Rp) *</label><input type="number" min="1" name="jumlah" value="${t.jumlah||''}" required></div>
         <div class="fld"><label>Keterangan</label><textarea name="keterangan" rows="2">${UI.esc(t.keterangan||'')}</textarea></div>` });
@@ -796,21 +751,10 @@ const Actions = {
     UI.toast(`${rows.length} tagihan dilunasi`,'success'); App.render();
   },
 
-  'backup-export'(){ download(new Blob([JSON.stringify(Store.data,null,2)],{type:'application/json'}), `kas-madrasah-backup-${UI.today()}.json`); UI.toast('Backup diunduh','success'); },
-  'backup-import'(id, el){ const file = el.files?.[0]; if(!file) return;
-    const r = new FileReader(); r.onload = () => { try { const d = JSON.parse(r.result);
-      if(!d.settings || !Array.isArray(d.transaksi)) throw new Error('Struktur salah');
-      if(!UI.confirm('Data saat ini akan DIGANTI. Lanjut?')) { el.value=''; return; }
-      Store.data = d; Store.save(); UI.toast('Restore berhasil','success'); App.render();
-    } catch(e){ UI.toast('File salah','error'); } el.value=''; }; r.readAsText(file); },
-
   'print'(){ window.print(); }
 };
 
-// Helper Download Excel (Sederhana)
-function download(blob, filename){ const a=document.createElement('a'); a.href=URL.createObjectURL(blob); a.download=filename; document.body.appendChild(a); a.click(); setTimeout(()=>{URL.revokeObjectURL(a.href);a.remove();},100); }
-
-// Event Listeners
+// EVENT LISTENERS
 document.addEventListener('click', (e) => {
   const btn = e.target.closest('[data-action]'); if (btn && btn.tagName !== 'INPUT' && btn.tagName !== 'SELECT') { const fn = Actions[btn.dataset.action]; if (fn) { e.preventDefault(); fn(btn.dataset.id, btn); return; } }
   const nav = e.target.closest('[data-nav]'); if (nav) { e.preventDefault(); App.nav(nav.dataset.nav); }
@@ -825,7 +769,6 @@ document.addEventListener('change', (e) => {
   if (el.dataset.filter === 'sppTahun') { App.sppTahun = +el.value; App.render(); }
   if (el.dataset.filter === 'sppKelas') { App.sppFilter = App.sppFilter||{}; App.sppFilter.kelas = el.value; App.render(); }
   if (el.dataset.filter === 'muridKelas') { App.muridFilter = App.muridFilter||{}; App.muridFilter.kelas = el.value; App.render(); }
-  if (el.dataset.filter === 'lapDari' || el.dataset.filter === 'lapSampai') { App.lapFilter = App.lapFilter||{}; App.lapFilter[el.dataset.filter==='lapDari'?'dari':'sampai'] = el.value; App.render(); }
 });
 document.addEventListener('input', (e) => {
   const el = e.target;

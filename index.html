@@ -1162,8 +1162,13 @@
         const r = new FileReader(); r.onload = ev => { try { const p = JSON.parse(ev.target.result); if (!p.kas || !p.murid) throw new Error('Format salah'); db = migrateDb(p); localStorage.setItem('madrasah_db', JSON.stringify(db)); saveData(); toast('Restore berhasil'); closeSettings(); } catch (err) { toast(err.message, 'error'); } e.target.value = ''; }; r.readAsText(f);
     }
 
+    // ==========================================
+    // FUNGSI EKSPOR EXCEL (DIPERBARUI & DIRAPIKAN)
+    // ==========================================
     function exportToExcel() {
         const wb = XLSX.utils.book_new();
+        
+        // Helper untuk mengatur lebar kolom
         function getAutoWidth(data, headers) {
             return headers.map(h => {
                 let maxLen = h.length;
@@ -1172,26 +1177,48 @@
             });
         }
 
+        // 1. Jurnal Kas (Ditambah Baris Total)
         const kasData = db.kas.map(k => ({ 'Tanggal': k.tanggal, 'Keterangan': k.keterangan, 'Kategori': k.kategori, 'Jenis': k.jenis, 'Nominal': k.nominal }));
+        const totalKas = db.kas.reduce((s, k) => s + (k.jenis === 'Masuk' ? k.nominal : -k.nominal), 0);
+        kasData.push({ 'Tanggal': 'TOTAL', 'Keterangan': '', 'Kategori': '', 'Jenis': '', 'Nominal': totalKas }); // Baris Total
+
         const wsKas = XLSX.utils.json_to_sheet(kasData);
         wsKas['!cols'] = getAutoWidth(kasData, ['Tanggal', 'Keterangan', 'Kategori', 'Jenis', 'Nominal']);
         wsKas['!autofilter'] = { ref: "A1:E1" };
-        for (let i = 2; i <= kasData.length + 1; i++) { if (wsKas['E' + i]) wsKas['E' + i].z = '"Rp"#,##0'; }
+        for (let i = 2; i <= kasData.length; i++) { 
+            if (wsKas['E' + i]) wsKas['E' + i].z = '"Rp"#,##0'; 
+            if (i === kasData.length) { // Baris terakhir (TOTAL) di-bold
+                if (wsKas['A' + i]) wsKas['A' + i].s = { font: { bold: true } };
+                if (wsKas['E' + i]) wsKas['E' + i].s = { font: { bold: true } };
+            }
+        }
         XLSX.utils.book_append_sheet(wb, wsKas, 'Jurnal Kas');
 
+        // 2. Data SPP (Ditambah Baris Total)
         const sppData = db.spp.map(s => ({ 'NIS': s.nis, 'Nama Murid': s.nama, 'Kelas': s.kelas, 'Bulan': s.bulan, 'Tahun': s.tahun, 'Nominal': s.nominal, 'Status': s.status, 'Tgl Bayar': s.tanggalBayar || '-' }));
+        const totalSppLunas = db.spp.filter(s => s.status === 'Lunas').reduce((s, x) => s + x.nominal, 0);
+        sppData.push({ 'NIS': 'TOTAL', 'Nama Murid': '', 'Kelas': '', 'Bulan': '', 'Tahun': '', 'Nominal': totalSppLunas, 'Status': 'Lunas', 'Tgl Bayar': '' }); // Baris Total
+
         const wsSpp = XLSX.utils.json_to_sheet(sppData);
         wsSpp['!cols'] = getAutoWidth(sppData, ['NIS', 'Nama Murid', 'Kelas', 'Bulan', 'Tahun', 'Nominal', 'Status', 'Tgl Bayar']);
         wsSpp['!autofilter'] = { ref: "A1:H1" };
-        for (let i = 2; i <= sppData.length + 1; i++) { if (wsSpp['F' + i]) wsSpp['F' + i].z = '"Rp"#,##0'; }
+        for (let i = 2; i <= sppData.length; i++) { 
+            if (wsSpp['F' + i]) wsSpp['F' + i].z = '"Rp"#,##0'; 
+            if (i === sppData.length) { // Baris terakhir (TOTAL) di-bold
+                if (wsSpp['A' + i]) wsSpp['A' + i].s = { font: { bold: true } };
+                if (wsSpp['F' + i]) wsSpp['F' + i].s = { font: { bold: true } };
+            }
+        }
         XLSX.utils.book_append_sheet(wb, wsSpp, 'Data SPP');
 
+        // 3. Data Murid
         const muridData = db.murid.map(m => ({ 'NIS': m.nis, 'Nama Murid': m.nama, 'Kelas': m.kelas }));
         const wsMurid = XLSX.utils.json_to_sheet(muridData);
         wsMurid['!cols'] = getAutoWidth(muridData, ['NIS', 'Nama Murid', 'Kelas']);
         wsMurid['!autofilter'] = { ref: "A1:C1" };
         XLSX.utils.book_append_sheet(wb, wsMurid, 'Data Murid');
 
+        // 4. Data Guru
         const guruData = db.guru.map(g => ({ 'NIP': g.nip, 'Nama Guru': g.nama, 'Mata Pelajaran': g.mapel, 'Kontak/HP': g.kontak }));
         const wsGuru = XLSX.utils.json_to_sheet(guruData);
         wsGuru['!cols'] = getAutoWidth(guruData, ['NIP', 'Nama Guru', 'Mata Pelajaran', 'Kontak/HP']);
@@ -1202,10 +1229,30 @@
         toast('Ekspor Excel berhasil');
     }
 
+    // ==========================================
+    // FUNGSI IMPOR EXCEL (DIPERBARUI & AMAN)
+    // ==========================================
+    
+    // Fungsi pembantu untuk mengubah tanggal Excel menjadi format YYYY-MM-DD
+    function parseExcelDate(val) {
+        if (!val) return new Date().toISOString().slice(0, 10);
+        // Jika formatnya angka (Excel serial date)
+        if (typeof val === 'number') {
+            return new Date((val - 25569) * 86400 * 1000).toISOString().slice(0, 10);
+        }
+        // Jika formatnya string tapi aneh (misal 12/31/2026)
+        let str = String(val);
+        if (str.includes('/')) {
+            const parts = str.split('/');
+            if (parts.length === 3) return `${parts[2]}-${parts[0].padStart(2,'0')}-${parts[1].padStart(2,'0')}`;
+        }
+        return str.slice(0, 10); // Ambil 10 karakter pertama (YYYY-MM-DD)
+    }
+
     function importData(e) {
         const f = e.target.files[0]; 
         if (!f) return; 
-        if (!confirm('Data akan diimpor. Data dengan NIS/NIP yang sama tidak akan diduplikasi. Lanjutkan?')) { 
+        if (!confirm('Data akan diimpor. Data yang memiliki kesamaan nama sheet akan ditimpa. Lanjutkan?')) { 
             e.target.value = ''; return; 
         }
         
@@ -1215,68 +1262,92 @@
                 const data = new Uint8Array(ev.target.result); 
                 const wb = XLSX.read(data, { type: 'array' });
                 
-                let countMurid = 0;
-                let countGuru = 0;
+                let countKas = 0, countSpp = 0, countMurid = 0, countGuru = 0;
 
-                if (wb.SheetNames.includes('MURID')) {
+                // 1. BACA JURNAL KAS
+                if (wb.SheetNames.includes('Jurnal Kas')) {
+                    const rows = XLSX.utils.sheet_to_json(wb.Sheets['Jurnal Kas']);
+                    db.kas = rows.filter(r => r['Tanggal'] !== 'TOTAL').map((r, i) => ({
+                        id: Date.now() + i,
+                        tanggal: parseExcelDate(r['Tanggal']),
+                        keterangan: r['Keterangan'] || '-',
+                        kategori: r['Kategori'] || 'Lainnya',
+                        jenis: (r['Jenis'] === 'Keluar') ? 'Keluar' : 'Masuk',
+                        nominal: Number(r['Nominal']) || 0
+                    }));
+                    countKas = db.kas.length;
+                }
+
+                // 2. BACA DATA SPP
+                if (wb.SheetNames.includes('Data SPP')) {
+                    const rows = XLSX.utils.sheet_to_json(wb.Sheets['Data SPP']);
+                    db.spp = rows.filter(r => r['NIS'] !== 'TOTAL').map((r, i) => ({
+                        id: Date.now() + 1000 + i,
+                        nis: String(r['NIS'] || ''),
+                        nama: r['Nama Murid'] || '-',
+                        kelas: r['Kelas'] || '-',
+                        bulan: r['Bulan'] || 'Januari',
+                        tahun: Number(r['Tahun']) || 2026,
+                        nominal: Number(r['Nominal']) || 50000,
+                        status: (r['Status'] === 'Lunas') ? 'Lunas' : 'Belum',
+                        tanggalBayar: r['Tgl Bayar'] !== '-' ? parseExcelDate(r['Tgl Bayar']) : null,
+                        kasId: null
+                    }));
+                    countSpp = db.spp.length;
+                }
+
+                // 3. BACA DATA MURID (Bisa dari format standar atau Kemenag)
+                if (wb.SheetNames.includes('Data Murid')) {
+                    db.murid = XLSX.utils.sheet_to_json(wb.Sheets['Data Murid']).map(r => ({
+                        nis: String(r['NIS'] || ''),
+                        nama: r['Nama Murid'] || '-',
+                        kelas: r['Kelas'] || '-'
+                    })).filter(m => m.nis);
+                    countMurid += db.murid.length;
+                } else if (wb.SheetNames.includes('MURID')) {
                     const rawRows = XLSX.utils.sheet_to_json(wb.Sheets['MURID'], { header: 1 });
-                    let headerRowIndex = -1;
-                    for (let i = 0; i < rawRows.length; i++) {
-                        const rowStr = rawRows[i].map(c => String(c).toUpperCase()).join(' ');
-                        if (rowStr.includes('NAMA SANTRI') || rowStr.includes('NOMER INDUK')) {
-                            headerRowIndex = i;
-                            break;
-                        }
-                    }
+                    let headerRowIndex = rawRows.findIndex(row => row.join(' ').toUpperCase().includes('NAMA SANTRI'));
                     if (headerRowIndex > -1) {
                         const headers = rawRows[headerRowIndex].map(h => h ? String(h).toUpperCase().trim() : '');
                         const idxNis = headers.findIndex(h => h.includes('NOMER INDUK') || h.includes('NIS'));
                         const idxNama = headers.findIndex(h => h.includes('NAMA SANTRI') || h.includes('NAMA MURID'));
                         const idxKelas = headers.findIndex(h => h.includes('KELAS'));
-
                         for (let i = headerRowIndex + 1; i < rawRows.length; i++) {
                             const row = rawRows[i];
-                            if (!row || row.length === 0) continue;
-                            const nis = row[idxNis];
-                            const nama = row[idxNama];
-                            const kelas = row[idxKelas];
-                            if (nis && nama && String(nama).trim() !== '') {
-                                const exists = db.murid.find(m => String(m.nis) === String(nis).trim());
+                            if (row[idxNis] && row[idxNama]) {
+                                const exists = db.murid.find(m => String(m.nis) === String(row[idxNis]).trim());
                                 if (!exists) {
-                                    db.murid.push({ nis: String(nis).trim(), nama: String(nama).trim(), kelas: String(kelas || '-').trim() });
+                                    db.murid.push({ nis: String(row[idxNis]).trim(), nama: String(row[idxNama]).trim(), kelas: String(row[idxKelas] || '-').trim() });
                                     countMurid++;
                                 }
                             }
                         }
                     }
-                } 
-                
-                if (wb.SheetNames.includes('ASATIDZ')) {
+                }
+
+                // 4. BACA DATA GURU (Bisa dari format standar atau Kemenag)
+                if (wb.SheetNames.includes('Data Guru')) {
+                    db.guru = XLSX.utils.sheet_to_json(wb.Sheets['Data Guru']).map(r => ({
+                        nip: String(r['NIP'] || ''),
+                        nama: r['Nama Guru'] || '-',
+                        mapel: r['Mata Pelajaran'] || '-',
+                        kontak: r['Kontak/HP'] || '-'
+                    })).filter(g => g.nip);
+                    countGuru += db.guru.length;
+                } else if (wb.SheetNames.includes('ASATIDZ')) {
                     const rawRows = XLSX.utils.sheet_to_json(wb.Sheets['ASATIDZ'], { header: 1 });
-                    let headerRowIndex = -1;
-                    for (let i = 0; i < rawRows.length; i++) {
-                        const rowStr = rawRows[i].map(c => String(c).toUpperCase()).join(' ');
-                        if (rowStr.includes('NAMA GURU') || rowStr.includes('NIK')) {
-                            headerRowIndex = i;
-                            break;
-                        }
-                    }
+                    let headerRowIndex = rawRows.findIndex(row => row.join(' ').toUpperCase().includes('NAMA GURU'));
                     if (headerRowIndex > -1) {
                         const headers = rawRows[headerRowIndex].map(h => h ? String(h).toUpperCase().trim() : '');
                         const idxNip = headers.findIndex(h => h.includes('NIK') || h.includes('NO'));
                         const idxNama = headers.findIndex(h => h.includes('NAMA GURU'));
                         const idxMapel = headers.findIndex(h => h.includes('MENGAJAR'));
-
                         for (let i = headerRowIndex + 1; i < rawRows.length; i++) {
                             const row = rawRows[i];
-                            if (!row || row.length === 0) continue;
-                            const nip = row[idxNip];
-                            const nama = row[idxNama];
-                            const mapel = row[idxMapel];
-                            if (nip && nama && String(nama).trim() !== '') {
-                                const exists = db.guru.find(g => String(g.nip) === String(nip).trim());
+                            if (row[idxNip] && row[idxNama]) {
+                                const exists = db.guru.find(g => String(g.nip) === String(row[idxNip]).trim());
                                 if (!exists) {
-                                    db.guru.push({ nip: String(nip).trim(), nama: String(nama).trim(), mapel: String(mapel || '-').trim(), kontak: '-' });
+                                    db.guru.push({ nip: String(row[idxNip]).trim(), nama: String(row[idxNama]).trim(), mapel: String(row[idxMapel] || '-').trim(), kontak: '-' });
                                     countGuru++;
                                 }
                             }
@@ -1284,33 +1355,10 @@
                     }
                 }
 
-                if (wb.SheetNames.includes('Data Murid')) {
-                    XLSX.utils.sheet_to_json(wb.Sheets['Data Murid']).forEach(r => {
-                        const nis = String(r['NIS'] || '');
-                        if (nis && !db.murid.find(m => m.nis === nis)) {
-                            db.murid.push({ nis: nis, nama: r['Nama Murid'] || '-', kelas: r['Kelas'] || '-' });
-                            countMurid++;
-                        }
-                    });
-                }
-                if (wb.SheetNames.includes('Data Guru')) {
-                    XLSX.utils.sheet_to_json(wb.Sheets['Data Guru']).forEach(r => {
-                        const nip = String(r['NIP'] || '');
-                        if (nip && !db.guru.find(g => g.nip === nip)) {
-                            db.guru.push({ nip: nip, nama: r['Nama Guru'] || '-', mapel: r['Mata Pelajaran'] || '-', kontak: r['Kontak/HP'] || '-' });
-                            countGuru++;
-                        }
-                    });
-                }
-
                 saveData(); 
                 closeSettings(); 
                 
-                if (countMurid > 0 || countGuru > 0) {
-                    toast(`Import sukses! ${countMurid} Murid & ${countGuru} Guru baru ditambahkan.`);
-                } else {
-                    toast('Tidak ada data baru yang ditemukan (mungkin semua data sudah ada).', 'info');
-                }
+                toast(`Import sukses! ${countKas} Kas, ${countSpp} SPP, ${countMurid} Murid, ${countGuru} Guru diproses.`);
 
             } catch (err) { 
                 console.error(err);

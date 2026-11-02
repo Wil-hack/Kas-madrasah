@@ -1010,17 +1010,99 @@
         toast('Ekspor Excel berhasil');
     }
 
+    // FUNGSI IMPOR EXCEL KEMENAG (SMART)
     function importData(e) {
-        const f = e.target.files[0]; if (!f) return; if (!confirm('Data per sheet akan diganti. Lanjut?')) { e.target.value = ''; return; }
+        const f = e.target.files[0]; 
+        if (!f) return; 
+        if (!confirm('Data akan diimpor. Data dengan NIS/NIP yang sama tidak akan diduplikasi. Lanjutkan?')) { 
+            e.target.value = ''; return; 
+        }
+        
         const r = new FileReader();
         r.onload = function(ev) {
             try {
-                const data = new Uint8Array(ev.target.result); const wb = XLSX.read(data, { type: 'array' });
-                if (wb.SheetNames.includes('Jurnal Kas')) db.kas = XLSX.utils.sheet_to_json(wb.Sheets['Jurnal Kas']).map((r, i) => ({ id: Date.now() + i, tanggal: r['Tanggal'] || new Date().toISOString().slice(0, 10), keterangan: r['Keterangan'] || '-', kategori: r['Kategori'] || 'Lainnya', jenis: (r['Jenis']) === 'Keluar' ? 'Keluar' : 'Masuk', nominal: Number(r['Nominal (Rp)'] || r['Nominal'] || 0) }));
-                if (wb.SheetNames.includes('Data SPP')) db.spp = XLSX.utils.sheet_to_json(wb.Sheets['Data SPP']).map((r, i) => ({ id: Date.now() + 1000 + i, nis: String(r['NIS'] || ''), nama: r['Nama Murid'] || '-', kelas: r['Kelas'] || '-', bulan: r['Bulan'] || r['Bulan SPP'] || 'Januari', tahun: Number(r['Tahun']) || 2026, nominal: Number(r['Nominal (Rp)'] || r['Nominal'] || 50000), status: (r['Status']) === 'Lunas' ? 'Lunas' : 'Belum', tanggalBayar: null, kasId: null }));
-                if (wb.SheetNames.includes('Data Murid')) db.murid = XLSX.utils.sheet_to_json(wb.Sheets['Data Murid']).map(r => ({ nis: String(r['NIS'] || ''), nama: r['Nama Murid'] || '-', kelas: r['Kelas'] || '-' })).filter(m => m.nis);
-                saveData(); closeSettings(); toast('Import berhasil!');
-            } catch (err) { toast('Gagal baca file.', 'error'); } e.target.value = '';
+                const data = new Uint8Array(ev.target.result); 
+                const wb = XLSX.read(data, { type: 'array' });
+                
+                let countMurid = 0;
+                let countGuru = 0;
+
+                // 1. DETEKSI FORMAT KHUSUS KEMENAG (MURID)
+                if (wb.SheetNames.includes('MURID')) {
+                    const rows = XLSX.utils.sheet_to_json(wb.Sheets['MURID'], { range: 7 });
+                    rows.forEach(row => {
+                        const nis = row['NOMER INDUK'] || row['NOMOR INDUK'] || row['NIS'];
+                        const nama = row['NAMA SANTRI'] || row['NAMA MURID'];
+                        const kelas = row['KELAS'];
+                        
+                        if (nis && nama) {
+                            const exists = db.murid.find(m => String(m.nis) === String(nis));
+                            if (!exists) {
+                                db.murid.push({ nis: String(nis).trim(), nama: String(nama).trim(), kelas: String(kelas || '-').trim() });
+                                countMurid++;
+                            }
+                        }
+                    });
+                } 
+                
+                // 2. DETEKSI FORMAT KHUSUS KEMENAG (GURU)
+                else if (wb.SheetNames.includes('ASATIDZ')) {
+                    const rows = XLSX.utils.sheet_to_json(wb.Sheets['ASATIDZ'], { range: 7 });
+                    rows.forEach(row => {
+                        const nip = row['NIK'] || row['NO'];
+                        const nama = row['NAMA GURU'];
+                        const mapel = row['MENGAJAR'];
+                        
+                        if (nip && nama) {
+                            const exists = db.guru.find(g => String(g.nip) === String(nip));
+                            if (!exists) {
+                                db.guru.push({ nip: String(nip).trim(), nama: String(nama).trim(), mapel: String(mapel || '-').trim(), kontak: '-' });
+                                countGuru++;
+                            }
+                        }
+                    });
+                }
+
+                // 3. DETEKSI FORMAT STANDAR APLIKASI
+                if (wb.SheetNames.includes('Jurnal Kas')) {
+                    db.kas = XLSX.utils.sheet_to_json(wb.Sheets['Jurnal Kas']).map((r, i) => ({ id: Date.now() + i, tanggal: r['Tanggal'] || new Date().toISOString().slice(0, 10), keterangan: r['Keterangan'] || '-', kategori: r['Kategori'] || 'Lainnya', jenis: (r['Jenis']) === 'Keluar' ? 'Keluar' : 'Masuk', nominal: Number(r['Nominal (Rp)'] || r['Nominal'] || 0) }));
+                }
+                if (wb.SheetNames.includes('Data SPP')) {
+                    db.spp = XLSX.utils.sheet_to_json(wb.Sheets['Data SPP']).map((r, i) => ({ id: Date.now() + 1000 + i, nis: String(r['NIS'] || ''), nama: r['Nama Murid'] || '-', kelas: r['Kelas'] || '-', bulan: r['Bulan'] || r['Bulan SPP'] || 'Januari', tahun: Number(r['Tahun']) || 2026, nominal: Number(r['Nominal (Rp)'] || r['Nominal'] || 50000), status: (r['Status']) === 'Lunas' ? 'Lunas' : 'Belum', tanggalBayar: null, kasId: null }));
+                }
+                if (wb.SheetNames.includes('Data Murid')) {
+                    XLSX.utils.sheet_to_json(wb.Sheets['Data Murid']).forEach(r => {
+                        const nis = String(r['NIS'] || '');
+                        if (nis && !db.murid.find(m => m.nis === nis)) {
+                            db.murid.push({ nis: nis, nama: r['Nama Murid'] || '-', kelas: r['Kelas'] || '-' });
+                            countMurid++;
+                        }
+                    });
+                }
+                if (wb.SheetNames.includes('Data Guru')) {
+                    XLSX.utils.sheet_to_json(wb.Sheets['Data Guru']).forEach(r => {
+                        const nip = String(r['NIP'] || '');
+                        if (nip && !db.guru.find(g => g.nip === nip)) {
+                            db.guru.push({ nip: nip, nama: r['Nama Guru'] || '-', mapel: r['Mata Pelajaran'] || '-', kontak: r['Kontak/HP'] || '-' });
+                            countGuru++;
+                        }
+                    });
+                }
+
+                saveData(); 
+                closeSettings(); 
+                
+                if (countMurid > 0 || countGuru > 0) {
+                    toast(`Import sukses! ${countMurid} Murid & ${countGuru} Guru baru ditambahkan.`);
+                } else {
+                    toast('Tidak ada data baru yang ditemukan (mungkin sudah ada).', 'info');
+                }
+
+            } catch (err) { 
+                console.error(err);
+                toast('Gagal membaca file. Pastikan format Excel sesuai.', 'error'); 
+            } 
+            e.target.value = '';
         };
         r.readAsArrayBuffer(f);
     }

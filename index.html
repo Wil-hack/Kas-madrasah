@@ -37,41 +37,14 @@
         }
     </script>
     <style>
-        /* === SISTEM TEMA WARNA MIX === */
         :root {
-            /* Default: Emerald & Gold */
-            --c-primary: 5 150 105;       
+            --c-primary: 5 150 105;
             --c-primary-dark: 6 78 59;
             --c-primary-light: 209 250 229;
         }
-        
-        .theme-blue { 
-            /* Corporate Navy */
-            --c-primary: 37 99 235;       
-            --c-primary-dark: 30 58 138;
-            --c-primary-light: 219 234 254;
-        }
-        
-        .theme-crimson { 
-            /* Bold Crimson */
-            --c-primary: 225 29 72;       
-            --c-primary-dark: 136 19 55;
-            --c-primary-light: 255 228 230;
-        }
-        
-        .theme-purple { 
-            /* Elegant Violet */
-            --c-primary: 124 58 237;      
-            --c-primary-dark: 76 29 149;
-            --c-primary-light: 237 233 254;
-        }
-        
-        .theme-amber { 
-            /* Warm Amber */
-            --c-primary: 217 119 6;       
-            --c-primary-dark: 146 64 14;
-            --c-primary-light: 254 243 199;
-        }
+        .theme-blue { --c-primary: 37 99 235; --c-primary-dark: 30 58 138; --c-primary-light: 219 234 254; }
+        .theme-purple { --c-primary: 124 58 237; --c-primary-dark: 76 29 149; --c-primary-light: 237 233 254; }
+        .theme-rose { --c-primary: 225 29 72; --c-primary-dark: 136 19 55; --c-primary-light: 255 228 230; }
 
         .scrollbar-none::-webkit-scrollbar { display: none; }
         .scrollbar-none { -ms-overflow-style: none; scrollbar-width: none; }
@@ -79,14 +52,6 @@
         .dark .glass { background: rgba(15, 23, 42, 0.85); }
         @media (max-width: 768px) { body { padding-bottom: 80px; } }
         .theme-transition { transition: background-color 0.3s ease, border-color 0.3s ease, color 0.3s ease; }
-
-        /* Mempercantik Header Modal/Pop-up dengan warna tema */
-        .dlg-hd { 
-            background-color: rgb(var(--c-primary)); 
-            color: white; 
-            border-top-left-radius: 1rem; 
-            border-top-right-radius: 1rem; 
-        }
     </style>
 </head>
 <body class="text-slate-800 dark:text-slate-200 font-sans antialiased bg-slate-50 dark:bg-slate-900 min-h-screen flex flex-col theme-transition">
@@ -400,9 +365,9 @@
     <!-- Edit / Add Modal -->
     <div id="editModal" class="hidden fixed inset-0 bg-slate-900/60 z-[60] flex items-end md:items-center justify-center p-0 md:p-4 backdrop-blur-sm">
         <div class="bg-white dark:bg-slate-800 rounded-t-3xl md:rounded-3xl shadow-2xl w-full max-w-md max-h-[90vh] overflow-y-auto">
-            <div class="dlg-hd p-5 flex justify-between items-center sticky top-0 z-10 rounded-t-3xl theme-transition">
+            <div class="p-5 border-b flex justify-between items-center sticky top-0 bg-white dark:bg-slate-800 z-10 rounded-t-3xl">
                 <h3 id="editTitle" class="font-extrabold text-lg">Edit</h3>
-                <button onclick="closeEdit()" class="text-white/80 hover:text-white bg-black/20 rounded-full p-2 leading-none">&times;</button>
+                <button onclick="closeEdit()" class="text-slate-400 bg-slate-100 dark:bg-slate-700 rounded-full p-2 leading-none">&times;</button>
             </div>
             <form id="editForm" onsubmit="saveEdit(event)" class="p-5 space-y-4">
                 <div id="editBody"></div>
@@ -414,19 +379,19 @@
         </div>
     </div>
 
-    <!-- SETTINGS MODAL -->
+    <!-- SETTINGS MODAL (TATA LETAK BARU) -->
     <div id="settingsModal" class="hidden fixed inset-0 bg-slate-900/60 z-[60] flex items-end md:items-center justify-center p-0 md:p-4 backdrop-blur-sm">
         <div class="bg-white dark:bg-slate-800 rounded-t-3xl md:rounded-3xl shadow-2xl w-full max-w-md max-h-[90vh] overflow-y-auto">
-            <div class="dlg-hd p-5 flex justify-between items-center sticky top-0 z-10 rounded-t-3xl theme-transition">
+            <div class="p-5 border-b flex justify-between items-center sticky top-0 bg-white dark:bg-slate-800 z-10 rounded-t-3xl">
                 <h3 class="font-extrabold text-lg">Pengaturan</h3>
-                <button onclick="closeSettings()" class="text-white/80 hover:text-white bg-black/20 rounded-full p-2 leading-none">&times;</button>
+                <button onclick="closeSettings()" class="text-slate-400 bg-slate-100 dark:bg-slate-700 rounded-full p-2 leading-none">&times;</button>
             </div>
             
             <div class="p-5 space-y-8">
                 <!-- 1. PROFIL MADRASAH -->
                 <section>
                     <div class="flex items-center gap-2 mb-4">
-                        <div class="w-1.5 h-5 bg-primary rounded-full theme-transition"></div>
+                        <div class="w-1.5 h-5 bg-primary rounded-full"></div>
                         <h4 class="text-sm font-extrabold text-slate-800 dark:text-slate-200 uppercase tracking-wide">Profil Madrasah</h4>
                     </div>
                     <form id="settingsForm" onsubmit="saveSettings(event)" class="space-y-4">
@@ -437,45 +402,24 @@
                     </form>
                 </section>
 
-                <!-- 2. TEMA WARNA MIX -->
+                <!-- 2. TEMA WARNA -->
                 <section>
                     <div class="flex items-center gap-2 mb-4">
-                        <div class="w-1.5 h-5 bg-primary rounded-full theme-transition"></div>
-                        <h4 class="text-sm font-extrabold text-slate-800 dark:text-slate-200 uppercase tracking-wide">Tema Warna Premium</h4>
+                        <div class="w-1.5 h-5 bg-primary rounded-full"></div>
+                        <h4 class="text-sm font-extrabold text-slate-800 dark:text-slate-200 uppercase tracking-wide">Tema Aplikasi</h4>
                     </div>
-                    <div class="grid grid-cols-5 gap-2">
-                        <!-- Emerald -->
-                        <button type="button" onclick="setThemeColor('green')" id="btn-theme-green" class="flex flex-col items-center gap-1 group">
-                            <div class="w-10 h-10 rounded-full bg-emerald-600 border-2 border-transparent group-hover:border-slate-300 transition-all"></div>
-                            <span class="text-[9px] font-bold text-slate-500">Hijau</span>
-                        </button>
-                        <!-- Blue -->
-                        <button type="button" onclick="setThemeColor('blue')" id="btn-theme-blue" class="flex flex-col items-center gap-1 group">
-                            <div class="w-10 h-10 rounded-full bg-blue-600 border-2 border-transparent group-hover:border-slate-300 transition-all"></div>
-                            <span class="text-[9px] font-bold text-slate-500">Biru</span>
-                        </button>
-                        <!-- Crimson (Merah) -->
-                        <button type="button" onclick="setThemeColor('crimson')" id="btn-theme-crimson" class="flex flex-col items-center gap-1 group">
-                            <div class="w-10 h-10 rounded-full bg-rose-600 border-2 border-transparent group-hover:border-slate-300 transition-all"></div>
-                            <span class="text-[9px] font-bold text-slate-500">Merah</span>
-                        </button>
-                        <!-- Violet (Ungu) -->
-                        <button type="button" onclick="setThemeColor('purple')" id="btn-theme-purple" class="flex flex-col items-center gap-1 group">
-                            <div class="w-10 h-10 rounded-full bg-violet-600 border-2 border-transparent group-hover:border-slate-300 transition-all"></div>
-                            <span class="text-[9px] font-bold text-slate-500">Ungu</span>
-                        </button>
-                        <!-- Amber (Oranye) -->
-                        <button type="button" onclick="setThemeColor('amber')" id="btn-theme-amber" class="flex flex-col items-center gap-1 group">
-                            <div class="w-10 h-10 rounded-full bg-amber-500 border-2 border-transparent group-hover:border-slate-300 transition-all"></div>
-                            <span class="text-[9px] font-bold text-slate-500">Oranye</span>
-                        </button>
+                    <div class="flex gap-3">
+                        <button type="button" onclick="setThemeColor('green')" id="btn-theme-green" class="w-10 h-10 rounded-full bg-emerald-600 border-2 border-transparent hover:border-slate-300 transition-all"></button>
+                        <button type="button" onclick="setThemeColor('blue')" id="btn-theme-blue" class="w-10 h-10 rounded-full bg-blue-600 border-2 border-transparent hover:border-slate-300 transition-all"></button>
+                        <button type="button" onclick="setThemeColor('purple')" id="btn-theme-purple" class="w-10 h-10 rounded-full bg-purple-600 border-2 border-transparent hover:border-slate-300 transition-all"></button>
+                        <button type="button" onclick="setThemeColor('rose')" id="btn-theme-rose" class="w-10 h-10 rounded-full bg-rose-600 border-2 border-transparent hover:border-slate-300 transition-all"></button>
                     </div>
                 </section>
 
                 <!-- 3. KEAMANAN -->
                 <section>
                     <div class="flex items-center gap-2 mb-4">
-                        <div class="w-1.5 h-5 bg-primary rounded-full theme-transition"></div>
+                        <div class="w-1.5 h-5 bg-primary rounded-full"></div>
                         <h4 class="text-sm font-extrabold text-slate-800 dark:text-slate-200 uppercase tracking-wide">Keamanan</h4>
                     </div>
                     <form id="changePinForm" onsubmit="saveSettings(event)" class="flex gap-2">
@@ -487,7 +431,7 @@
                 <!-- 4. TUTUP BUKU -->
                 <section>
                     <div class="flex items-center gap-2 mb-4">
-                        <div class="w-1.5 h-5 bg-primary rounded-full theme-transition"></div>
+                        <div class="w-1.5 h-5 bg-primary rounded-full"></div>
                         <h4 class="text-sm font-extrabold text-slate-800 dark:text-slate-200 uppercase tracking-wide">Tutup Buku (Kunci)</h4>
                     </div>
                     <p class="text-xs text-slate-500 mb-2">Kunci data transaksi kas & SPP untuk bulan tertentu agar tidak bisa diubah/dihapus.</p>
@@ -501,7 +445,7 @@
                 <!-- 5. MANAJEMEN DATA -->
                 <section>
                     <div class="flex items-center gap-2 mb-4">
-                        <div class="w-1.5 h-5 bg-primary rounded-full theme-transition"></div>
+                        <div class="w-1.5 h-5 bg-primary rounded-full"></div>
                         <h4 class="text-sm font-extrabold text-slate-800 dark:text-slate-200 uppercase tracking-wide">Manajemen Data</h4>
                     </div>
                     <div class="grid grid-cols-2 gap-3">
@@ -551,9 +495,9 @@
     <!-- Kategori Modal -->
     <div id="kategoriModal" class="hidden fixed inset-0 bg-slate-900/60 z-[60] flex items-end md:items-center justify-center p-0 md:p-4 backdrop-blur-sm">
         <div class="bg-white dark:bg-slate-800 rounded-t-3xl md:rounded-3xl shadow-2xl w-full max-w-md max-h-[90vh] overflow-y-auto">
-            <div class="dlg-hd p-5 flex justify-between items-center sticky top-0 z-10 rounded-t-3xl theme-transition">
+            <div class="p-5 border-b flex justify-between items-center sticky top-0 bg-white dark:bg-slate-800 z-10 rounded-t-3xl">
                 <h3 class="font-extrabold text-lg">Kategori</h3>
-                <button onclick="closeKelolaKategori()" class="text-white/80 hover:text-white bg-black/20 rounded-full p-2 leading-none">&times;</button>
+                <button onclick="closeKelolaKategori()" class="text-slate-400 bg-slate-100 dark:bg-slate-700 rounded-full p-2 leading-none">&times;</button>
             </div>
             <div class="p-5">
                 <form onsubmit="addKategori(event)" class="flex gap-2 mb-4">
@@ -568,7 +512,7 @@
     <!-- Bulk SPP Modal -->
     <div id="bulkNominalModal" class="hidden fixed inset-0 bg-slate-900/60 z-[60] flex items-end md:items-center justify-center p-0 md:p-4 backdrop-blur-sm">
         <div class="bg-white dark:bg-slate-800 rounded-t-3xl md:rounded-3xl shadow-2xl w-full max-w-md">
-            <div class="dlg-hd p-5 flex justify-between items-center theme-transition"><h3 class="font-extrabold text-lg">Massal SPP</h3><button onclick="closeBulkNominal()" class="text-white/80 hover:text-white text-2xl">&times;</button></div>
+            <div class="p-5 border-b flex justify-between items-center"><h3 class="font-extrabold text-lg">Massal SPP</h3><button onclick="closeBulkNominal()" class="text-slate-400 text-2xl">&times;</button></div>
             <form onsubmit="applyBulkNominal(event)" class="p-5 space-y-4">
                 <select id="bulkTargetKelas" onchange="previewBulkNominal()" class="w-full px-3 py-2 rounded-xl border dark:bg-slate-900 dark:border-slate-700"><option value="">Semua Kelas</option></select>
                 <select id="bulkTargetStatus" onchange="previewBulkNominal()" class="w-full px-3 py-2 rounded-xl border dark:bg-slate-900 dark:border-slate-700"><option value="">Semua Status</option><option value="Belum">Belum</option><option value="Lunas">Lunas</option></select>
@@ -661,23 +605,19 @@
     }
 
     function setThemeColor(color) {
-        document.body.classList.remove('theme-blue', 'theme-purple', 'theme-crimson', 'theme-amber');
+        document.body.classList.remove('theme-blue', 'theme-purple', 'theme-rose');
         if (color !== 'green') document.body.classList.add('theme-' + color);
         
-        ['green', 'blue', 'crimson', 'purple', 'amber'].forEach(c => {
+        ['green', 'blue', 'purple', 'rose'].forEach(c => {
             const btn = document.getElementById('btn-theme-' + c);
             if(btn) {
-                const innerDiv = btn.querySelector('div');
-                if(innerDiv) {
-                    if (c === color) innerDiv.classList.add('ring-2', 'ring-offset-2', 'ring-slate-400');
-                    else innerDiv.classList.remove('ring-2', 'ring-offset-2', 'ring-slate-400');
-                }
+                if (c === color) btn.classList.add('ring-2', 'ring-offset-2', 'ring-slate-400');
+                else btn.classList.remove('ring-2', 'ring-offset-2', 'ring-slate-400');
             }
         });
         
         appSettings.themeColor = color;
         localStorage.setItem('madrasah_settings', JSON.stringify(appSettings));
-        renderChart();
     }
 
     setThemeColor(appSettings.themeColor);
@@ -952,7 +892,7 @@
                     <p class="text-[10px] md:text-xs font-bold text-red-600 dark:text-red-400 mb-1">Kas Keluar</p>
                     <p class="text-sm md:text-lg font-extrabold text-red-700 dark:text-red-300 break-all">${formatRupiah(tKeluar)}</p>
                 </div>
-                <div class="bg-primary-light/50 dark:bg-primary-dark/20 border border-primary/20 p-3 md:p-4 rounded-xl md:rounded-2xl theme-transition">
+                <div class="bg-primary-light/50 dark:bg-primary-dark/20 border border-primary/20 p-3 md:p-4 rounded-xl md:rounded-2xl">
                     <p class="text-[10px] md:text-xs font-bold text-primary mb-1">SPP Lunas</p>
                     <p class="text-sm md:text-lg font-extrabold text-primary break-all">${sppLunasBulanIni} Tagihan</p>
                     <p class="text-[10px] md:text-xs font-bold text-primary mt-1 break-all">${formatRupiah(sppNominalLunas)}</p>
@@ -1415,6 +1355,9 @@
         r.readAsArrayBuffer(f);
     }
 
+    // ==========================================
+    // FITUR HAPUS DATA (RESET)
+    // ==========================================
     function hapusData(type) {
         if (type === 'kas_spp') {
             if (!confirm('PERINGATAN!\n\nAnda akan menghapus SEMUA data Jurnal Kas dan Tagihan SPP.\nData Murid dan Guru akan tetap aman.\n\nLanjutkan?')) return;

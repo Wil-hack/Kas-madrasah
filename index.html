@@ -7,10 +7,6 @@
     <meta name="apple-mobile-web-app-capable" content="yes">
     <title>Madrasah Manager Enterprise</title>
     
-    <!-- Favicon -->
-    <link rel="icon" type="image/png" href="icon.png">
-    <link rel="apple-touch-icon" href="icon.png">
-    
     <!-- Fonts & Libraries -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -31,10 +27,7 @@
                         'primary-light': 'rgb(var(--c-primary-light) / <alpha-value>)',
                         gold: { 300: '#fcd34d', 400: '#fbbf24', 500: '#f59e0b', 600: '#d97706' },
                     },
-                    animation: {
-                        'fade-in': 'fadeIn 0.3s ease-out',
-                        'slide-in': 'slideIn 0.3s ease-out',
-                    },
+                    animation: { 'fade-in': 'fadeIn 0.3s ease-out', 'slide-in': 'slideIn 0.3s ease-out', },
                     keyframes: {
                         fadeIn: { '0%': { opacity: '0' }, '100%': { opacity: '1' } },
                         slideIn: { '0%': { opacity: '0', transform: 'translateX(20px)' }, '100%': { opacity: '1', transform: 'translateX(0)' } },
@@ -49,34 +42,15 @@
             --c-primary-dark: 6 78 59;
             --c-primary-light: 209 250 229;
         }
-        .theme-blue {
-            --c-primary: 37 99 235;
-            --c-primary-dark: 30 58 138;
-            --c-primary-light: 219 234 254;
-        }
-        .theme-purple {
-            --c-primary: 124 58 237;
-            --c-primary-dark: 76 29 149;
-            --c-primary-light: 237 233 254;
-        }
-        .theme-rose {
-            --c-primary: 225 29 72;
-            --c-primary-dark: 136 19 55;
-            --c-primary-light: 255 228 230;
-        }
+        .theme-blue { --c-primary: 37 99 235; --c-primary-dark: 30 58 138; --c-primary-light: 219 234 254; }
+        .theme-purple { --c-primary: 124 58 237; --c-primary-dark: 76 29 149; --c-primary-light: 237 233 254; }
+        .theme-rose { --c-primary: 225 29 72; --c-primary-dark: 136 19 55; --c-primary-light: 255 228 230; }
 
         .scrollbar-none::-webkit-scrollbar { display: none; }
         .scrollbar-none { -ms-overflow-style: none; scrollbar-width: none; }
-        .glass {
-            background: rgba(255, 255, 255, 0.85);
-            backdrop-filter: blur(12px);
-            -webkit-backdrop-filter: blur(12px);
-        }
+        .glass { background: rgba(255, 255, 255, 0.85); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); }
         .dark .glass { background: rgba(15, 23, 42, 0.85); }
-        @media (max-width: 768px) {
-            body { padding-bottom: 80px; }
-        }
-        
+        @media (max-width: 768px) { body { padding-bottom: 80px; } }
         .theme-transition { transition: background-color 0.3s ease, border-color 0.3s ease, color 0.3s ease; }
     </style>
 </head>
@@ -101,7 +75,6 @@
         <!-- HEADER -->
         <header class="glass sticky top-0 z-40 border-b border-slate-200 dark:border-slate-700 transition-colors duration-300">
             <div class="max-w-7xl mx-auto px-4 py-3 flex justify-between items-center gap-3">
-                <!-- Logo & Identity (Ikon Buku Kembali) -->
                 <div class="flex items-center space-x-3">
                     <div class="bg-gradient-to-br from-primary to-primary-dark p-2 rounded-xl shadow-md theme-transition">
                         <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"></path></svg>
@@ -112,31 +85,28 @@
                     </div>
                 </div>
                 
-                <!-- Action Buttons -->
                 <div class="flex items-center gap-2">
-                    <!-- Notifications -->
                     <div class="relative">
                         <button onclick="toggleNotif(event)" class="p-2 rounded-xl bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-700 transition relative">
                             <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"></path></svg>
                             <span id="notifBadge" class="hidden absolute top-0 right-0 bg-red-500 text-white text-[9px] font-bold rounded-full min-w-[16px] h-[16px] flex items-center justify-center px-1 ring-2 ring-white dark:ring-slate-800">0</span>
                         </button>
-                        <!-- Notif Panel -->
-                        <div id="notifPanel" class="hidden absolute right-0 top-full mt-2 w-72 bg-white dark:bg-slate-800 rounded-2xl shadow-xl border border-slate-200 dark:border-slate-700 z-50 max-h-80 overflow-y-auto">
-                            <div class="p-3 border-b border-slate-100 dark:border-slate-700 flex justify-between items-center sticky top-0 bg-slate-50 dark:bg-slate-800/90 backdrop-blur rounded-t-2xl">
+                        
+                        <!-- NOTIFIKASI RAPI -->
+                        <div id="notifPanel" class="hidden absolute right-0 top-full mt-2 w-80 bg-white dark:bg-slate-800 rounded-2xl shadow-xl border border-slate-200 dark:border-slate-700 z-50 max-h-96 overflow-y-auto animate-fade-in">
+                            <div class="p-3 border-b border-slate-100 dark:border-slate-700 flex justify-between items-center sticky top-0 bg-white/95 dark:bg-slate-800/95 backdrop-blur rounded-t-2xl z-10">
                                 <h4 class="font-bold text-sm">Tunggakan SPP</h4>
-                                <button onclick="toggleNotif(event)" class="text-slate-400 hover:text-slate-600 text-xl">&times;</button>
+                                <button onclick="toggleNotif(event)" class="text-slate-400 hover:text-slate-600 text-xl leading-none">&times;</button>
                             </div>
-                            <div id="notifList"></div>
+                            <div id="notifList" class="divide-y divide-slate-100 dark:divide-slate-700/50"></div>
                         </div>
                     </div>
 
-                    <!-- Theme Toggle (Dark/Light) -->
                     <button onclick="toggleThemeMode()" class="p-2 rounded-xl bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-700 transition">
                         <svg id="iconSun" class="w-5 h-5 hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"></path></svg>
                         <svg id="iconMoon" class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"></path></svg>
                     </button>
 
-                    <!-- Tombol Pengaturan -->
                     <button onclick="openSettings()" class="px-3 py-2 rounded-xl text-xs font-bold bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 transition flex items-center gap-1">
                         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path></svg>
                         <span class="hidden md:inline">Pengaturan</span>
@@ -148,11 +118,22 @@
         <!-- MAIN CONTENT -->
         <main class="max-w-7xl mx-auto px-4 py-6 w-full flex-grow space-y-6" onclick="closeNotifOnOutside(event)">
             
-            <!-- HERO DASHBOARD (LOGO WATERMARK DIPERBAIKI) -->
+            <!-- PERINGATAN BACKUP -->
+            <div id="backupWarning" class="hidden bg-amber-50 dark:bg-amber-900/30 border border-amber-200 dark:border-amber-700 rounded-2xl p-4 flex items-start gap-3 animate-fade-in">
+                <div class="text-amber-500 mt-0.5">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path></svg>
+                </div>
+                <div class="flex-1">
+                    <h4 class="text-sm font-bold text-amber-800 dark:text-amber-400">Peringatan Backup!</h4>
+                    <p class="text-xs text-amber-700 dark:text-amber-500 mt-1">Anda belum melakukan backup data selama lebih dari 7 hari. Unduh backup JSON sekarang agar data aman jika HP di-reset.</p>
+                </div>
+                <button onclick="backupJSON()" class="text-xs font-bold bg-amber-500 hover:bg-amber-600 text-white px-3 py-1.5 rounded-lg transition">Backup Sekarang</button>
+            </div>
+
+            <!-- HERO DASHBOARD -->
             <section class="bg-gradient-to-br from-primary to-primary-dark rounded-3xl shadow-xl p-6 md:p-8 text-white relative overflow-hidden theme-transition">
-                <!-- MENGGUNAKAN LOGO ANDA SEBAGAI WATERMARK -->
                 <div class="absolute -right-10 -top-10 opacity-10 pointer-events-none">
-                    <img src="icon.png" alt="Watermark Logo" class="w-64 h-64 object-contain filter brightness-0 invert">
+                    <img src="icon.png" alt="Watermark Logo" class="w-64 h-64 object-contain filter brightness-0 invert" onerror="this.style.display='none'">
                 </div>
                 
                 <div class="relative z-10">
@@ -194,6 +175,10 @@
                     <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path></svg>
                     Guru
                 </button>
+                <button onclick="switchTab('laporan')" id="tab-btn-laporan" class="tab-btn px-5 py-3 rounded-t-xl font-bold text-sm whitespace-nowrap transition flex items-center gap-2 border-b-2 border-transparent text-slate-500 hover:text-slate-700 dark:text-slate-400 dark:hover:text-slate-200">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 17v-2m3 2v-4m3 4v-6m2 10H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path></svg>
+                    Laporan
+                </button>
             </div>
 
             <!-- TAB KAS -->
@@ -201,9 +186,7 @@
                 <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
                     <div class="bg-white dark:bg-slate-800 rounded-3xl border border-slate-200 dark:border-slate-700 p-5 shadow-sm lg:col-span-2 flex flex-col">
                         <h3 class="text-base font-bold mb-4">Grafik Arus Kas (6 Bulan Terakhir)</h3>
-                        <div class="relative flex-grow h-64">
-                            <canvas id="cashChart"></canvas>
-                        </div>
+                        <div class="relative flex-grow h-64"><canvas id="cashChart"></canvas></div>
                     </div>
                     
                     <div class="hidden lg:block bg-white dark:bg-slate-800 rounded-3xl border border-slate-200 dark:border-slate-700 p-6 shadow-sm h-fit">
@@ -324,6 +307,23 @@
                 </div>
             </div>
 
+            <!-- TAB LAPORAN BULANAN TERPADU -->
+            <div id="tab-laporan" class="tab-content space-y-6 hidden">
+                <div class="bg-white dark:bg-slate-800 rounded-3xl border border-slate-200 dark:border-slate-700 p-5 shadow-sm">
+                    <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-4">
+                        <div>
+                            <h3 class="text-base font-bold">Laporan Bulanan Terpadu</h3>
+                            <p class="text-xs text-slate-500 mt-1">Rekap Kas dan SPP berdasarkan bulan terpilih.</p>
+                        </div>
+                        <input type="month" id="lapBulan" onchange="renderLaporan()" class="px-3 py-2 rounded-xl border text-sm font-bold">
+                    </div>
+                    
+                    <div id="lapContent" class="space-y-6">
+                        <!-- Diisi oleh JS -->
+                    </div>
+                </div>
+            </div>
+
         </main>
 
         <!-- BOTTOM NAV (MOBILE ONLY) -->
@@ -343,9 +343,9 @@
                 <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"></path></svg>
                 <span class="text-[10px] font-bold">Murid</span>
             </button>
-            <button onclick="switchTab('guru')" id="nav-btn-guru" class="nav-btn flex flex-col items-center flex-1 h-full text-slate-400 space-y-1 pt-2 theme-transition">
-                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path></svg>
-                <span class="text-[10px] font-bold">Guru</span>
+            <button onclick="switchTab('laporan')" id="nav-btn-laporan" class="nav-btn flex flex-col items-center flex-1 h-full text-slate-400 space-y-1 pt-2 theme-transition">
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 17v-2m3 2v-4m3 4v-6m2 10H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path></svg>
+                <span class="text-[10px] font-bold">Laporan</span>
             </button>
         </nav>
 
@@ -403,6 +403,17 @@
 
                     <button type="submit" class="w-full bg-primary text-white py-2.5 rounded-xl font-bold text-sm shadow-md mt-4 theme-transition">Simpan Profil</button>
                 </form>
+
+                <!-- TUTUP BUKU -->
+                <div class="pt-4 border-t border-slate-200 dark:border-slate-700">
+                    <h4 class="text-sm font-extrabold text-slate-800 dark:text-slate-200 mb-3">Tutup Buku (Kunci Data)</h4>
+                    <p class="text-xs text-slate-500 mb-2">Kunci data transaksi kas & SPP untuk bulan tertentu agar tidak bisa diubah/dihapus.</p>
+                    <div class="flex gap-2 mb-2">
+                        <input type="month" id="lockBulanInput" class="flex-1 px-3 py-2 rounded-xl border dark:bg-slate-900 dark:border-slate-700 text-sm">
+                        <button onclick="lockPeriode()" class="bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded-xl text-xs font-bold">Kunci</button>
+                    </div>
+                    <div id="listLockedPeriods" class="space-y-2"></div>
+                </div>
 
                 <!-- Manajemen Data Section -->
                 <div class="pt-4 border-t border-slate-200 dark:border-slate-700">
@@ -465,7 +476,7 @@
 
     <!-- ================= JAVASCRIPT LOGIC ================= -->
     <script>
-    const DB_VERSION = 5; 
+    const DB_VERSION = 6; // Naikkan versi karena ada perubahan struktur
     const DEFAULT_KATEGORI = ['SPP','BOS','Dana Bantuan','ATK','Gaji/Honor','Listrik/Air','Perbaikan','Konsumsi','Lainnya'];
     const BULAN_LIST = ['Juli','Agustus','September','Oktober','November','Desember','Januari','Februari','Maret','April','Mei','Juni'];
     
@@ -534,7 +545,7 @@
         { nip: '351421005930007', nama: 'LUTFI', mapel: 'KHOLASOH', kontak: '-' }
     ];
 
-    let appSettings = JSON.parse(localStorage.getItem('madrasah_settings')) || { nama: 'MIFTAHUL ULUM ULA', alamat: 'Tongas, Probolinggo', kepala: 'ACHMAD MUCHAMAD', pin: null, themeColor: 'green' };
+    let appSettings = JSON.parse(localStorage.getItem('madrasah_settings')) || { nama: 'MIFTAHUL ULUM ULA', alamat: 'Tongas, Probolinggo', kepala: 'ACHMAD MUCHAMAD', pin: null, themeColor: 'green', closedPeriods: [], lastBackup: null };
 
     if (localStorage.getItem('themeMode') === 'dark' || (!('themeMode' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
         document.documentElement.classList.add('dark');
@@ -585,6 +596,7 @@
         document.getElementById('lockScreen').classList.add('hidden');
         document.getElementById('appContainer').classList.remove('hidden');
         renderChart();
+        checkBackupWarning();
         toast('PIN berhasil dibuat!');
     }
 
@@ -594,6 +606,7 @@
             document.getElementById('lockScreen').classList.add('hidden');
             document.getElementById('appContainer').classList.remove('hidden');
             renderChart(); 
+            checkBackupWarning();
         } else {
             alert('PIN Salah!'); document.getElementById('pinInput').value = '';
         }
@@ -614,6 +627,63 @@
         renderChart();
     }
 
+    // LOGIKA TUTUP BUKU
+    function isPeriodClosed(tanggal) {
+        if (!appSettings.closedPeriods || appSettings.closedPeriods.length === 0) return false;
+        const bulan = tanggal.slice(0, 7); // Format YYYY-MM
+        return appSettings.closedPeriods.includes(bulan);
+    }
+
+    function lockPeriode() {
+        const bulan = document.getElementById('lockBulanInput').value;
+        if (!bulan) return toast('Pilih bulan terlebih dahulu', 'error');
+        if (appSettings.closedPeriods.includes(bulan)) return toast('Bulan ini sudah dikunci', 'info');
+        
+        if (!confirm(`Kunci data bulan ${bulan}? Transaksi di bulan ini tidak bisa diedit/dihapus.`)) return;
+        appSettings.closedPeriods.push(bulan);
+        localStorage.setItem('madrasah_settings', JSON.stringify(appSettings));
+        renderLockedPeriods();
+        toast('Data bulan ' + bulan + ' dikunci.');
+    }
+
+    function unlockPeriode(bulan) {
+        if (!confirm(`Buka kunci data bulan ${bulan}?`)) return;
+        appSettings.closedPeriods = appSettings.closedPeriods.filter(b => b !== bulan);
+        localStorage.setItem('madrasah_settings', JSON.stringify(appSettings));
+        renderLockedPeriods();
+        toast('Kunci data dibuka.');
+    }
+
+    function renderLockedPeriods() {
+        const container = document.getElementById('listLockedPeriods');
+        if (!appSettings.closedPeriods || appSettings.closedPeriods.length === 0) {
+            container.innerHTML = '<p class="text-xs text-slate-400 italic">Belum ada bulan yang dikunci.</p>';
+            return;
+        }
+        container.innerHTML = appSettings.closedPeriods.sort().reverse().map(b => `
+            <div class="flex justify-between items-center bg-slate-100 dark:bg-slate-900 p-2 rounded-lg border border-slate-200 dark:border-slate-700">
+                <span class="text-xs font-bold">${b}</span>
+                <button onclick="unlockPeriode('${b}')" class="text-[10px] bg-red-100 text-red-600 px-2 py-1 rounded hover:bg-red-200 transition">Buka Kunci</button>
+            </div>
+        `).join('');
+    }
+
+    function checkBackupWarning() {
+        const warning = document.getElementById('backupWarning');
+        if (!appSettings.lastBackup) {
+            warning.classList.remove('hidden');
+            return;
+        }
+        const last = new Date(appSettings.lastBackup);
+        const now = new Date();
+        const diffDays = Math.ceil(Math.abs(now - last) / (1000 * 60 * 60 * 24)); 
+        if (diffDays > 7) {
+            warning.classList.remove('hidden');
+        } else {
+            warning.classList.add('hidden');
+        }
+    }
+
     function getCatColor(name) {
         if (!name) name = 'Lainnya';
         let hash = 0; for (let i = 0; i < name.length; i++) { hash = ((hash << 5) - hash) + name.charCodeAt(i); hash |= 0; }
@@ -627,10 +697,11 @@
         const container = document.getElementById('toastContainer');
         const icons = {
             success: '<svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7"/></svg>',
-            error: '<svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M6 18L18 6M6 6l12 12"/></svg>'
+            error: '<svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M6 18L18 6M6 6l12 12"/></svg>',
+            info: '<svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>'
         };
         const el = document.createElement('div');
-        el.className = `${type === 'success' ? 'bg-primary border-primary' : 'bg-red-600 border-red-500'} text-white px-4 py-3 rounded-xl shadow-lg text-sm font-bold flex items-center gap-2 pointer-events-auto border-l-4 max-w-xs animate-slide-in theme-transition`;
+        el.className = `${type === 'success' ? 'bg-primary border-primary' : type === 'error' ? 'bg-red-600 border-red-500' : 'bg-blue-500 border-blue-400'} text-white px-4 py-3 rounded-xl shadow-lg text-sm font-bold flex items-center gap-2 pointer-events-auto border-l-4 max-w-xs animate-slide-in theme-transition`;
         el.innerHTML = `${icons[type]}<span>${escapeHtml(msg)}</span>`;
         container.appendChild(el);
         setTimeout(() => { el.style.opacity = '0'; setTimeout(() => el.remove(), 300); }, 3000);
@@ -648,9 +719,9 @@
 
     function migrateDb(db) {
         if (!db.version || db.version < DB_VERSION) {
-            db.murid = [...defaultMurid];
-            db.guru = [...defaultGuru];
-            db.spp = [];
+            db.murid = db.murid && db.murid.length > 0 ? db.murid : [...defaultMurid];
+            db.guru = db.guru && db.guru.length > 0 ? db.guru : [...defaultGuru];
+            db.spp = db.spp || [];
             db.version = DB_VERSION;
         }
         db.tahunAjaran = db.tahunAjaran || '2025/2026';
@@ -682,23 +753,43 @@
         if (navBtn) { navBtn.classList.remove('text-slate-400'); navBtn.classList.add('text-primary'); }
 
         const fab = document.getElementById('fabBtn');
-        if(tabId === 'spp') fab.classList.add('hidden'); else fab.classList.remove('hidden');
+        if(tabId === 'spp' || tabId === 'laporan') fab.classList.add('hidden'); else fab.classList.remove('hidden');
+        
+        if(tabId === 'laporan') renderLaporan();
     }
 
     function toggleNotif(e) { if(e) e.stopPropagation(); document.getElementById('notifPanel').classList.toggle('hidden'); }
     function closeNotifOnOutside(e) { const p = document.getElementById('notifPanel'); if (!p) return; if (!e.target.closest('button[onclick="toggleNotif(event)"]') && !e.target.closest('#notifPanel')) p.classList.add('hidden'); }
     
+    // RAPIHKAN NOTIFIKASI
     function renderNotif() {
         const map = {};
         db.spp.filter(s => s.status === 'Belum').forEach(s => {
             if (!map[s.nis]) map[s.nis] = { nama: s.nama, kelas: s.kelas, list: [] };
-            map[s.nis].list.push(`${s.bulan} ${s.tahun}`);
+            map[s.nis].list.push(s.bulan);
         });
         const keys = Object.keys(map); const badge = document.getElementById('notifBadge');
         badge.textContent = keys.length; badge.classList.toggle('hidden', keys.length === 0);
+        
         const list = document.getElementById('notifList');
-        if (keys.length === 0) { list.innerHTML = `<div class="p-8 text-center text-slate-500"><p class="text-sm font-bold">Tidak ada tunggakan 🎉</p></div>`; return; }
-        list.innerHTML = keys.map(k => `<div class="p-3 border-b dark:border-slate-700 text-sm"><p class="font-bold">${escapeHtml(map[k].nama)}</p><p class="text-xs text-red-500 mt-1">${map[k].list.length} bulan belum lunas</p></div>`).join('');
+        if (keys.length === 0) { 
+            list.innerHTML = `<div class="p-8 text-center text-slate-500"><div class="inline-flex items-center justify-center w-12 h-12 bg-emerald-50 rounded-full mb-3"><svg class="w-6 h-6 text-emerald-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg></div><p class="text-sm font-bold">Tidak ada tunggakan 🎉</p></div>`; 
+            return; 
+        }
+        
+        list.innerHTML = keys.map(k => {
+            const t = map[k];
+            return `<div class="p-3 hover:bg-slate-50 dark:hover:bg-slate-800/50 transition">
+                <div class="flex justify-between items-start mb-1">
+                    <p class="font-bold text-sm text-slate-800 dark:text-slate-200">${escapeHtml(t.nama)}</p>
+                    <span class="text-[10px] bg-amber-100 text-amber-800 px-2 py-0.5 rounded-md font-bold">${t.list.length} Bln</span>
+                </div>
+                <p class="text-xs text-slate-500 mb-1.5">Kelas: ${escapeHtml(t.kelas)}</p>
+                <div class="flex flex-wrap gap-1">
+                    ${t.list.map(b => `<span class="text-[10px] bg-red-50 text-red-600 border border-red-100 px-1.5 py-0.5 rounded">${escapeHtml(b)}</span>`).join('')}
+                </div>
+            </div>`;
+        }).join('');
     }
 
     function renderAll() { renderKas(); renderSpp(); renderMurid(); renderGuru(); renderNotif(); renderChart(); }
@@ -711,27 +802,64 @@
         db.kas.forEach(k => { const d = new Date(k.tanggal); const idx = months.findIndex(m => m.year === d.getFullYear() && m.month === d.getMonth()); if (idx > -1) { if (k.jenis === 'Masuk') dataMasuk[idx] += k.nominal; else dataKeluar[idx] += k.nominal; } });
         if (chartInstance) chartInstance.destroy();
         const isDark = document.documentElement.classList.contains('dark');
-        
         const primaryColor = getComputedStyle(document.body).getPropertyValue('--c-primary').trim().split(' ').join(', ');
         
-        chartInstance = new Chart(ctx, { 
-            type: 'bar', 
-            data: { 
-                labels: months.map(m => m.label), 
-                datasets: [ 
-                    { label: 'Masuk', data: dataMasuk, backgroundColor: `rgb(${primaryColor})`, borderRadius: 4 }, 
-                    { label: 'Keluar', data: dataKeluar, backgroundColor: '#ef4444', borderRadius: 4 } 
-                ] 
-            }, 
-            options: { 
-                responsive: true, maintainAspectRatio: false, 
-                plugins: { legend: { labels: { color: isDark ? '#fff' : '#333' } } }, 
-                scales: { 
-                    x: { ticks: { color: isDark ? '#94a3b8' : '#64748b' }, grid: { display: false } }, 
-                    y: { ticks: { color: isDark ? '#94a3b8' : '#64748b' }, grid: { color: isDark ? '#334155' : '#e2e8f0' } } 
-                } 
-            } 
+        chartInstance = new Chart(ctx, { type: 'bar', data: { labels: months.map(m => m.label), datasets: [ { label: 'Masuk', data: dataMasuk, backgroundColor: `rgb(${primaryColor})`, borderRadius: 4 }, { label: 'Keluar', data: dataKeluar, backgroundColor: '#ef4444', borderRadius: 4 } ] }, options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { labels: { color: isDark ? '#fff' : '#333' } } }, scales: { x: { ticks: { color: isDark ? '#94a3b8' : '#64748b' }, grid: { display: false } }, y: { ticks: { color: isDark ? '#94a3b8' : '#64748b' }, grid: { color: isDark ? '#334155' : '#e2e8f0' } } } } });
+    }
+
+    // LAPORAN BULANAN TERPADU
+    function renderLaporan() {
+        const input = document.getElementById('lapBulan');
+        if (!input.value) input.value = new Date().toISOString().slice(0, 7);
+        const bulan = input.value;
+        
+        const filterKas = db.kas.filter(k => k.tanggal.startsWith(bulan));
+        const tMasuk = filterKas.filter(k => k.jenis === 'Masuk').reduce((s, k) => s + k.nominal, 0);
+        const tKeluar = filterKas.filter(k => k.jenis === 'Keluar').reduce((s, k) => s + k.nominal, 0);
+        
+        const filterSpp = db.spp.filter(s => {
+            if (s.tanggalBayar && s.tanggalBayar.startsWith(bulan)) return true;
+            const [thn, bln] = bulan.split('-');
+            const blnName = BULAN_LIST[parseInt(bln) - 1]; 
+            return false;
         });
+        
+        // Perbaikan logika filter SPP karena bulan di SPP berbentuk teks
+        let sppLunasBulanIni = 0, sppNominalLunas = 0;
+        db.spp.forEach(s => {
+            if (s.status === 'Lunas' && s.tanggalBayar && s.tanggalBayar.startsWith(bulan)) {
+                sppLunasBulanIni++;
+                sppNominalLunas += s.nominal;
+            }
+        });
+
+        const container = document.getElementById('lapContent');
+        container.innerHTML = `
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-3">
+                <div class="bg-emerald-50 dark:bg-emerald-900/20 border border-emerald-100 dark:border-emerald-800 p-4 rounded-2xl">
+                    <p class="text-xs font-bold text-emerald-600 dark:text-emerald-400 mb-1">Kas Masuk</p>
+                    <p class="text-lg font-extrabold text-emerald-700 dark:text-emerald-300">${formatRupiah(tMasuk)}</p>
+                </div>
+                <div class="bg-red-50 dark:bg-red-900/20 border border-red-100 dark:border-red-800 p-4 rounded-2xl">
+                    <p class="text-xs font-bold text-red-600 dark:text-red-400 mb-1">Kas Keluar</p>
+                    <p class="text-lg font-extrabold text-red-700 dark:text-red-300">${formatRupiah(tKeluar)}</p>
+                </div>
+                <div class="bg-primary-light/50 dark:bg-primary-dark/20 border border-primary/20 p-4 rounded-2xl">
+                    <p class="text-xs font-bold text-primary mb-1">SPP Lunas (Hari ini/Bln ini)</p>
+                    <p class="text-lg font-extrabold text-primary">${sppLunasBulanIni} Tagihan</p>
+                    <p class="text-xs font-bold text-primary mt-1">${formatRupiah(sppNominalLunas)}</p>
+                </div>
+                <div class="bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 p-4 rounded-2xl">
+                    <p class="text-xs font-bold text-slate-500 mb-1">Selisih Kas</p>
+                    <p class="text-lg font-extrabold ${tMasuk - tKeluar >= 0 ? 'text-emerald-600' : 'text-red-600'}">${formatRupiah(tMasuk - tKeluar)}</p>
+                </div>
+            </div>
+
+            <h3 class="text-sm font-bold mt-6 mb-3 border-b pb-2">Rincian Kas Bulan ${bulan}</h3>
+            ${filterKas.length ? `<div class="table-wrap"><table class="w-full text-left"><thead><tr class="bg-slate-50 text-xs uppercase"><th class="p-3">Tgl</th><th class="p-3">Keterangan</th><th class="p-3 text-right">Nominal</th></tr></thead><tbody>
+                ${filterKas.map(k => `<tr class="border-b dark:border-slate-700"><td class="p-3 text-xs">${k.tanggal}</td><td class="p-3 font-medium">${escapeHtml(k.keterangan)}</td><td class="p-3 text-right font-bold ${k.jenis === 'Masuk' ? 'text-emerald-500' : 'text-red-500'}">${k.jenis === 'Masuk' ? '+' : '-'} ${formatRupiah(k.nominal)}</td></tr>`).join('')}
+            </tbody></table></div>` : '<p class="text-sm text-slate-400">Tidak ada transaksi di bulan ini.</p>'}
+        `;
     }
 
     function populateKategoriSelects() {
@@ -753,14 +881,16 @@
         
         tbody.innerHTML = [...filtered].sort((a,b) => new Date(b.tanggal) - new Date(a.tanggal)).map(item => {
             const color = getCatColor(item.kategori);
+            const isClosed = isPeriodClosed(item.tanggal);
             return `<tr class="hover:bg-slate-50 dark:hover:bg-slate-800/50 transition border-b border-slate-100 dark:border-slate-700/50">
-                <td class="p-4 text-xs text-slate-500 whitespace-nowrap">${escapeHtml(item.tanggal)}</td>
+                <td class="p-4 text-xs text-slate-500 whitespace-nowrap">${escapeHtml(item.tanggal)} ${isClosed?'<span class="text-[9px] bg-slate-200 text-slate-600 px-1 rounded">LOCK</span>':''}</td>
                 <td class="p-4 font-bold">${escapeHtml(item.keterangan)}</td>
                 <td class="p-4 hidden sm:table-cell"><span class="inline-flex items-center gap-1.5 ${color.bg} px-2.5 py-1 rounded-lg text-[11px] font-bold"><span class="w-1.5 h-1.5 rounded-full ${color.dot}"></span>${escapeHtml(item.kategori)}</span></td>
                 <td class="p-4 text-right font-extrabold ${item.jenis === 'Masuk' ? 'text-primary' : 'text-red-500'} whitespace-nowrap theme-transition">${item.jenis === 'Masuk' ? '+' : '-'} ${formatRupiah(item.nominal)}</td>
                 <td class="p-4 text-center">
+                    ${isClosed ? '<span class="text-slate-400 text-xs">Terkunci</span>' : `
                     <button onclick="openEditKas(${item.id})" class="text-slate-400 hover:text-primary p-1 transition theme-transition">✏️</button>
-                    <button onclick="deleteKas(${item.id})" class="text-slate-400 hover:text-red-500 p-1 transition">🗑️</button>
+                    <button onclick="deleteKas(${item.id})" class="text-slate-400 hover:text-red-500 p-1 transition">🗑️</button>`}
                 </td>
             </tr>`;
         }).join('');
@@ -768,17 +898,27 @@
 
     function addKas(e) {
         e.preventDefault();
-        db.kas.push({ id: Date.now(), tanggal: document.getElementById('kasTanggal').value, keterangan: document.getElementById('kasKeterangan').value, kategori: document.getElementById('kasKategori').value, jenis: document.getElementById('kasJenis').value, nominal: parseFloat(document.getElementById('kasNominal').value) });
+        const tgl = document.getElementById('kasTanggal').value;
+        if (isPeriodClosed(tgl)) return toast('Bulan ini sudah ditutup buku (terkunci)', 'error');
+        
+        db.kas.push({ id: Date.now(), tanggal: tgl, keterangan: document.getElementById('kasKeterangan').value, kategori: document.getElementById('kasKategori').value, jenis: document.getElementById('kasJenis').value, nominal: parseFloat(document.getElementById('kasNominal').value) });
         document.getElementById('formKas').reset(); document.getElementById('kasTanggal').valueAsDate = new Date();
         saveData(); toast('Transaksi Kas tersimpan');
     }
-    function deleteKas(id) { if (!confirm('Hapus?')) return; db.kas = db.kas.filter(item => item.id !== id); saveData(); toast('Dihapus'); }
+    function deleteKas(id) { 
+        const item = db.kas.find(k=>k.id === id);
+        if (item && isPeriodClosed(item.tanggal)) return toast('Tidak bisa hapus data di bulan terkunci', 'error');
+        if (!confirm('Hapus?')) return; db.kas = db.kas.filter(item => item.id !== id); saveData(); toast('Dihapus'); 
+    }
     function resetKasFilter() { document.getElementById('kasFilterJenis').value = ''; document.getElementById('kasFilterKategori').value = ''; document.getElementById('kasFilterDari').value = ''; document.getElementById('kasFilterSampai').value = ''; renderKas(); }
 
     function toggleSppStatus(id) {
         const item = db.spp.find(s => s.id === id); if (!item) return;
+        const tgl = new Date().toISOString().split('T')[0];
+        if (isPeriodClosed(tgl)) return toast('Bulan ini terkunci, tidak bisa ubah status SPP', 'error');
+
         if (item.status === 'Belum') {
-            item.status = 'Lunas'; item.tanggalBayar = new Date().toISOString().split('T')[0];
+            item.status = 'Lunas'; item.tanggalBayar = tgl;
             const kasId = Date.now() + Math.floor(Math.random() * 1000); item.kasId = kasId;
             db.kas.push({ id: kasId, tanggal: item.tanggalBayar, keterangan: `SPP ${item.bulan} ${item.tahun} - ${item.nama} (${item.kelas})`, jenis: 'Masuk', nominal: item.nominal, kategori: db.kategoriSpp || 'SPP' });
             toast(`SPP ${item.nama} LUNAS`);
@@ -914,7 +1054,9 @@
     function closeEdit() { document.getElementById('editModal').classList.add('hidden'); editContext = { type: null, id: null }; }
     
     function openEditKas(id) {
-        const item = db.kas.find(k => k.id === id); if (!item) return; editContext = { type: 'kas', id };
+        const item = db.kas.find(k => k.id === id); if (!item) return; 
+        if (isPeriodClosed(item.tanggal)) return toast('Bulan ini terkunci', 'error');
+        editContext = { type: 'kas', id };
         document.getElementById('editTitle').textContent = 'Edit Transaksi Kas';
         document.getElementById('editBody').innerHTML = `
             <select name="jenis" class="w-full px-3 py-2 rounded-xl border mb-3 dark:bg-slate-900 dark:border-slate-700"><option value="Masuk" ${item.jenis === 'Masuk' ? 'selected' : ''}>Pemasukan</option><option value="Keluar" ${item.jenis === 'Keluar' ? 'selected' : ''}>Pengeluaran</option></select>
@@ -959,6 +1101,7 @@
         e.preventDefault(); const data = Object.fromEntries(new FormData(e.target).entries());
         if (editContext.type === 'kas') {
             const item = db.kas.find(k => k.id === editContext.id); if (!item) return;
+            if (isPeriodClosed(data.tanggal)) return toast('Tidak bisa pindah ke bulan yang terkunci', 'error');
             const oldN = item.nominal; Object.assign(item, { jenis: data.jenis, tanggal: data.tanggal, keterangan: data.keterangan, kategori: data.kategori, nominal: parseFloat(data.nominal) });
             const linked = db.spp.find(s => s.kasId === item.id); if (linked && linked.status === 'Lunas' && oldN !== item.nominal) linked.nominal = item.nominal;
         } else if (editContext.type === 'murid') {
@@ -1002,7 +1145,15 @@
         saveData(); renderKategoriList(); populateKategoriSelects(); renderKas(); toast('Dihapus');
     }
 
-    function backupJSON() { const b = new Blob([JSON.stringify(db, null, 2)], { type: 'application/json' }); const a = document.createElement('a'); a.href = URL.createObjectURL(b); a.download = `backup_madrasah_${new Date().toISOString().slice(0, 10)}.json`; a.click(); toast('Backup diunduh'); }
+    function backupJSON() { 
+        const b = new Blob([JSON.stringify(db, null, 2)], { type: 'application/json' }); 
+        const a = document.createElement('a'); a.href = URL.createObjectURL(b); a.download = `backup_madrasah_${new Date().toISOString().slice(0, 10)}.json`; a.click(); 
+        
+        appSettings.lastBackup = new Date().toISOString();
+        localStorage.setItem('madrasah_settings', JSON.stringify(appSettings));
+        document.getElementById('backupWarning').classList.add('hidden');
+        toast('Backup diunduh'); 
+    }
     function restoreJSON(e) {
         const f = e.target.files[0]; if (!f) return; if (!confirm('Data diganti?')) { e.target.value = ''; return; }
         const r = new FileReader(); r.onload = ev => { try { const p = JSON.parse(ev.target.result); if (!p.kas || !p.murid) throw new Error('Format salah'); db = migrateDb(p); localStorage.setItem('madrasah_db', JSON.stringify(db)); saveData(); toast('Restore berhasil'); closeSettings(); } catch (err) { toast(err.message, 'error'); } e.target.value = ''; }; r.readAsText(f);
@@ -1162,53 +1313,4 @@
                 console.error(err);
                 toast('Gagal membaca file. Pastikan format Excel sesuai.', 'error'); 
             } 
-            e.target.value = '';
-        };
-        r.readAsArrayBuffer(f);
-    }
-
-    function openMobileForm(type = null) {
-        let tab = document.querySelector('.tab-content:not(.hidden)').id.replace('tab-',''); if(type) tab = type;
-        if(tab === 'kas') {
-            editContext = { type: 'kas_new' }; document.getElementById('editTitle').innerText = 'Tambah Kas';
-            document.getElementById('editBody').innerHTML = `<select name="jenis" class="w-full px-3 py-2 rounded-xl border mb-3 dark:bg-slate-900 dark:border-slate-700"><option value="Masuk">Masuk</option><option value="Keluar">Keluar</option></select><input type="date" name="tanggal" value="${new Date().toISOString().slice(0,10)}" required class="w-full px-3 py-2 rounded-xl border mb-3 dark:bg-slate-900 dark:border-slate-700"><input type="text" name="keterangan" required class="w-full px-3 py-2 rounded-xl border mb-3 dark:bg-slate-900 dark:border-slate-700" placeholder="Keterangan"><input type="number" name="nominal" required class="w-full px-3 py-2 rounded-xl border mb-3 dark:bg-slate-900 dark:border-slate-700" placeholder="Nominal"><select name="kategori" class="w-full px-3 py-2 rounded-xl border mb-3 dark:bg-slate-900 dark:border-slate-700">${db.kategori.map(k=>`<option value="${k}">${k}</option>`).join('')}</select>`;
-        } else if (tab === 'murid') {
-            editContext = { type: 'murid_new' }; document.getElementById('editTitle').innerText = 'Tambah Murid';
-            document.getElementById('editBody').innerHTML = `<input type="text" name="nis" required class="w-full px-3 py-2 rounded-xl border mb-3 dark:bg-slate-900 dark:border-slate-700" placeholder="NIS"><input type="text" name="nama" required class="w-full px-3 py-2 rounded-xl border mb-3 dark:bg-slate-900 dark:border-slate-700" placeholder="Nama"><input type="text" name="kelas" required class="w-full px-3 py-2 rounded-xl border mb-3 dark:bg-slate-900 dark:border-slate-700" placeholder="Kelas">`;
-        } else if (tab === 'guru') {
-            editContext = { type: 'guru_new' }; document.getElementById('editTitle').innerText = 'Tambah Guru';
-            document.getElementById('editBody').innerHTML = `<input type="text" name="nip" required class="w-full px-3 py-2 rounded-xl border mb-3 dark:bg-slate-900 dark:border-slate-700" placeholder="NIP"><input type="text" name="nama" required class="w-full px-3 py-2 rounded-xl border mb-3 dark:bg-slate-900 dark:border-slate-700" placeholder="Nama"><input type="text" name="mapel" required class="w-full px-3 py-2 rounded-xl border mb-3 dark:bg-slate-900 dark:border-slate-700" placeholder="Mapel"><input type="text" name="kontak" required class="w-full px-3 py-2 rounded-xl border mb-3 dark:bg-slate-900 dark:border-slate-700" placeholder="Kontak">`;
-        }
-        document.getElementById('editModal').classList.remove('hidden');
-    }
-
-    const originalSaveEdit = saveEdit;
-    saveEdit = function(e) {
-        e.preventDefault(); const data = Object.fromEntries(new FormData(e.target).entries());
-        if (editContext.type === 'kas_new') { db.kas.push({ id: Date.now(), ...data, nominal: parseFloat(data.nominal) }); closeEdit(); saveData(); toast('Kas ditambah'); return; }
-        if (editContext.type === 'murid_new') { db.murid.push(data); closeEdit(); saveData(); toast('Murid ditambah'); return; }
-        if (editContext.type === 'guru_new') { db.guru.push(data); closeEdit(); saveData(); toast('Guru ditambah'); return; }
-        originalSaveEdit(e);
-    };
-
-    function openSettings() {
-        document.getElementById('setNama').value = appSettings.nama; document.getElementById('setAlamat').value = appSettings.alamat;
-        document.getElementById('setKepala').value = appSettings.kepala; document.getElementById('setPin').value = '';
-        setThemeColor(appSettings.themeColor);
-        document.getElementById('settingsModal').classList.remove('hidden');
-    }
-    function closeSettings() { document.getElementById('settingsModal').classList.add('hidden'); }
-    function saveSettings(e) {
-        e.preventDefault(); appSettings.nama = document.getElementById('setNama').value;
-        appSettings.alamat = document.getElementById('setAlamat').value; appSettings.kepala = document.getElementById('setKepala').value;
-        const newPin = document.getElementById('setPin').value; if (newPin && newPin.length >= 4) appSettings.pin = newPin;
-        localStorage.setItem('madrasah_settings', JSON.stringify(appSettings)); document.getElementById('appNameDisplay').innerText = appSettings.nama;
-        closeSettings(); toast('Pengaturan disimpan');
-    }
-
-    populateKategoriSelects();
-    document.getElementById('kasTanggal').valueAsDate = new Date();
-    renderAll();
-    </script>
-</body>
-</html>
+            e.target.value =

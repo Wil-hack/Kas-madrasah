@@ -82,27 +82,27 @@
     <!-- HEADER -->
     <header class="dynamic-header text-white shadow-md sticky top-0 z-40 border-b-4 border-gold-500">
         <div class="max-w-7xl mx-auto px-4 py-3 flex flex-col gap-3">
-            <div class="flex items-center space-x-3 w-full">
-                <div class="bg-black/20 p-2 rounded-xl shadow-inner border border-white/10 flex-shrink-0">
-                    <svg class="w-6 h-6 text-gold-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"></path></svg>
-                </div>
-                <div>
-                    <h1 class="text-base md:text-xl font-bold tracking-tight text-white leading-tight">Madrasah Manager</h1>
-                    <p class="text-[11px] md:text-xs dynamic-accent-sub">Sistem Keuangan & Administrasi Terpadu</p>
-                </div>
-            </div>
             
-            <!-- TOMBOL AKSI & SELECTOR TEMA (RESPONSIF HP) -->
-            <div class="grid grid-cols-3 sm:grid-cols-6 gap-1.5 w-full items-center">
-                <div class="col-span-1">
-                    <select id="themeSelect" onchange="changeTheme(this.value)" class="w-full bg-black/30 text-white text-[10px] md:text-xs font-semibold px-1.5 py-2 rounded-lg border border-white/20 focus:outline-none cursor-pointer truncate">
-                        <option value="emerald" class="text-slate-800">🌿 Emerald</option>
-                        <option value="ocean" class="text-slate-800">🌊 Ocean</option>
-                        <option value="purple" class="text-slate-800">👑 Purple</option>
-                        <option value="dark" class="text-slate-800">🌑 Dark</option>
-                    </select>
+            <!-- BARIS ATAS: LOGO, JUDUL & IKON GANTI TEMA DI POJOK KANAN -->
+            <div class="flex items-center justify-between w-full">
+                <div class="flex items-center space-x-3">
+                    <div class="bg-black/20 p-2 rounded-xl shadow-inner border border-white/10 flex-shrink-0">
+                        <svg class="w-6 h-6 text-gold-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"></path></svg>
+                    </div>
+                    <div>
+                        <h1 class="text-base md:text-xl font-bold tracking-tight text-white leading-tight">Madrasah Manager</h1>
+                        <p class="text-[11px] md:text-xs dynamic-accent-sub">Sistem Keuangan & Administrasi Terpadu</p>
+                    </div>
                 </div>
 
+                <!-- IKON GANTI TEMA DI POJOK KANAN ATAS -->
+                <button onclick="cycleTheme()" class="bg-black/20 hover:bg-black/40 text-white p-2.5 rounded-xl border border-white/10 transition active:scale-95 flex items-center justify-center flex-shrink-0 shadow-sm" title="Ganti Tema">
+                    <svg class="w-5 h-5 text-gold-300" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 21a4 4 0 01-4-4V5a2 2 0 012-2h4a2 2 0 012 2v12a4 4 0 01-4 4zm0 0h12a2 2 0 002-2v-4a2 2 0 00-2-2h-2.343M11 7.343l2.122-2.122a4 4 0 015.656 0l2.122 2.122M11 7.343L6.757 11.585M15 11h.01"></path></svg>
+                </button>
+            </div>
+            
+            <!-- BARIS BAWAH: 5 TOMBOL AKSI UTAMA -->
+            <div class="grid grid-cols-5 gap-1.5 w-full items-center">
                 <button onclick="backupJSON()" class="flex flex-col items-center justify-center bg-black/20 hover:bg-black/40 text-white p-1.5 md:py-2 rounded-lg text-[10px] md:text-xs font-medium transition active:scale-95 gap-0.5 border border-white/10">
                     <svg class="w-4 h-4 text-gold-300" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 7v10c0 2.21 3.582 4 8 4s8-1.79 8-4V7M4 7c0 2.21 3.582 4 8 4s8-1.79 8-4M4 7c0-2.21 3.582-4 8-4s8 1.79 8 4"></path></svg>
                     <span>Backup</span>
@@ -122,7 +122,7 @@
                     <input type="file" id="importFile" accept=".xlsx, .json" onchange="importData(event)" class="hidden">
                 </label>
                 
-                <div class="relative flex justify-center col-span-1">
+                <div class="relative flex justify-center">
                     <button onclick="toggleNotif(event)" class="w-full flex flex-col items-center justify-center bg-black/20 hover:bg-black/40 text-white p-1.5 md:py-2 rounded-lg text-[10px] md:text-xs font-medium transition active:scale-95 gap-0.5 border border-white/10">
                         <div class="relative">
                             <svg class="w-4 h-4 text-gold-300" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"></path></svg>
@@ -139,13 +139,14 @@
                         <div id="notifList"></div>
                     </div>
                 </div>
+
             </div>
         </div>
     </header>
 
     <main class="max-w-7xl mx-auto px-4 py-5 w-full flex-grow space-y-5" onclick="closeNotifOnOutside(event)">
         
-        <!-- HERO SECTION -->
+        <!-- HERO CARD (SALDO KAS) -->
         <section class="dynamic-hero rounded-2xl shadow-lg p-5 md:p-8 text-white relative overflow-hidden border border-white/10">
             <div class="absolute -right-10 -bottom-10 opacity-10 pointer-events-none animate-float">
                 <svg class="w-64 h-64 text-white" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-2h2v2zm0-4h-2V7h2v6z"/></svg>
@@ -206,9 +207,10 @@
             </button>
         </div>
 
-        <!-- KAS TAB -->
+        <!-- TAB CONTENT: KAS -->
         <div id="tab-kas" class="tab-content space-y-5">
             <div class="grid grid-cols-1 lg:grid-cols-3 gap-5">
+                
                 <div class="bg-white rounded-2xl border border-slate-200 p-5 h-fit card-islamic">
                     <h3 class="text-sm font-bold text-slate-800 mb-4 pb-2 border-b border-slate-100 flex items-center space-x-2">
                         <svg class="w-4 h-4 text-emerald-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path></svg>
@@ -279,7 +281,7 @@
             </div>
         </div>
 
-        <!-- SPP TAB -->
+        <!-- TAB CONTENT: SPP -->
         <div id="tab-spp" class="tab-content space-y-5 hidden">
             <div class="bg-white rounded-2xl border border-slate-200 p-5 card-islamic">
                 <div class="bg-slate-50 border border-slate-200 rounded-xl p-3.5 mb-4">
@@ -341,7 +343,7 @@
             </div>
         </div>
 
-        <!-- MURID TAB -->
+        <!-- TAB CONTENT: MURID -->
         <div id="tab-murid" class="tab-content space-y-5 hidden">
             <div class="grid grid-cols-1 lg:grid-cols-3 gap-5">
                 <div class="bg-white rounded-2xl border border-slate-200 p-5 h-fit card-islamic">
@@ -387,7 +389,7 @@
             </div>
         </div>
 
-        <!-- GURU TAB -->
+        <!-- TAB CONTENT: GURU -->
         <div id="tab-guru" class="tab-content space-y-5 hidden">
             <div class="grid grid-cols-1 lg:grid-cols-3 gap-5">
                 <div class="bg-white rounded-2xl border border-slate-200 p-5 h-fit card-islamic">
@@ -513,13 +515,23 @@
 
     <script>
     /* ================= TEMA & SETUP ================= */
+    const themes = ['emerald', 'ocean', 'purple', 'dark'];
+    
     function changeTheme(themeName) {
         document.body.className = `theme-${themeName} font-sans antialiased min-h-screen flex flex-col`;
         localStorage.setItem('madrasah_theme', themeName);
     }
+
+    function cycleTheme() {
+        let current = localStorage.getItem('madrasah_theme') || 'emerald';
+        let idx = themes.indexOf(current);
+        let next = themes[(idx + 1) % themes.length];
+        changeTheme(next);
+        toast(`Tema: ${next.charAt(0).toUpperCase() + next.slice(1)}`);
+    }
+
     const savedTheme = localStorage.getItem('madrasah_theme') || 'emerald';
     changeTheme(savedTheme);
-    document.getElementById('themeSelect').value = savedTheme;
 
     const DB_VERSION = 4;
     const DEFAULT_KATEGORI = ['SPP','BOS','Dana Bantuan','ATK','Gaji/Honor','Listrik/Air','Perbaikan','Konsumsi','Lainnya'];

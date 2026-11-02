@@ -28,12 +28,10 @@
                     animation: {
                         'fade-in': 'fadeIn 0.3s ease-out',
                         'slide-in': 'slideIn 0.3s ease-out',
-                        'float': 'float 6s ease-in-out infinite',
                     },
                     keyframes: {
-                        fadeIn: { '0%': { opacity: '0', transform: 'translateY(6px)' }, '100%': { opacity: '1', transform: 'translateY(0)' } },
+                        fadeIn: { '0%': { opacity: '0' }, '100%': { opacity: '1' } },
                         slideIn: { '0%': { opacity: '0', transform: 'translateX(20px)' }, '100%': { opacity: '1', transform: 'translateX(0)' } },
-                        float: { '0%,100%': { transform: 'translateY(0)' }, '50%': { transform: 'translateY(-6px)' } },
                     }
                 }
             }
@@ -110,18 +108,11 @@
                         <svg id="iconMoon" class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"></path></svg>
                     </button>
 
-                    <!-- Menu Tambahan (Desktop) -->
-                    <div class="hidden md:flex gap-2 border-l border-slate-200 dark:border-slate-700 pl-2 ml-1">
-                        <button onclick="openSettings()" class="px-3 py-2 rounded-xl text-xs font-bold bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 transition">Pengaturan</button>
-                        <button onclick="backupJSON()" class="px-3 py-2 rounded-xl text-xs font-bold bg-blue-100 dark:bg-blue-900/30 text-blue-700 dark:text-blue-400 hover:bg-blue-200 transition">Backup JSON</button>
-                        <label class="px-3 py-2 rounded-xl text-xs font-bold bg-amber-100 dark:bg-amber-900/30 text-amber-700 dark:text-amber-400 hover:bg-amber-200 transition cursor-pointer">
-                            Restore <input type="file" id="restoreFile" accept=".json" onchange="restoreJSON(event)" class="hidden">
-                        </label>
-                        <button onclick="exportToExcel()" class="px-3 py-2 rounded-xl text-xs font-bold bg-emerald-100 dark:bg-emerald-900/30 text-emerald-700 dark:text-emerald-400 hover:bg-emerald-200 transition">Ekspor Excel</button>
-                        <label class="px-3 py-2 rounded-xl text-xs font-bold bg-purple-100 dark:bg-purple-900/30 text-purple-700 dark:text-purple-400 hover:bg-purple-200 transition cursor-pointer">
-                            Impor <input type="file" id="importFile" accept=".xlsx" onchange="importData(event)" class="hidden">
-                        </label>
-                    </div>
+                    <!-- Tombol Pengaturan (Muncul di HP & Desktop) -->
+                    <button onclick="openSettings()" class="px-3 py-2 rounded-xl text-xs font-bold bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 transition flex items-center gap-1">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path></svg>
+                        <span class="hidden md:inline">Pengaturan</span>
+                    </button>
                 </div>
             </div>
         </header>
@@ -177,7 +168,6 @@
 
             <!-- TAB KAS -->
             <div id="tab-kas" class="tab-content space-y-6">
-                <!-- Grafik & Form (Desktop) -->
                 <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
                     <div class="bg-white dark:bg-slate-800 rounded-3xl border border-slate-200 dark:border-slate-700 p-5 shadow-sm lg:col-span-2 flex flex-col">
                         <h3 class="text-base font-bold mb-4">Grafik Arus Kas (6 Bulan Terakhir)</h3>
@@ -209,7 +199,6 @@
                     </div>
                 </div>
 
-                <!-- Tabel Kas -->
                 <div class="bg-white dark:bg-slate-800 rounded-3xl border border-slate-200 dark:border-slate-700 p-0 shadow-sm overflow-hidden flex flex-col">
                     <div class="p-5 border-b border-slate-100 dark:border-slate-700 flex justify-between items-center">
                         <h3 class="text-base font-bold">Riwayat Jurnal Kas</h3>
@@ -356,22 +345,48 @@
         </div>
     </div>
 
-    <!-- Settings Modal -->
+    <!-- SETTINGS MODAL (Pusat Ekspor/Impor) -->
     <div id="settingsModal" class="hidden fixed inset-0 bg-slate-900/60 z-[60] flex items-end md:items-center justify-center p-0 md:p-4 backdrop-blur-sm">
         <div class="bg-white dark:bg-slate-800 rounded-t-3xl md:rounded-3xl shadow-2xl w-full max-w-md max-h-[90vh] overflow-y-auto">
             <div class="p-5 border-b flex justify-between items-center sticky top-0 bg-white dark:bg-slate-800 z-10 rounded-t-3xl">
-                <h3 class="font-extrabold text-lg">Pengaturan</h3>
+                <h3 class="font-extrabold text-lg">Pengaturan & Data</h3>
                 <button onclick="closeSettings()" class="text-slate-400 bg-slate-100 dark:bg-slate-700 rounded-full p-2 leading-none">&times;</button>
             </div>
-            <form id="settingsForm" onsubmit="saveSettings(event)" class="p-5 space-y-4">
-                <div><label class="block text-xs font-bold text-slate-500 mb-1">Nama Madrasah</label><input type="text" id="setNama" required class="w-full px-3 py-2 rounded-xl border dark:bg-slate-900 dark:border-slate-700"></div>
-                <div><label class="block text-xs font-bold text-slate-500 mb-1">Alamat</label><input type="text" id="setAlamat" class="w-full px-3 py-2 rounded-xl border dark:bg-slate-900 dark:border-slate-700"></div>
-                <div><label class="block text-xs font-bold text-slate-500 mb-1">Kepala Madrasah</label><input type="text" id="setKepala" class="w-full px-3 py-2 rounded-xl border dark:bg-slate-900 dark:border-slate-700"></div>
-                <div><label class="block text-xs font-bold text-slate-500 mb-1">Ganti PIN (6 digit)</label><input type="text" id="setPin" maxlength="6" placeholder="Kosongkan jika tidak diganti" class="w-full px-3 py-2 rounded-xl border dark:bg-slate-900 dark:border-slate-700"></div>
-                <div class="pt-2">
-                    <button type="submit" class="w-full bg-emerald-600 text-white py-3 rounded-xl font-bold text-sm shadow-md">Simpan Pengaturan</button>
+            <div class="p-5 space-y-6">
+                <!-- Profil Form -->
+                <form id="settingsForm" onsubmit="saveSettings(event)" class="space-y-4">
+                    <div><label class="block text-xs font-bold text-slate-500 mb-1">Nama Madrasah</label><input type="text" id="setNama" required class="w-full px-3 py-2 rounded-xl border dark:bg-slate-900 dark:border-slate-700"></div>
+                    <div><label class="block text-xs font-bold text-slate-500 mb-1">Alamat</label><input type="text" id="setAlamat" class="w-full px-3 py-2 rounded-xl border dark:bg-slate-900 dark:border-slate-700"></div>
+                    <div><label class="block text-xs font-bold text-slate-500 mb-1">Kepala Madrasah</label><input type="text" id="setKepala" class="w-full px-3 py-2 rounded-xl border dark:bg-slate-900 dark:border-slate-700"></div>
+                    <div><label class="block text-xs font-bold text-slate-500 mb-1">Ganti PIN (6 digit)</label><input type="text" id="setPin" maxlength="6" placeholder="Kosongkan jika tidak diganti" class="w-full px-3 py-2 rounded-xl border dark:bg-slate-900 dark:border-slate-700"></div>
+                    <button type="submit" class="w-full bg-emerald-600 text-white py-2.5 rounded-xl font-bold text-sm shadow-md">Simpan Profil</button>
+                </form>
+
+                <!-- Manajemen Data Section -->
+                <div class="pt-4 border-t border-slate-200 dark:border-slate-700">
+                    <h4 class="text-sm font-extrabold text-slate-800 dark:text-slate-200 mb-3">Manajemen Data (Excel & Backup)</h4>
+                    <div class="grid grid-cols-2 gap-3">
+                        <button onclick="backupJSON()" class="flex flex-col items-center justify-center p-3 bg-blue-50 dark:bg-blue-900/20 text-blue-700 dark:text-blue-400 rounded-xl hover:bg-blue-100 transition">
+                            <svg class="w-6 h-6 mb-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7H5a2 2 0 00-2 2v9a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-3m-1 4l-3 3m0 0l-3-3m3 3V4"></path></svg>
+                            <span class="text-xs font-bold">Backup JSON</span>
+                        </button>
+                        <label class="flex flex-col items-center justify-center p-3 bg-amber-50 dark:bg-amber-900/20 text-amber-700 dark:text-amber-400 rounded-xl hover:bg-amber-100 transition cursor-pointer">
+                            <svg class="w-6 h-6 mb-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12"></path></svg>
+                            <span class="text-xs font-bold">Restore JSON</span>
+                            <input type="file" id="restoreFile" accept=".json" onchange="restoreJSON(event)" class="hidden">
+                        </label>
+                        <button onclick="exportToExcel()" class="flex flex-col items-center justify-center p-3 bg-emerald-50 dark:bg-emerald-900/20 text-emerald-700 dark:text-emerald-400 rounded-xl hover:bg-emerald-100 transition">
+                            <svg class="w-6 h-6 mb-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 17v-2m3 2v-4m3 4v-6m2 10H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path></svg>
+                            <span class="text-xs font-bold">Ekspor Excel</span>
+                        </button>
+                        <label class="flex flex-col items-center justify-center p-3 bg-purple-50 dark:bg-purple-900/20 text-purple-700 dark:text-purple-400 rounded-xl hover:bg-purple-100 transition cursor-pointer">
+                            <svg class="w-6 h-6 mb-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path></svg>
+                            <span class="text-xs font-bold">Impor Excel</span>
+                            <input type="file" id="importFile" accept=".xlsx, .xls" onchange="importData(event)" class="hidden">
+                        </label>
+                    </div>
                 </div>
-            </form>
+            </div>
         </div>
     </div>
 
@@ -839,84 +854,47 @@
     function backupJSON() { const b = new Blob([JSON.stringify(db, null, 2)], { type: 'application/json' }); const a = document.createElement('a'); a.href = URL.createObjectURL(b); a.download = `backup_madrasah_${new Date().toISOString().slice(0, 10)}.json`; a.click(); toast('Backup diunduh'); }
     function restoreJSON(e) {
         const f = e.target.files[0]; if (!f) return; if (!confirm('Data diganti?')) { e.target.value = ''; return; }
-        const r = new FileReader(); r.onload = ev => { try { const p = JSON.parse(ev.target.result); if (!p.kas || !p.murid) throw new Error('Format salah'); db = migrateDb(p); localStorage.setItem('madrasah_db', JSON.stringify(db)); saveData(); toast('Restore berhasil'); } catch (err) { toast(err.message, 'error'); } e.target.value = ''; }; r.readAsText(f);
+        const r = new FileReader(); r.onload = ev => { try { const p = JSON.parse(ev.target.result); if (!p.kas || !p.murid) throw new Error('Format salah'); db = migrateDb(p); localStorage.setItem('madrasah_db', JSON.stringify(db)); saveData(); toast('Restore berhasil'); closeSettings(); } catch (err) { toast(err.message, 'error'); } e.target.value = ''; }; r.readAsText(f);
     }
 
-    // FUNGSI EXCEL YANG SUDAH DIRAPIKAN
     function exportToExcel() {
         const wb = XLSX.utils.book_new();
-
-        // Helper Lebar Kolom Otomatis
         function getAutoWidth(data, headers) {
             return headers.map(h => {
                 let maxLen = h.length;
-                data.forEach(row => {
-                    if (row[h]) maxLen = Math.max(maxLen, String(row[h]).length);
-                });
+                data.forEach(row => { if (row[h]) maxLen = Math.max(maxLen, String(row[h]).length); });
                 return { wch: maxLen + 2 };
             });
         }
 
-        // 1. Jurnal Kas
-        const kasData = db.kas.map(k => ({
-            'Tanggal': k.tanggal,
-            'Keterangan': k.keterangan,
-            'Kategori': k.kategori,
-            'Jenis': k.jenis,
-            'Nominal': k.nominal
-        }));
+        const kasData = db.kas.map(k => ({ 'Tanggal': k.tanggal, 'Keterangan': k.keterangan, 'Kategori': k.kategori, 'Jenis': k.jenis, 'Nominal': k.nominal }));
         const wsKas = XLSX.utils.json_to_sheet(kasData);
         wsKas['!cols'] = getAutoWidth(kasData, ['Tanggal', 'Keterangan', 'Kategori', 'Jenis', 'Nominal']);
         wsKas['!autofilter'] = { ref: "A1:E1" };
-        for (let i = 2; i <= kasData.length + 1; i++) {
-            if (wsKas['E' + i]) wsKas['E' + i].z = '"Rp"#,##0';
-        }
+        for (let i = 2; i <= kasData.length + 1; i++) { if (wsKas['E' + i]) wsKas['E' + i].z = '"Rp"#,##0'; }
         XLSX.utils.book_append_sheet(wb, wsKas, 'Jurnal Kas');
 
-        // 2. Data SPP
-        const sppData = db.spp.map(s => ({
-            'NIS': s.nis,
-            'Nama Murid': s.nama,
-            'Kelas': s.kelas,
-            'Bulan': s.bulan,
-            'Tahun': s.tahun,
-            'Nominal': s.nominal,
-            'Status': s.status,
-            'Tgl Bayar': s.tanggalBayar || '-'
-        }));
+        const sppData = db.spp.map(s => ({ 'NIS': s.nis, 'Nama Murid': s.nama, 'Kelas': s.kelas, 'Bulan': s.bulan, 'Tahun': s.tahun, 'Nominal': s.nominal, 'Status': s.status, 'Tgl Bayar': s.tanggalBayar || '-' }));
         const wsSpp = XLSX.utils.json_to_sheet(sppData);
         wsSpp['!cols'] = getAutoWidth(sppData, ['NIS', 'Nama Murid', 'Kelas', 'Bulan', 'Tahun', 'Nominal', 'Status', 'Tgl Bayar']);
         wsSpp['!autofilter'] = { ref: "A1:H1" };
-        for (let i = 2; i <= sppData.length + 1; i++) {
-            if (wsSpp['F' + i]) wsSpp['F' + i].z = '"Rp"#,##0';
-        }
+        for (let i = 2; i <= sppData.length + 1; i++) { if (wsSpp['F' + i]) wsSpp['F' + i].z = '"Rp"#,##0'; }
         XLSX.utils.book_append_sheet(wb, wsSpp, 'Data SPP');
 
-        // 3. Data Murid
-        const muridData = db.murid.map(m => ({
-            'NIS': m.nis,
-            'Nama Murid': m.nama,
-            'Kelas': m.kelas
-        }));
+        const muridData = db.murid.map(m => ({ 'NIS': m.nis, 'Nama Murid': m.nama, 'Kelas': m.kelas }));
         const wsMurid = XLSX.utils.json_to_sheet(muridData);
         wsMurid['!cols'] = getAutoWidth(muridData, ['NIS', 'Nama Murid', 'Kelas']);
         wsMurid['!autofilter'] = { ref: "A1:C1" };
         XLSX.utils.book_append_sheet(wb, wsMurid, 'Data Murid');
 
-        // 4. Data Guru
-        const guruData = db.guru.map(g => ({
-            'NIP': g.nip,
-            'Nama Guru': g.nama,
-            'Mata Pelajaran': g.mapel,
-            'Kontak/HP': g.kontak
-        }));
+        const guruData = db.guru.map(g => ({ 'NIP': g.nip, 'Nama Guru': g.nama, 'Mata Pelajaran': g.mapel, 'Kontak/HP': g.kontak }));
         const wsGuru = XLSX.utils.json_to_sheet(guruData);
         wsGuru['!cols'] = getAutoWidth(guruData, ['NIP', 'Nama Guru', 'Mata Pelajaran', 'Kontak/HP']);
         wsGuru['!autofilter'] = { ref: "A1:D1" };
         XLSX.utils.book_append_sheet(wb, wsGuru, 'Data Guru');
 
         XLSX.writeFile(wb, `Laporan_Madrasah_${new Date().toISOString().slice(0, 10)}.xlsx`);
-        toast('Ekspor Excel berhasil (Rapi)');
+        toast('Ekspor Excel berhasil');
     }
 
     function importData(e) {
@@ -925,11 +903,10 @@
         r.onload = function(ev) {
             try {
                 const data = new Uint8Array(ev.target.result); const wb = XLSX.read(data, { type: 'array' });
-                // Baca Jurnal Kas (Mendukung kolom 'Nominal' baru maupun 'Nominal (Rp)' lama)
                 if (wb.SheetNames.includes('Jurnal Kas')) db.kas = XLSX.utils.sheet_to_json(wb.Sheets['Jurnal Kas']).map((r, i) => ({ id: Date.now() + i, tanggal: r['Tanggal'] || new Date().toISOString().slice(0, 10), keterangan: r['Keterangan'] || '-', kategori: r['Kategori'] || 'Lainnya', jenis: (r['Jenis']) === 'Keluar' ? 'Keluar' : 'Masuk', nominal: Number(r['Nominal (Rp)'] || r['Nominal'] || 0) }));
                 if (wb.SheetNames.includes('Data SPP')) db.spp = XLSX.utils.sheet_to_json(wb.Sheets['Data SPP']).map((r, i) => ({ id: Date.now() + 1000 + i, nis: String(r['NIS'] || ''), nama: r['Nama Murid'] || '-', kelas: r['Kelas'] || '-', bulan: r['Bulan'] || r['Bulan SPP'] || 'Januari', tahun: Number(r['Tahun']) || 2026, nominal: Number(r['Nominal (Rp)'] || r['Nominal'] || 50000), status: (r['Status']) === 'Lunas' ? 'Lunas' : 'Belum', tanggalBayar: null, kasId: null }));
                 if (wb.SheetNames.includes('Data Murid')) db.murid = XLSX.utils.sheet_to_json(wb.Sheets['Data Murid']).map(r => ({ nis: String(r['NIS'] || ''), nama: r['Nama Murid'] || '-', kelas: r['Kelas'] || '-' })).filter(m => m.nis);
-                saveData(); toast('Import berhasil!');
+                saveData(); closeSettings(); toast('Import berhasil!');
             } catch (err) { toast('Gagal baca file.', 'error'); } e.target.value = '';
         };
         r.readAsArrayBuffer(f);

@@ -379,49 +379,75 @@
         </div>
     </div>
 
-    <!-- SETTINGS MODAL -->
+    <!-- SETTINGS MODAL (TATA LETAK BARU) -->
     <div id="settingsModal" class="hidden fixed inset-0 bg-slate-900/60 z-[60] flex items-end md:items-center justify-center p-0 md:p-4 backdrop-blur-sm">
         <div class="bg-white dark:bg-slate-800 rounded-t-3xl md:rounded-3xl shadow-2xl w-full max-w-md max-h-[90vh] overflow-y-auto">
             <div class="p-5 border-b flex justify-between items-center sticky top-0 bg-white dark:bg-slate-800 z-10 rounded-t-3xl">
-                <h3 class="font-extrabold text-lg">Pengaturan & Data</h3>
+                <h3 class="font-extrabold text-lg">Pengaturan</h3>
                 <button onclick="closeSettings()" class="text-slate-400 bg-slate-100 dark:bg-slate-700 rounded-full p-2 leading-none">&times;</button>
             </div>
-            <div class="p-5 space-y-6">
-                <!-- Profil Form -->
-                <form id="settingsForm" onsubmit="saveSettings(event)" class="space-y-4">
-                    <div><label class="block text-xs font-bold text-slate-500 mb-1">Nama Madrasah</label><input type="text" id="setNama" required class="w-full px-3 py-2 rounded-xl border dark:bg-slate-900 dark:border-slate-700"></div>
-                    <div><label class="block text-xs font-bold text-slate-500 mb-1">Alamat</label><input type="text" id="setAlamat" class="w-full px-3 py-2 rounded-xl border dark:bg-slate-900 dark:border-slate-700"></div>
-                    <div><label class="block text-xs font-bold text-slate-500 mb-1">Kepala Madrasah</label><input type="text" id="setKepala" class="w-full px-3 py-2 rounded-xl border dark:bg-slate-900 dark:border-slate-700"></div>
-                    <div><label class="block text-xs font-bold text-slate-500 mb-1">Ganti PIN (4-6 digit)</label><input type="password" id="setPin" maxlength="6" placeholder="Kosongkan jika tidak diganti" class="w-full px-3 py-2 rounded-xl border dark:bg-slate-900 dark:border-slate-700"></div>
-                    
-                    <!-- Pilihan Tema -->
-                    <div>
-                        <label class="block text-xs font-bold text-slate-500 mb-2">Tema Warna Aplikasi</label>
-                        <div class="flex gap-3">
-                            <button type="button" onclick="setThemeColor('green')" id="btn-theme-green" class="w-10 h-10 rounded-full bg-emerald-600 border-2 border-transparent hover:border-slate-300 transition-all"></button>
-                            <button type="button" onclick="setThemeColor('blue')" id="btn-theme-blue" class="w-10 h-10 rounded-full bg-blue-600 border-2 border-transparent hover:border-slate-300 transition-all"></button>
-                            <button type="button" onclick="setThemeColor('purple')" id="btn-theme-purple" class="w-10 h-10 rounded-full bg-purple-600 border-2 border-transparent hover:border-slate-300 transition-all"></button>
-                            <button type="button" onclick="setThemeColor('rose')" id="btn-theme-rose" class="w-10 h-10 rounded-full bg-rose-600 border-2 border-transparent hover:border-slate-300 transition-all"></button>
-                        </div>
+            
+            <div class="p-5 space-y-8">
+                <!-- 1. PROFIL MADRASAH -->
+                <section>
+                    <div class="flex items-center gap-2 mb-4">
+                        <div class="w-1.5 h-5 bg-primary rounded-full"></div>
+                        <h4 class="text-sm font-extrabold text-slate-800 dark:text-slate-200 uppercase tracking-wide">Profil Madrasah</h4>
                     </div>
+                    <form id="settingsForm" onsubmit="saveSettings(event)" class="space-y-4">
+                        <div><label class="block text-xs font-bold text-slate-500 mb-1">Nama Madrasah</label><input type="text" id="setNama" required class="w-full px-3 py-2 rounded-xl border dark:bg-slate-900 dark:border-slate-700"></div>
+                        <div><label class="block text-xs font-bold text-slate-500 mb-1">Alamat</label><input type="text" id="setAlamat" class="w-full px-3 py-2 rounded-xl border dark:bg-slate-900 dark:border-slate-700"></div>
+                        <div><label class="block text-xs font-bold text-slate-500 mb-1">Kepala Madrasah</label><input type="text" id="setKepala" class="w-full px-3 py-2 rounded-xl border dark:bg-slate-900 dark:border-slate-700"></div>
+                        <button type="submit" class="w-full bg-primary text-white py-2.5 rounded-xl font-bold text-sm shadow-md theme-transition">Simpan Profil</button>
+                    </form>
+                </section>
 
-                    <button type="submit" class="w-full bg-primary text-white py-2.5 rounded-xl font-bold text-sm shadow-md mt-4 theme-transition">Simpan Profil</button>
-                </form>
+                <!-- 2. TEMA WARNA -->
+                <section>
+                    <div class="flex items-center gap-2 mb-4">
+                        <div class="w-1.5 h-5 bg-primary rounded-full"></div>
+                        <h4 class="text-sm font-extrabold text-slate-800 dark:text-slate-200 uppercase tracking-wide">Tema Aplikasi</h4>
+                    </div>
+                    <div class="flex gap-3">
+                        <button type="button" onclick="setThemeColor('green')" id="btn-theme-green" class="w-10 h-10 rounded-full bg-emerald-600 border-2 border-transparent hover:border-slate-300 transition-all"></button>
+                        <button type="button" onclick="setThemeColor('blue')" id="btn-theme-blue" class="w-10 h-10 rounded-full bg-blue-600 border-2 border-transparent hover:border-slate-300 transition-all"></button>
+                        <button type="button" onclick="setThemeColor('purple')" id="btn-theme-purple" class="w-10 h-10 rounded-full bg-purple-600 border-2 border-transparent hover:border-slate-300 transition-all"></button>
+                        <button type="button" onclick="setThemeColor('rose')" id="btn-theme-rose" class="w-10 h-10 rounded-full bg-rose-600 border-2 border-transparent hover:border-slate-300 transition-all"></button>
+                    </div>
+                </section>
 
-                <!-- TUTUP BUKU -->
-                <div class="pt-4 border-t border-slate-200 dark:border-slate-700">
-                    <h4 class="text-sm font-extrabold text-slate-800 dark:text-slate-200 mb-3">Tutup Buku (Kunci Data)</h4>
+                <!-- 3. KEAMANAN -->
+                <section>
+                    <div class="flex items-center gap-2 mb-4">
+                        <div class="w-1.5 h-5 bg-primary rounded-full"></div>
+                        <h4 class="text-sm font-extrabold text-slate-800 dark:text-slate-200 uppercase tracking-wide">Keamanan</h4>
+                    </div>
+                    <form id="changePinForm" onsubmit="saveSettings(event)" class="flex gap-2">
+                        <input type="password" id="setPin" maxlength="6" placeholder="PIN Baru (4-6 digit)" class="flex-1 px-3 py-2 rounded-xl border dark:bg-slate-900 dark:border-slate-700 text-sm">
+                        <button type="submit" class="bg-slate-800 dark:bg-slate-700 text-white px-4 py-2 rounded-xl font-bold text-sm">Ganti PIN</button>
+                    </form>
+                </section>
+
+                <!-- 4. TUTUP BUKU -->
+                <section>
+                    <div class="flex items-center gap-2 mb-4">
+                        <div class="w-1.5 h-5 bg-primary rounded-full"></div>
+                        <h4 class="text-sm font-extrabold text-slate-800 dark:text-slate-200 uppercase tracking-wide">Tutup Buku (Kunci)</h4>
+                    </div>
                     <p class="text-xs text-slate-500 mb-2">Kunci data transaksi kas & SPP untuk bulan tertentu agar tidak bisa diubah/dihapus.</p>
                     <div class="flex gap-2 mb-2">
                         <input type="month" id="lockBulanInput" class="flex-1 px-3 py-2 rounded-xl border dark:bg-slate-900 dark:border-slate-700 text-sm">
                         <button onclick="lockPeriode()" class="bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded-xl text-xs font-bold">Kunci</button>
                     </div>
                     <div id="listLockedPeriods" class="space-y-2"></div>
-                </div>
+                </section>
 
-                <!-- Manajemen Data Section -->
-                <div class="pt-4 border-t border-slate-200 dark:border-slate-700">
-                    <h4 class="text-sm font-extrabold text-slate-800 dark:text-slate-200 mb-3">Manajemen Data (Excel & Backup)</h4>
+                <!-- 5. MANAJEMEN DATA -->
+                <section>
+                    <div class="flex items-center gap-2 mb-4">
+                        <div class="w-1.5 h-5 bg-primary rounded-full"></div>
+                        <h4 class="text-sm font-extrabold text-slate-800 dark:text-slate-200 uppercase tracking-wide">Manajemen Data</h4>
+                    </div>
                     <div class="grid grid-cols-2 gap-3">
                         <button onclick="backupJSON()" class="flex flex-col items-center justify-center p-3 bg-blue-50 dark:bg-blue-900/20 text-blue-700 dark:text-blue-400 rounded-xl hover:bg-blue-100 transition">
                             <svg class="w-6 h-6 mb-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7H5a2 2 0 00-2 2v9a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-3m-1 4l-3 3m0 0l-3-3m3 3V4"></path></svg>
@@ -442,7 +468,26 @@
                             <input type="file" id="importFile" accept=".xlsx, .xls" onchange="importData(event)" class="hidden">
                         </label>
                     </div>
-                </div>
+                </section>
+
+                <!-- 6. ZONA BERBAHAYA (HAPUS DATA) -->
+                <section class="border border-red-200 dark:border-red-900/50 bg-red-50 dark:bg-red-900/10 rounded-2xl p-4">
+                    <div class="flex items-center gap-2 mb-3">
+                        <div class="w-1.5 h-5 bg-red-500 rounded-full"></div>
+                        <h4 class="text-sm font-extrabold text-red-700 dark:text-red-400 uppercase tracking-wide">Hapus Data</h4>
+                    </div>
+                    <p class="text-xs text-red-600 dark:text-red-400 mb-3">Tindakan ini tidak dapat dibatalkan. Pastikan Anda sudah melakukan Backup JSON sebelum menghapus data.</p>
+                    <div class="space-y-2">
+                        <button onclick="hapusData('kas_spp')" class="w-full bg-white dark:bg-slate-800 border border-red-300 dark:border-red-700 text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-900/30 py-2.5 rounded-xl font-bold text-xs transition flex justify-center items-center gap-2">
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path></svg>
+                            Hapus Kas & SPP Saja
+                        </button>
+                        <button onclick="hapusData('all')" class="w-full bg-red-600 hover:bg-red-700 text-white py-2.5 rounded-xl font-bold text-xs transition flex justify-center items-center gap-2">
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path></svg>
+                            Hapus SEMUA Data (Reset Pabrik)
+                        </button>
+                    </div>
+                </section>
             </div>
         </div>
     </div>
@@ -1162,13 +1207,8 @@
         const r = new FileReader(); r.onload = ev => { try { const p = JSON.parse(ev.target.result); if (!p.kas || !p.murid) throw new Error('Format salah'); db = migrateDb(p); localStorage.setItem('madrasah_db', JSON.stringify(db)); saveData(); toast('Restore berhasil'); closeSettings(); } catch (err) { toast(err.message, 'error'); } e.target.value = ''; }; r.readAsText(f);
     }
 
-    // ==========================================
-    // FUNGSI EKSPOR EXCEL (DIPERBARUI & DIRAPIKAN)
-    // ==========================================
     function exportToExcel() {
         const wb = XLSX.utils.book_new();
-        
-        // Helper untuk mengatur lebar kolom
         function getAutoWidth(data, headers) {
             return headers.map(h => {
                 let maxLen = h.length;
@@ -1177,48 +1217,44 @@
             });
         }
 
-        // 1. Jurnal Kas (Ditambah Baris Total)
         const kasData = db.kas.map(k => ({ 'Tanggal': k.tanggal, 'Keterangan': k.keterangan, 'Kategori': k.kategori, 'Jenis': k.jenis, 'Nominal': k.nominal }));
         const totalKas = db.kas.reduce((s, k) => s + (k.jenis === 'Masuk' ? k.nominal : -k.nominal), 0);
-        kasData.push({ 'Tanggal': 'TOTAL', 'Keterangan': '', 'Kategori': '', 'Jenis': '', 'Nominal': totalKas }); // Baris Total
+        kasData.push({ 'Tanggal': 'TOTAL', 'Keterangan': '', 'Kategori': '', 'Jenis': '', 'Nominal': totalKas }); 
 
         const wsKas = XLSX.utils.json_to_sheet(kasData);
         wsKas['!cols'] = getAutoWidth(kasData, ['Tanggal', 'Keterangan', 'Kategori', 'Jenis', 'Nominal']);
         wsKas['!autofilter'] = { ref: "A1:E1" };
         for (let i = 2; i <= kasData.length; i++) { 
             if (wsKas['E' + i]) wsKas['E' + i].z = '"Rp"#,##0'; 
-            if (i === kasData.length) { // Baris terakhir (TOTAL) di-bold
+            if (i === kasData.length) { 
                 if (wsKas['A' + i]) wsKas['A' + i].s = { font: { bold: true } };
                 if (wsKas['E' + i]) wsKas['E' + i].s = { font: { bold: true } };
             }
         }
         XLSX.utils.book_append_sheet(wb, wsKas, 'Jurnal Kas');
 
-        // 2. Data SPP (Ditambah Baris Total)
         const sppData = db.spp.map(s => ({ 'NIS': s.nis, 'Nama Murid': s.nama, 'Kelas': s.kelas, 'Bulan': s.bulan, 'Tahun': s.tahun, 'Nominal': s.nominal, 'Status': s.status, 'Tgl Bayar': s.tanggalBayar || '-' }));
         const totalSppLunas = db.spp.filter(s => s.status === 'Lunas').reduce((s, x) => s + x.nominal, 0);
-        sppData.push({ 'NIS': 'TOTAL', 'Nama Murid': '', 'Kelas': '', 'Bulan': '', 'Tahun': '', 'Nominal': totalSppLunas, 'Status': 'Lunas', 'Tgl Bayar': '' }); // Baris Total
+        sppData.push({ 'NIS': 'TOTAL', 'Nama Murid': '', 'Kelas': '', 'Bulan': '', 'Tahun': '', 'Nominal': totalSppLunas, 'Status': 'Lunas', 'Tgl Bayar': '' }); 
 
         const wsSpp = XLSX.utils.json_to_sheet(sppData);
         wsSpp['!cols'] = getAutoWidth(sppData, ['NIS', 'Nama Murid', 'Kelas', 'Bulan', 'Tahun', 'Nominal', 'Status', 'Tgl Bayar']);
         wsSpp['!autofilter'] = { ref: "A1:H1" };
         for (let i = 2; i <= sppData.length; i++) { 
             if (wsSpp['F' + i]) wsSpp['F' + i].z = '"Rp"#,##0'; 
-            if (i === sppData.length) { // Baris terakhir (TOTAL) di-bold
+            if (i === sppData.length) { 
                 if (wsSpp['A' + i]) wsSpp['A' + i].s = { font: { bold: true } };
                 if (wsSpp['F' + i]) wsSpp['F' + i].s = { font: { bold: true } };
             }
         }
         XLSX.utils.book_append_sheet(wb, wsSpp, 'Data SPP');
 
-        // 3. Data Murid
         const muridData = db.murid.map(m => ({ 'NIS': m.nis, 'Nama Murid': m.nama, 'Kelas': m.kelas }));
         const wsMurid = XLSX.utils.json_to_sheet(muridData);
         wsMurid['!cols'] = getAutoWidth(muridData, ['NIS', 'Nama Murid', 'Kelas']);
         wsMurid['!autofilter'] = { ref: "A1:C1" };
         XLSX.utils.book_append_sheet(wb, wsMurid, 'Data Murid');
 
-        // 4. Data Guru
         const guruData = db.guru.map(g => ({ 'NIP': g.nip, 'Nama Guru': g.nama, 'Mata Pelajaran': g.mapel, 'Kontak/HP': g.kontak }));
         const wsGuru = XLSX.utils.json_to_sheet(guruData);
         wsGuru['!cols'] = getAutoWidth(guruData, ['NIP', 'Nama Guru', 'Mata Pelajaran', 'Kontak/HP']);
@@ -1229,24 +1265,12 @@
         toast('Ekspor Excel berhasil');
     }
 
-    // ==========================================
-    // FUNGSI IMPOR EXCEL (DIPERBARUI & AMAN)
-    // ==========================================
-    
-    // Fungsi pembantu untuk mengubah tanggal Excel menjadi format YYYY-MM-DD
     function parseExcelDate(val) {
         if (!val) return new Date().toISOString().slice(0, 10);
-        // Jika formatnya angka (Excel serial date)
-        if (typeof val === 'number') {
-            return new Date((val - 25569) * 86400 * 1000).toISOString().slice(0, 10);
-        }
-        // Jika formatnya string tapi aneh (misal 12/31/2026)
+        if (typeof val === 'number') return new Date((val - 25569) * 86400 * 1000).toISOString().slice(0, 10);
         let str = String(val);
-        if (str.includes('/')) {
-            const parts = str.split('/');
-            if (parts.length === 3) return `${parts[2]}-${parts[0].padStart(2,'0')}-${parts[1].padStart(2,'0')}`;
-        }
-        return str.slice(0, 10); // Ambil 10 karakter pertama (YYYY-MM-DD)
+        if (str.includes('/')) { const parts = str.split('/'); if (parts.length === 3) return `${parts[2]}-${parts[0].padStart(2,'0')}-${parts[1].padStart(2,'0')}`; }
+        return str.slice(0, 10); 
     }
 
     function importData(e) {
@@ -1264,45 +1288,20 @@
                 
                 let countKas = 0, countSpp = 0, countMurid = 0, countGuru = 0;
 
-                // 1. BACA JURNAL KAS
                 if (wb.SheetNames.includes('Jurnal Kas')) {
                     const rows = XLSX.utils.sheet_to_json(wb.Sheets['Jurnal Kas']);
-                    db.kas = rows.filter(r => r['Tanggal'] !== 'TOTAL').map((r, i) => ({
-                        id: Date.now() + i,
-                        tanggal: parseExcelDate(r['Tanggal']),
-                        keterangan: r['Keterangan'] || '-',
-                        kategori: r['Kategori'] || 'Lainnya',
-                        jenis: (r['Jenis'] === 'Keluar') ? 'Keluar' : 'Masuk',
-                        nominal: Number(r['Nominal']) || 0
-                    }));
+                    db.kas = rows.filter(r => r['Tanggal'] !== 'TOTAL').map((r, i) => ({ id: Date.now() + i, tanggal: parseExcelDate(r['Tanggal']), keterangan: r['Keterangan'] || '-', kategori: r['Kategori'] || 'Lainnya', jenis: (r['Jenis'] === 'Keluar') ? 'Keluar' : 'Masuk', nominal: Number(r['Nominal']) || 0 }));
                     countKas = db.kas.length;
                 }
 
-                // 2. BACA DATA SPP
                 if (wb.SheetNames.includes('Data SPP')) {
                     const rows = XLSX.utils.sheet_to_json(wb.Sheets['Data SPP']);
-                    db.spp = rows.filter(r => r['NIS'] !== 'TOTAL').map((r, i) => ({
-                        id: Date.now() + 1000 + i,
-                        nis: String(r['NIS'] || ''),
-                        nama: r['Nama Murid'] || '-',
-                        kelas: r['Kelas'] || '-',
-                        bulan: r['Bulan'] || 'Januari',
-                        tahun: Number(r['Tahun']) || 2026,
-                        nominal: Number(r['Nominal']) || 50000,
-                        status: (r['Status'] === 'Lunas') ? 'Lunas' : 'Belum',
-                        tanggalBayar: r['Tgl Bayar'] !== '-' ? parseExcelDate(r['Tgl Bayar']) : null,
-                        kasId: null
-                    }));
+                    db.spp = rows.filter(r => r['NIS'] !== 'TOTAL').map((r, i) => ({ id: Date.now() + 1000 + i, nis: String(r['NIS'] || ''), nama: r['Nama Murid'] || '-', kelas: r['Kelas'] || '-', bulan: r['Bulan'] || 'Januari', tahun: Number(r['Tahun']) || 2026, nominal: Number(r['Nominal']) || 50000, status: (r['Status'] === 'Lunas') ? 'Lunas' : 'Belum', tanggalBayar: r['Tgl Bayar'] !== '-' ? parseExcelDate(r['Tgl Bayar']) : null, kasId: null }));
                     countSpp = db.spp.length;
                 }
 
-                // 3. BACA DATA MURID (Bisa dari format standar atau Kemenag)
                 if (wb.SheetNames.includes('Data Murid')) {
-                    db.murid = XLSX.utils.sheet_to_json(wb.Sheets['Data Murid']).map(r => ({
-                        nis: String(r['NIS'] || ''),
-                        nama: r['Nama Murid'] || '-',
-                        kelas: r['Kelas'] || '-'
-                    })).filter(m => m.nis);
+                    db.murid = XLSX.utils.sheet_to_json(wb.Sheets['Data Murid']).map(r => ({ nis: String(r['NIS'] || ''), nama: r['Nama Murid'] || '-', kelas: r['Kelas'] || '-' })).filter(m => m.nis);
                     countMurid += db.murid.length;
                 } else if (wb.SheetNames.includes('MURID')) {
                     const rawRows = XLSX.utils.sheet_to_json(wb.Sheets['MURID'], { header: 1 });
@@ -1316,23 +1315,14 @@
                             const row = rawRows[i];
                             if (row[idxNis] && row[idxNama]) {
                                 const exists = db.murid.find(m => String(m.nis) === String(row[idxNis]).trim());
-                                if (!exists) {
-                                    db.murid.push({ nis: String(row[idxNis]).trim(), nama: String(row[idxNama]).trim(), kelas: String(row[idxKelas] || '-').trim() });
-                                    countMurid++;
-                                }
+                                if (!exists) { db.murid.push({ nis: String(row[idxNis]).trim(), nama: String(row[idxNama]).trim(), kelas: String(row[idxKelas] || '-').trim() }); countMurid++; }
                             }
                         }
                     }
                 }
 
-                // 4. BACA DATA GURU (Bisa dari format standar atau Kemenag)
                 if (wb.SheetNames.includes('Data Guru')) {
-                    db.guru = XLSX.utils.sheet_to_json(wb.Sheets['Data Guru']).map(r => ({
-                        nip: String(r['NIP'] || ''),
-                        nama: r['Nama Guru'] || '-',
-                        mapel: r['Mata Pelajaran'] || '-',
-                        kontak: r['Kontak/HP'] || '-'
-                    })).filter(g => g.nip);
+                    db.guru = XLSX.utils.sheet_to_json(wb.Sheets['Data Guru']).map(r => ({ nip: String(r['NIP'] || ''), nama: r['Nama Guru'] || '-', mapel: r['Mata Pelajaran'] || '-', kontak: r['Kontak/HP'] || '-' })).filter(g => g.nip);
                     countGuru += db.guru.length;
                 } else if (wb.SheetNames.includes('ASATIDZ')) {
                     const rawRows = XLSX.utils.sheet_to_json(wb.Sheets['ASATIDZ'], { header: 1 });
@@ -1346,10 +1336,7 @@
                             const row = rawRows[i];
                             if (row[idxNip] && row[idxNama]) {
                                 const exists = db.guru.find(g => String(g.nip) === String(row[idxNip]).trim());
-                                if (!exists) {
-                                    db.guru.push({ nip: String(row[idxNip]).trim(), nama: String(row[idxNama]).trim(), mapel: String(row[idxMapel] || '-').trim(), kontak: '-' });
-                                    countGuru++;
-                                }
+                                if (!exists) { db.guru.push({ nip: String(row[idxNip]).trim(), nama: String(row[idxNama]).trim(), mapel: String(row[idxMapel] || '-').trim(), kontak: '-' }); countGuru++; }
                             }
                         }
                     }
@@ -1357,7 +1344,6 @@
 
                 saveData(); 
                 closeSettings(); 
-                
                 toast(`Import sukses! ${countKas} Kas, ${countSpp} SPP, ${countMurid} Murid, ${countGuru} Guru diproses.`);
 
             } catch (err) { 
@@ -1367,6 +1353,37 @@
             e.target.value = '';
         };
         r.readAsArrayBuffer(f);
+    }
+
+    // ==========================================
+    // FITUR HAPUS DATA (RESET)
+    // ==========================================
+    function hapusData(type) {
+        if (type === 'kas_spp') {
+            if (!confirm('PERINGATAN!\n\nAnda akan menghapus SEMUA data Jurnal Kas dan Tagihan SPP.\nData Murid dan Guru akan tetap aman.\n\nLanjutkan?')) return;
+            if (!confirm('Konfirmasi terakhir: Hapus Kas & SPP sekarang?')) return;
+            
+            db.kas = [];
+            db.spp = [];
+            saveData();
+            closeSettings();
+            toast('Data Kas & SPP berhasil dikosongkan.', 'success');
+            
+        } else if (type === 'all') {
+            if (!confirm('PERINGATAN FATAL!\n\nAnda akan menghapus SEMUA DATA (Kas, SPP, Murid, Guru, Kategori).\nAplikasi akan kembali ke kondisi awal (Reset Pabrik).\n\nKecuali PIN dan Pengaturan Profil.\n\nLanjutkan?')) return;
+            if (!confirm('Konfirmasi terakhir: Hapus SEMUA data sekarang?')) return;
+            
+            const currentPin = appSettings.pin;
+            db = getDefaultDb();
+            appSettings.pin = currentPin;
+            
+            localStorage.setItem('madrasah_db', JSON.stringify(db));
+            localStorage.setItem('madrasah_settings', JSON.stringify(appSettings));
+            
+            closeSettings();
+            renderAll();
+            toast('Aplikasi berhasil di-reset ke pengaturan pabrik.', 'success');
+        }
     }
 
     function openMobileForm(type = null) {

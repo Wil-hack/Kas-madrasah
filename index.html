@@ -1,1078 +1,841 @@
 <!DOCTYPE html>
 <html lang="id">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Madrasah Manager Enterprise</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
-    <script>
-        tailwind.config = {
-            theme: {
-                extend: {
-                    colors: {
-                        gold: { 300: '#fcd34d', 400: '#fbbf24', 500: '#f59e0b', 600: '#d97706' },
-                    },
-                    animation: {
-                        'fade-in': 'fadeIn 0.3s ease-out',
-                        'slide-in': 'slideIn 0.3s ease-out',
-                        'float': 'float 6s ease-in-out infinite',
-                    },
-                    keyframes: {
-                        fadeIn: { '0%': { opacity: '0', transform: 'translateY(6px)' }, '100%': { opacity: '1', transform: 'translateY(0)' } },
-                        slideIn: { '0%': { opacity: '0', transform: 'translateX(20px)' }, '100%': { opacity: '1', transform: 'translateX(0)' } },
-                        float: { '0%,100%': { transform: 'translateY(0)' }, '50%': { transform: 'translateY(-6px)' } },
-                    }
-                }
-            }
-        }
-    </script>
-    <style>
-        .scrollbar-none::-webkit-scrollbar { display: none; }
-        .scrollbar-none { -ms-overflow-style: none; scrollbar-width: none; }
-        .tab-content:not(.hidden) { animation: fadeIn 0.3s ease-out; }
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: translateY(0); } }
-        @keyframes slideIn { from { opacity: 0; transform: translateX(20px); } to { opacity: 1; transform: translateX(0); } }
-        @keyframes float { 0%,100% { transform: translateY(0); } 50% { transform: translateY(-6px); } }
-        
-        .card-islamic { 
-            transition: all 0.3s ease; 
-            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03);
-        }
-        .card-islamic:hover { 
-            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05); 
-        }
-        tbody tr { transition: background-color 0.15s ease; }
-
-        /* DEFINISI TEMA WARNA DENGAN CSS VARIABLES */
-        body.theme-emerald { 
-            --bg-main: #f8fafc; --header-bg: #064e3b; --hero-from: #065f46; --hero-to: #134e4a; 
-            --btn-primary: #047857; --btn-hover: #065f46; --accent: #fcd34d; --accent-sub: #a7f3d0; 
-        }
-        body.theme-ocean { 
-            --bg-main: #f0f9ff; --header-bg: #0c4a6e; --hero-from: #0284c7; --hero-to: #0369a1; 
-            --btn-primary: #0284c7; --btn-hover: #0369a1; --accent: #38bdf8; --accent-sub: #bae6fd; 
-        }
-        body.theme-purple { 
-            --bg-main: #faf5ff; --header-bg: #581c87; --hero-from: #7e22ce; --hero-to: #6b21a8; 
-            --btn-primary: #7e22ce; --btn-hover: #6b21a8; --accent: #e9d5ff; --accent-sub: #ddd6fe; 
-        }
-        body.theme-dark { 
-            --bg-main: #0f172a; --header-bg: #1e293b; --hero-from: #334155; --hero-to: #1e293b; 
-            --btn-primary: #475569; --btn-hover: #334155; --accent: #fbbf24; --accent-sub: #cbd5e1; color: #f8fafc; 
-        }
-
-        .dynamic-header { background-color: var(--header-bg) !important; }
-        .dynamic-hero { background: linear-gradient(135deg, var(--hero-from), var(--hero-to)) !important; }
-        .dynamic-btn { background-color: var(--btn-primary) !important; }
-        .dynamic-btn:hover { background-color: var(--btn-hover) !important; }
-        .dynamic-accent { color: var(--accent) !important; }
-        .dynamic-accent-sub { color: var(--accent-sub) !important; }
-        
-        body.theme-dark .bg-white { background-color: #1e293b !important; color: #f1f5f9 !important; border-color: #334155 !important; }
-        body.theme-dark .text-slate-800, body.theme-dark .text-slate-700, body.theme-dark .text-slate-600, body.theme-dark .text-emerald-900 { color: #f1f5f9 !important; }
-        body.theme-dark .bg-slate-50, body.theme-dark .bg-slate-100 { background-color: #334155 !important; color: #f1f5f9 !important; }
-        body.theme-dark input, body.theme-dark select { background-color: #0f172a !important; color: #fff !important; border-color: #475569 !important; }
-        body.theme-dark table th { background-color: #334155 !important; color: #cbd5e1 !important; }
-        body.theme-dark table td { border-color: #334155 !important; }
-    </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Kas Madrasah — Offline Full Edition</title>
+<style>
+:root{--bg:#f4f6fb;--card:#fff;--text:#1a2234;--muted:#64748b;--primary:#2563eb;--primary-h:#1d4ed8;--success:#10b981;--danger:#ef4444;--warning:#f59e0b;--info:#3b82f6;--border:#e2e8f0;--shadow:0 1px 3px rgba(0,0,0,.06);--radius:10px}
+[data-theme="dark"]{--bg:#0f172a;--card:#1e293b;--text:#e2e8f0;--muted:#94a3b8;--border:#334155;--shadow:0 1px 3px rgba(0,0,0,.35)}
+*{box-sizing:border-box}
+body{margin:0;font-family:system-ui,-apple-system,'Segoe UI',sans-serif;background:var(--bg);color:var(--text);font-size:14px;line-height:1.5;transition:background .2s}
+h1,h2,h3{margin:0 0 .5rem}h1{font-size:20px}h2{font-size:17px}h3{font-size:15px}
+a{color:var(--primary);cursor:pointer;text-decoration:none}
+input,select,textarea,button{font-family:inherit;font-size:14px}
+input,select,textarea{padding:8px 10px;border:1px solid var(--border);border-radius:8px;background:var(--card);color:var(--text);width:100%;transition:border .15s}
+input:focus,select:focus,textarea:focus{outline:none;border-color:var(--primary)}
+button{padding:8px 14px;border:1px solid var(--border);border-radius:8px;background:var(--card);color:var(--text);cursor:pointer;font-weight:500;transition:all .15s}
+button:hover{background:var(--bg)}
+button.primary{background:var(--primary);color:#fff;border-color:var(--primary)}
+button.primary:hover{background:var(--primary-h)}
+button.danger{background:var(--danger);color:#fff;border-color:var(--danger)}
+button.success{background:var(--success);color:#fff;border-color:var(--success)}
+button.warning{background:var(--warning);color:#fff;border-color:var(--warning)}
+button.sm{padding:4px 10px;font-size:12px}
+button.xs{padding:2px 8px;font-size:11px}
+.row{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+.grid{display:grid;gap:12px}
+.table-wrap{overflow-x:auto;border-radius:var(--radius);border:1px solid var(--border)}
+table{width:100%;border-collapse:collapse;font-size:13px}
+th,td{padding:10px 12px;text-align:left;border-bottom:1px solid var(--border)}
+th{background:var(--bg);font-weight:600;font-size:12px;text-transform:uppercase;letter-spacing:.03em;color:var(--muted)}
+tr:last-child td{border-bottom:none}
+tr:hover td{background:var(--bg)}
+.card{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:16px;box-shadow:var(--shadow)}
+.badge{display:inline-block;padding:2px 8px;border-radius:12px;font-size:11px;font-weight:600}
+.badge.s{background:#d1fae5;color:#065f46}
+.badge.d{background:#fee2e2;color:#991b1b}
+.badge.w{background:#fef3c7;color:#92400e}
+.badge.i{background:#dbeafe;color:#1e40af}
+#app{display:flex;min-height:100vh}
+.sidebar{width:230px;background:var(--card);border-right:1px solid var(--border);padding:16px 0;display:flex;flex-direction:column;flex-shrink:0;position:sticky;top:0;height:100vh;overflow-y:auto}
+.brand{padding:0 20px 16px;font-weight:700;font-size:16px;border-bottom:1px solid var(--border);margin-bottom:8px}
+.brand small{display:block;font-size:11px;color:var(--muted);font-weight:400;margin-top:2px}
+.nav{flex:1}
+.nav a{display:flex;gap:10px;padding:9px 20px;color:var(--text);border-left:3px solid transparent;font-size:13px;cursor:pointer}
+.nav a:hover{background:var(--bg)}
+.nav a.active{background:#eff6ff;color:var(--primary);border-left-color:var(--primary);font-weight:600}
+[data-theme="dark"] .nav a.active{background:#1e3a8a33}
+.nav .ico{font-size:15px;width:18px;text-align:center}
+.sidebar .foot{padding:12px 20px;border-top:1px solid var(--border);font-size:12px;color:var(--muted);display:flex;flex-direction:column;gap:6px}
+main{flex:1;padding:20px 24px;max-width:100%;overflow-x:hidden;min-width:0}
+.topbar{display:flex;justify-content:space-between;align-items:center;margin-bottom:20px;gap:12px;flex-wrap:wrap}
+.topbar h1{margin:0}
+.stat-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:14px;margin-bottom:20px}
+.stat{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:14px 16px;box-shadow:var(--shadow)}
+.stat .lbl{font-size:12px;color:var(--muted);margin-bottom:4px}
+.stat .val{font-size:20px;font-weight:700}
+.stat .val.pos{color:var(--success)}.stat .val.neg{color:var(--danger)}
+dialog{border:none;border-radius:12px;padding:0;background:var(--card);color:var(--text);box-shadow:0 20px 60px rgba(0,0,0,.3);max-width:600px;width:calc(100% - 32px);max-height:90vh;overflow:auto}
+dialog::backdrop{background:rgba(0,0,0,.5)}
+.dlg-hd{padding:16px 20px;border-bottom:1px solid var(--border);font-weight:600}
+.dlg-bd{padding:20px}
+.dlg-ft{padding:12px 20px;border-top:1px solid var(--border);display:flex;justify-content:flex-end;gap:8px}
+.fld{margin-bottom:12px}
+.fld label{display:block;margin-bottom:4px;font-size:12px;font-weight:500;color:var(--muted)}
+.toast{position:fixed;bottom:20px;right:20px;padding:10px 16px;border-radius:8px;color:#fff;background:#334155;box-shadow:0 10px 30px rgba(0,0,0,.2);opacity:0;transform:translateY(10px);transition:all .25s;z-index:9999;max-width:90vw}
+.toast.show{opacity:1;transform:translateY(0)}
+.toast.success{background:var(--success)}.toast.error{background:var(--danger)}.toast.warn{background:var(--warning)}
+.auth-screen{position:fixed;inset:0;display:flex;align-items:center;justify-content:center;background:linear-gradient(135deg,#2563eb,#1e40af);padding:20px;z-index:9999}
+.auth-box{background:var(--card);border-radius:14px;padding:32px 28px;width:100%;max-width:400px;box-shadow:0 20px 60px rgba(0,0,0,.3)}
+.auth-box h2{text-align:center;margin-bottom:4px}
+.auth-box p{text-align:center;color:var(--muted);margin-bottom:20px;font-size:13px}
+.empty{text-align:center;padding:40px 20px;color:var(--muted)}
+.filter-bar{display:flex;gap:8px;margin-bottom:12px;flex-wrap:wrap;align-items:center}
+.filter-bar>*{flex:0 0 auto}
+.filter-bar input,.filter-bar select{min-width:130px;max-width:180px}
+.money{font-family:'SF Mono',Menlo,monospace;text-align:right;white-space:nowrap}
+.money.pos{color:var(--success);font-weight:600}
+.money.neg{color:var(--danger);font-weight:600}
+.actions-cell{display:flex;gap:4px;justify-content:flex-end}
+.chart{display:flex;align-items:flex-end;gap:8px;height:180px;padding:10px 0;border-bottom:2px solid var(--border)}
+.chart .bar-wrap{flex:1;display:flex;flex-direction:column;align-items:center;gap:2px;min-width:0}
+.chart .bar{display:flex;align-items:flex-end;gap:2px;height:150px;width:100%;justify-content:center}
+.chart .bar>div{width:10px;border-radius:3px 3px 0 0;min-height:2px;transition:height .3s}
+.chart .bar .in{background:var(--success)}
+.chart .bar .out{background:var(--danger)}
+.chart .lbl{font-size:10px;color:var(--muted);text-align:center;white-space:nowrap}
+.legend{display:flex;gap:14px;font-size:12px;margin-top:8px;justify-content:center;color:var(--muted)}
+.legend span::before{content:'■';margin-right:4px}
+.legend .in::before{color:var(--success)}
+.legend .out::before{color:var(--danger)}
+.spp-grid{display:grid;grid-template-columns:repeat(12,1fr);gap:4px;margin-top:8px}
+.spp-grid button{padding:4px 0;font-size:11px;min-width:0}
+.kuitansi{border:2px dashed var(--border);border-radius:8px;padding:20px;background:var(--card);max-width:400px;margin:0 auto}
+.kuitansi h3{text-align:center;margin-bottom:4px}
+.kuitansi .sub{text-align:center;font-size:11px;color:var(--muted);margin-bottom:14px;border-bottom:1px dashed var(--border);padding-bottom:10px}
+.kuitansi table{font-size:12px}
+.kuitansi td{border:none;padding:3px 0}
+.kuitansi td:first-child{width:40%;color:var(--muted)}
+@media(max-width:768px){#app{flex-direction:column}.sidebar{width:100%;flex-direction:row;padding:8px;overflow-x:auto;border-right:none;border-bottom:1px solid var(--border);height:auto;position:static}.brand,.sidebar .foot{display:none}.nav{display:flex;gap:4px}.nav a{padding:8px 12px;border-left:none;border-radius:8px;white-space:nowrap;font-size:12px}.nav a.active{border-left:none}.nav .ico{display:none}main{padding:16px}}
+@media print{.sidebar,.topbar,.no-print,.filter-bar{display:none!important}main{padding:0}.card{box-shadow:none;border:none}}
+</style>
 </head>
-<body class="theme-emerald font-sans antialiased min-h-screen flex flex-col" style="background-color: var(--bg-main);">
+<body>
+<div id="app"></div>
+<script>
+/* ============================================================
+   KAS MADRASAH — OFFLINE FULL EDITION
+   localStorage + JSON backup. Tanpa backend, tanpa database server.
+   ============================================================ */
 
-    <!-- HEADER -->
-    <header class="dynamic-header text-white shadow-md sticky top-0 z-40 border-b-4 border-gold-500">
-        <div class="max-w-7xl mx-auto px-4 py-3 flex flex-col gap-3">
-            
-            <!-- BARIS ATAS: LOGO, JUDUL & IKON GANTI TEMA DI POJOK KANAN -->
-            <div class="flex items-center justify-between w-full">
-                <div class="flex items-center space-x-3">
-                    <div class="bg-black/20 p-2 rounded-xl shadow-inner border border-white/10 flex-shrink-0">
-                        <svg class="w-6 h-6 text-gold-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"></path></svg>
-                    </div>
-                    <div>
-                        <h1 class="text-base md:text-xl font-bold tracking-tight text-white leading-tight">Madrasah Manager</h1>
-                        <p class="text-[11px] md:text-xs dynamic-accent-sub">Sistem Keuangan & Administrasi Terpadu</p>
-                    </div>
-                </div>
+/* ---------- STORE ---------- */
+const Store = {
+  KEY: 'kas_madrasah_v2',
+  data: null,
+  default() {
+    const y = new Date().getFullYear();
+    return {
+      settings: { namaMadrasah:'', alamat:'', kepala:'', tahunAjaran:y+'/'+(y+1), nominalSPP:50000, pin:'', theme:'light' },
+      murid: [], guru: [], kelas: [], kategori: [], transaksi: [], spp: [], tabungan: []
+    };
+  },
+  load() {
+    let d;
+    try { d = JSON.parse(localStorage.getItem(this.KEY) || 'null'); } catch { d = null; }
+    if (!d || typeof d !== 'object') d = this.default();
+    const def = this.default();
+    for (const k in def) if (d[k] === undefined) d[k] = def[k];
+    for (const k in def.settings) if (d.settings[k] === undefined) d.settings[k] = def.settings[k];
+    this.data = d;
+    return d;
+  },
+  save() { localStorage.setItem(this.KEY, JSON.stringify(this.data)); },
+  id() { return Date.now().toString(36) + Math.random().toString(36).slice(2,7); },
+  add(c, item) { item.id = item.id || this.id(); this.data[c].push(item); this.save(); return item; },
+  update(c, id, patch) { const i = this.data[c].findIndex(x => x.id === id); if (i < 0) return; this.data[c][i] = { ...this.data[c][i], ...patch }; this.save(); },
+  remove(c, id) { this.data[c] = this.data[c].filter(x => x.id !== id); this.save(); },
+  find(c, id) { return this.data[c].find(x => x.id === id); }
+};
 
-                <!-- IKON GANTI TEMA DI POJOK KANAN ATAS -->
-                <button onclick="cycleTheme()" class="bg-black/20 hover:bg-black/40 text-white p-2.5 rounded-xl border border-white/10 transition active:scale-95 flex items-center justify-center flex-shrink-0 shadow-sm" title="Ganti Tema">
-                    <svg class="w-5 h-5 text-gold-300" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 21a4 4 0 01-4-4V5a2 2 0 012-2h4a2 2 0 012 2v12a4 4 0 01-4 4zm0 0h12a2 2 0 002-2v-4a2 2 0 00-2-2h-2.343M11 7.343l2.122-2.122a4 4 0 015.656 0l2.122 2.122M11 7.343L6.757 11.585M15 11h.01"></path></svg>
-                </button>
-            </div>
-            
-            <!-- BARIS BAWAH: 5 TOMBOL AKSI UTAMA -->
-            <div class="grid grid-cols-5 gap-1.5 w-full items-center">
-                <button onclick="backupJSON()" class="flex flex-col items-center justify-center bg-black/20 hover:bg-black/40 text-white p-1.5 md:py-2 rounded-lg text-[10px] md:text-xs font-medium transition active:scale-95 gap-0.5 border border-white/10">
-                    <svg class="w-4 h-4 text-gold-300" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 7v10c0 2.21 3.582 4 8 4s8-1.79 8-4V7M4 7c0 2.21 3.582 4 8 4s8-1.79 8-4M4 7c0-2.21 3.582-4 8-4s8 1.79 8 4"></path></svg>
-                    <span>Backup</span>
-                </button>
-                <label class="flex flex-col items-center justify-center bg-black/20 hover:bg-black/40 text-white p-1.5 md:py-2 rounded-lg text-[10px] md:text-xs font-medium transition cursor-pointer active:scale-95 gap-0.5 border border-white/10">
-                    <svg class="w-4 h-4 text-gold-300" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path></svg>
-                    <span>Restore</span>
-                    <input type="file" id="restoreFile" accept=".json" onchange="restoreJSON(event)" class="hidden">
-                </label>
-                <button onclick="exportToExcel()" class="flex flex-col items-center justify-center bg-black/20 hover:bg-black/40 text-white p-1.5 md:py-2 rounded-lg text-[10px] md:text-xs font-medium transition active:scale-95 gap-0.5 border border-white/10">
-                    <svg class="w-4 h-4 text-gold-300" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path></svg>
-                    <span>Ekspor</span>
-                </button>
-                <label class="flex flex-col items-center justify-center bg-black/20 hover:bg-black/40 text-white p-1.5 md:py-2 rounded-lg text-[10px] md:text-xs font-medium transition cursor-pointer active:scale-95 gap-0.5 border border-white/10">
-                    <svg class="w-4 h-4 text-gold-300" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 16v-6m0 0l-3 3m3-3l3 3M7 21h10a2 2 0 002-2V5a2 2 0 00-2-2H7a2 2 0 00-2 2v14a2 2 0 002 2z"></path></svg>
-                    <span>Impor</span>
-                    <input type="file" id="importFile" accept=".xlsx, .json" onchange="importData(event)" class="hidden">
-                </label>
-                
-                <div class="relative flex justify-center">
-                    <button onclick="toggleNotif(event)" class="w-full flex flex-col items-center justify-center bg-black/20 hover:bg-black/40 text-white p-1.5 md:py-2 rounded-lg text-[10px] md:text-xs font-medium transition active:scale-95 gap-0.5 border border-white/10">
-                        <div class="relative">
-                            <svg class="w-4 h-4 text-gold-300" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"></path></svg>
-                            <span id="notifBadge" class="hidden absolute -top-1.5 -right-2 bg-red-500 text-white text-[8px] font-bold rounded-full min-w-[12px] h-[12px] flex items-center justify-center px-0.5 ring-1 ring-white">0</span>
-                        </div>
-                        <span>Notif</span>
-                    </button>
-                    
-                    <div id="notifPanel" class="hidden absolute right-0 top-full mt-2 w-72 sm:w-80 bg-white text-slate-800 rounded-xl shadow-xl border border-slate-200 z-50 max-h-96 overflow-y-auto">
-                        <div class="p-3 border-b border-slate-100 flex justify-between items-center sticky top-0 bg-slate-50 rounded-t-xl">
-                            <h4 class="font-bold text-slate-800 text-xs sm:text-sm">Tunggakan SPP Murid</h4>
-                            <button onclick="toggleNotif(event)" class="text-slate-400 hover:text-slate-600 text-lg leading-none">&times;</button>
-                        </div>
-                        <div id="notifList"></div>
-                    </div>
-                </div>
+/* ---------- HELPERS ---------- */
+const BULAN = ['Januari','Februari','Maret','April','Mei','Juni','Juli','Agustus','September','Oktober','November','Desember'];
+const BULAN_S = ['Jan','Feb','Mar','Apr','Mei','Jun','Jul','Agu','Sep','Okt','Nov','Des'];
+const UI = {
+  fmt(n){ return 'Rp ' + (Number(n)||0).toLocaleString('id-ID'); },
+  today(){ return new Date().toISOString().slice(0,10); },
+  fmtDate(d){ if(!d) return '-'; const x = new Date(d); return isNaN(x) ? '-' : x.toLocaleDateString('id-ID',{day:'2-digit',month:'short',year:'numeric'}); },
+  esc(s){ return String(s ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])); },
+  toast(msg,type=''){ const t=document.createElement('div'); t.className='toast '+type; t.textContent=msg; document.body.appendChild(t); requestAnimationFrame(()=>t.classList.add('show')); setTimeout(()=>{t.classList.remove('show');setTimeout(()=>t.remove(),300);},2600); },
+  confirm(m){ return window.confirm(m); }
+};
 
-            </div>
-        </div>
-    </header>
+/* ---------- AUTH ---------- */
+const Auth = {
+  isSetup(){ return !!Store.data.settings.pin; },
+  isLoggedIn(){ return sessionStorage.getItem('kas_auth') === '1'; },
+  login(pin){ if (String(pin) === String(Store.data.settings.pin)) { sessionStorage.setItem('kas_auth','1'); return true; } return false; },
+  setup(pin){ if (!pin || String(pin).length < 4) return false; Store.data.settings.pin = String(pin); Store.save(); sessionStorage.setItem('kas_auth','1'); return true; },
+  logout(){ sessionStorage.removeItem('kas_auth'); App.render(); }
+};
 
-    <main class="max-w-7xl mx-auto px-4 py-5 w-full flex-grow space-y-5" onclick="closeNotifOnOutside(event)">
-        
-        <!-- HERO CARD (SALDO KAS) -->
-        <section class="dynamic-hero rounded-2xl shadow-lg p-5 md:p-8 text-white relative overflow-hidden border border-white/10">
-            <div class="absolute -right-10 -bottom-10 opacity-10 pointer-events-none animate-float">
-                <svg class="w-64 h-64 text-white" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-2h2v2zm0-4h-2V7h2v6z"/></svg>
-            </div>
-            <div class="relative z-10">
-                <p class="text-[10px] md:text-xs uppercase tracking-widest dynamic-accent-sub font-semibold mb-1">Total Saldo Kas Madrasah</p>
-                <h2 id="heroSaldo" class="text-2xl md:text-5xl font-extrabold tracking-tight mb-4 dynamic-accent drop-shadow-sm">Rp 0</h2>
-                
-                <div class="grid grid-cols-1 sm:grid-cols-3 gap-3 pt-4 border-t border-white/20">
-                    <div class="flex items-center space-x-3 bg-black/10 p-2.5 rounded-xl border border-white/10">
-                        <div class="bg-black/20 p-2 rounded-lg flex-shrink-0">
-                            <svg class="w-4 h-4 text-emerald-300" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 11l5-5m0 0l5 5m-5-5v12"></path></svg>
-                        </div>
-                        <div>
-                            <p class="text-[10px] md:text-xs dynamic-accent-sub">Total Pemasukan</p>
-                            <p id="heroPemasukan" class="text-sm md:text-lg font-bold text-white">Rp 0</p>
-                        </div>
-                    </div>
-                    <div class="flex items-center space-x-3 bg-black/10 p-2.5 rounded-xl border border-white/10">
-                        <div class="bg-black/20 p-2 rounded-lg flex-shrink-0">
-                            <svg class="w-4 h-4 text-red-300" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 13l-5 5m0 0l-5-5m5 5V6"></path></svg>
-                        </div>
-                        <div>
-                            <p class="text-[10px] md:text-xs dynamic-accent-sub">Total Pengeluaran</p>
-                            <p id="heroPengeluaran" class="text-sm md:text-lg font-bold text-white">Rp 0</p>
-                        </div>
-                    </div>
-                    <div class="flex items-center space-x-3 bg-black/10 p-2.5 rounded-xl border border-white/10">
-                        <div class="bg-black/20 p-2 rounded-lg flex-shrink-0">
-                            <svg class="w-4 h-4 text-amber-300" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 14l6-6m-5.5.5h.01m4.99 5h.01M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16l3.5-2 3.5 2 3.5-2 3.5 2zM10 8.5a.5.5 0 11-1 0 .5.5 0 011 0zm5 5a.5.5 0 11-1 0 .5.5 0 011 0z"></path></svg>
-                        </div>
-                        <div>
-                            <p class="text-[10px] md:text-xs dynamic-accent-sub">Tunggakan SPP</p>
-                            <p id="heroTunggakan" class="text-sm md:text-lg font-bold text-amber-300">Rp 0</p>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </section>
+/* ---------- APP / ROUTER ---------- */
+const App = {
+  view: 'dashboard',
+  render() {
+    const root = document.getElementById('app');
+    if (!Auth.isSetup()) { root.innerHTML = Views.setup(); return; }
+    if (!Auth.isLoggedIn()) { root.innerHTML = Views.login(); return; }
+    document.documentElement.dataset.theme = Store.data.settings.theme || 'light';
+    root.innerHTML = Views.shell();
+    const v = document.getElementById('view');
+    v.innerHTML = Views[this.view] ? Views[this.view]() : '<div class="empty">Halaman tidak ditemukan</div>';
+    document.querySelectorAll('[data-nav]').forEach(a => a.classList.toggle('active', a.dataset.nav === this.view));
+  },
+  nav(v){ this.view = v; location.hash = v; this.render(); }
+};
 
-        <!-- TABS NAVIGASI -->
-        <div class="flex overflow-x-auto space-x-2 border-b border-slate-200 pb-2 scrollbar-none">
-            <button onclick="switchTab('kas')" id="tab-btn-kas" class="tab-btn px-4 py-2 rounded-xl font-semibold text-xs md:text-sm whitespace-nowrap transition dynamic-btn text-white shadow-sm flex items-center gap-1.5">
-                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z"></path></svg>
-                Jurnal Kas
-            </button>
-            <button onclick="switchTab('spp')" id="tab-btn-spp" class="tab-btn px-4 py-2 rounded-xl font-semibold text-xs md:text-sm whitespace-nowrap transition bg-slate-100 text-slate-600 hover:bg-slate-200 flex items-center gap-1.5">
-                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path></svg>
-                Pembayaran SPP
-            </button>
-            <button onclick="switchTab('murid')" id="tab-btn-murid" class="tab-btn px-4 py-2 rounded-xl font-semibold text-xs md:text-sm whitespace-nowrap transition bg-slate-100 text-slate-600 hover:bg-slate-200 flex items-center gap-1.5">
-                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"></path></svg>
-                Data Murid
-            </button>
-            <button onclick="switchTab('guru')" id="tab-btn-guru" class="tab-btn px-4 py-2 rounded-xl font-semibold text-xs md:text-sm whitespace-nowrap transition bg-slate-100 text-slate-600 hover:bg-slate-200 flex items-center gap-1.5">
-                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path></svg>
-                Data Guru
-            </button>
-        </div>
-
-        <!-- TAB CONTENT: KAS -->
-        <div id="tab-kas" class="tab-content space-y-5">
-            <div class="grid grid-cols-1 lg:grid-cols-3 gap-5">
-                
-                <div class="bg-white rounded-2xl border border-slate-200 p-5 h-fit card-islamic">
-                    <h3 class="text-sm font-bold text-slate-800 mb-4 pb-2 border-b border-slate-100 flex items-center space-x-2">
-                        <svg class="w-4 h-4 text-emerald-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path></svg>
-                        <span>Tambah Transaksi Kas</span>
-                    </h3>
-                    <form id="formKas" onsubmit="addKas(event)" class="space-y-3.5">
-                        <div>
-                            <label class="block text-[11px] font-semibold uppercase mb-1">Jenis Transaksi</label>
-                            <select id="kasJenis" class="w-full px-3 py-2 rounded-xl border border-slate-300 text-xs md:text-sm bg-white focus:outline-none">
-                                <option value="Masuk">Pemasukan (+)</option>
-                                <option value="Keluar">Pengeluaran (-)</option>
-                            </select>
-                        </div>
-                        <div>
-                            <label class="block text-[11px] font-semibold uppercase mb-1">Tanggal</label>
-                            <input type="date" id="kasTanggal" required class="w-full px-3 py-2 rounded-xl border border-slate-300 text-xs md:text-sm focus:outline-none">
-                        </div>
-                        <div>
-                            <label class="block text-[11px] font-semibold uppercase mb-1">Keterangan / Uraian</label>
-                            <input type="text" id="kasKeterangan" placeholder="Contoh: Dana BOS / ATK" required class="w-full px-3 py-2 rounded-xl border border-slate-300 text-xs md:text-sm focus:outline-none">
-                        </div>
-                        <div>
-                            <label class="flex justify-between items-center text-[11px] font-semibold uppercase mb-1">
-                                <span>Kategori</span>
-                                <button type="button" onclick="openKelolaKategori()" class="text-emerald-700 hover:text-emerald-900 normal-case font-bold text-[10px]">+ Kelola</button>
-                            </label>
-                            <select id="kasKategori" class="w-full px-3 py-2 rounded-xl border border-slate-300 text-xs md:text-sm bg-white focus:outline-none"></select>
-                        </div>
-                        <div>
-                            <label class="block text-[11px] font-semibold uppercase mb-1">Nominal (Rp)</label>
-                            <input type="number" id="kasNominal" placeholder="Contoh: 150000" min="1" required class="w-full px-3 py-2 rounded-xl border border-slate-300 text-xs md:text-sm focus:outline-none">
-                        </div>
-                        <button type="submit" class="w-full dynamic-btn text-white py-2.5 rounded-xl font-medium text-xs md:text-sm transition shadow-sm active:scale-95">Simpan Transaksi</button>
-                    </form>
-                </div>
-
-                <div class="bg-white rounded-2xl border border-slate-200 p-5 lg:col-span-2 overflow-hidden flex flex-col card-islamic">
-                    <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-2 mb-3">
-                        <h3 class="text-sm font-bold text-slate-800">Riwayat Kas Madrasah</h3>
-                        <button onclick="resetKasFilter()" class="text-[11px] text-emerald-700 hover:text-emerald-900 font-medium">Reset Filter</button>
-                    </div>
-                    <div class="grid grid-cols-2 md:grid-cols-4 gap-2 mb-3">
-                        <select id="kasFilterJenis" onchange="renderKas()" class="px-2 py-1.5 rounded-lg border border-slate-300 text-xs bg-white">
-                            <option value="">Semua Jenis</option>
-                            <option value="Masuk">Pemasukan</option>
-                            <option value="Keluar">Pengeluaran</option>
-                        </select>
-                        <select id="kasFilterKategori" onchange="renderKas()" class="px-2 py-1.5 rounded-lg border border-slate-300 text-xs bg-white"></select>
-                        <input type="date" id="kasFilterDari" onchange="renderKas()" title="Dari tanggal" class="px-2 py-1.5 rounded-lg border border-slate-300 text-xs">
-                        <input type="date" id="kasFilterSampai" onchange="renderKas()" title="Sampai tanggal" class="px-2 py-1.5 rounded-lg border border-slate-300 text-xs">
-                    </div>
-                    <div class="overflow-x-auto flex-grow">
-                        <table class="w-full text-left border-collapse">
-                            <thead>
-                                <tr class="bg-slate-100 text-xs uppercase tracking-wider">
-                                    <th class="p-2.5 rounded-tl-lg">Tanggal</th>
-                                    <th class="p-2.5">Keterangan</th>
-                                    <th class="p-2.5">Kategori</th>
-                                    <th class="p-2.5">Jenis</th>
-                                    <th class="p-2.5 text-right">Nominal</th>
-                                    <th class="p-2.5 text-center rounded-tr-lg">Aksi</th>
-                                </tr>
-                            </thead>
-                            <tbody id="tabelKasBody" class="divide-y divide-slate-100 text-xs md:text-sm"></tbody>
-                        </table>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- TAB CONTENT: SPP -->
-        <div id="tab-spp" class="tab-content space-y-5 hidden">
-            <div class="bg-white rounded-2xl border border-slate-200 p-5 card-islamic">
-                <div class="bg-slate-50 border border-slate-200 rounded-xl p-3.5 mb-4">
-                    <div class="flex flex-col md:flex-row md:items-center gap-3">
-                        <div class="flex-1">
-                            <p class="text-xs font-bold text-slate-800 flex items-center gap-1.5">
-                                <svg class="w-4 h-4 text-emerald-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
-                                Pengaturan Nominal SPP Default
-                            </p>
-                            <p class="text-[11px] text-slate-500">Atur nominal default dan ubah massal tagihan.</p>
-                        </div>
-                        <div class="flex flex-wrap items-center gap-2">
-                            <input type="number" id="nominalSppDefault" min="0" step="1000" placeholder="50000" onchange="updateNominalDefault()" class="px-2 py-1 rounded-lg border border-slate-300 text-xs w-24 bg-white">
-                            <button onclick="openBulkNominal()" class="dynamic-btn text-white px-2.5 py-1 rounded-lg text-xs font-medium active:scale-95">Atur Massal</button>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 mb-4 pb-3 border-b border-slate-100">
-                    <div>
-                        <h3 class="text-sm font-bold text-slate-800">Rekap Pembayaran SPP Murid</h3>
-                        <p class="text-[11px] text-slate-500">Klik tombol status untuk mengubah Lunas/Belum.</p>
-                    </div>
-                    <div class="flex flex-wrap items-center gap-2 w-full sm:w-auto">
-                        <input type="text" id="tahunAjaranInput" onchange="updateTahunAjaran()" placeholder="2025/2026" class="px-2 py-1.5 rounded-lg border border-slate-300 text-xs w-24">
-                        <button onclick="generateSppForAll()" class="dynamic-btn text-white px-3 py-1.5 rounded-lg text-xs font-medium transition active:scale-95">Generate SPP Tahunan</button>
-                    </div>
-                </div>
-                <div class="grid grid-cols-2 md:grid-cols-4 gap-2 mb-3">
-                    <input type="text" id="searchSpp" onkeyup="renderSpp()" placeholder="Cari nama/NIS..." class="px-3 py-1.5 rounded-lg border border-slate-300 text-xs">
-                    <select id="sppFilterKelas" onchange="renderSpp()" class="px-3 py-1.5 rounded-lg border border-slate-300 text-xs bg-white">
-                        <option value="">Semua Kelas</option>
-                    </select>
-                    <select id="sppFilterStatus" onchange="renderSpp()" class="px-3 py-1.5 rounded-lg border border-slate-300 text-xs bg-white">
-                        <option value="">Semua Status</option>
-                        <option value="Lunas">Lunas</option>
-                        <option value="Belum">Belum</option>
-                    </select>
-                    <div id="sppSummary" class="flex items-center justify-center bg-amber-50 border border-amber-200 text-amber-800 text-xs font-semibold rounded-lg px-2 py-1">
-                        Tunggakan: Rp 0
-                    </div>
-                </div>
-                <div class="overflow-x-auto">
-                    <table class="w-full text-left border-collapse">
-                        <thead>
-                            <tr class="bg-slate-100 text-xs uppercase">
-                                <th class="p-2.5">NIS</th>
-                                <th class="p-2.5">Nama Murid</th>
-                                <th class="p-2.5">Kelas</th>
-                                <th class="p-2.5">Bulan / Tahun</th>
-                                <th class="p-2.5 text-right">Nominal</th>
-                                <th class="p-2.5 text-center">Status</th>
-                                <th class="p-2.5 text-center">Aksi</th>
-                            </tr>
-                        </thead>
-                        <tbody id="tabelSppBody" class="divide-y divide-slate-100 text-xs md:text-sm"></tbody>
-                    </table>
-                </div>
-            </div>
-        </div>
-
-        <!-- TAB CONTENT: MURID -->
-        <div id="tab-murid" class="tab-content space-y-5 hidden">
-            <div class="grid grid-cols-1 lg:grid-cols-3 gap-5">
-                <div class="bg-white rounded-2xl border border-slate-200 p-5 h-fit card-islamic">
-                    <h3 class="text-sm font-bold text-slate-800 mb-4 pb-2 border-b border-slate-100">Tambah Data Murid</h3>
-                    <form id="formMurid" onsubmit="addMurid(event)" class="space-y-3.5">
-                        <div>
-                            <label class="block text-[11px] font-semibold uppercase mb-1">NIS</label>
-                            <input type="text" id="muridNis" required class="w-full px-3 py-2 rounded-xl border border-slate-300 text-xs md:text-sm">
-                        </div>
-                        <div>
-                            <label class="block text-[11px] font-semibold uppercase mb-1">Nama Lengkap Murid</label>
-                            <input type="text" id="muridNama" required class="w-full px-3 py-2 rounded-xl border border-slate-300 text-xs md:text-sm">
-                        </div>
-                        <div>
-                            <label class="block text-[11px] font-semibold uppercase mb-1">Kelas</label>
-                            <input type="text" id="muridKelas" placeholder="Contoh: VII-A" required class="w-full px-3 py-2 rounded-xl border border-slate-300 text-xs md:text-sm">
-                        </div>
-                        <button type="submit" class="w-full dynamic-btn text-white py-2.5 rounded-xl font-medium text-xs md:text-sm transition shadow-sm active:scale-95">Simpan Murid</button>
-                    </form>
-                </div>
-                <div class="bg-white rounded-2xl border border-slate-200 p-5 lg:col-span-2 overflow-hidden flex flex-col card-islamic">
-                    <h3 class="text-sm font-bold text-slate-800 mb-3">Daftar Murid Per Kelas</h3>
-                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-2 mb-3">
-                        <input type="text" id="searchMurid" onkeyup="renderMurid()" placeholder="Cari nama / NIS..." class="px-3 py-1.5 rounded-lg border border-slate-300 text-xs">
-                        <select id="muridFilterKelas" onchange="renderMurid()" class="px-3 py-1.5 rounded-lg border border-slate-300 text-xs bg-white">
-                            <option value="">Semua Kelas</option>
-                        </select>
-                    </div>
-                    <div class="overflow-x-auto flex-grow">
-                        <table class="w-full text-left border-collapse">
-                            <thead>
-                                <tr class="bg-slate-100 text-xs uppercase">
-                                    <th class="p-2.5">NIS</th>
-                                    <th class="p-2.5">Nama Murid</th>
-                                    <th class="p-2.5">Kelas</th>
-                                    <th class="p-2.5 text-center">Aksi</th>
-                                </tr>
-                            </thead>
-                            <tbody id="tabelMuridBody" class="divide-y divide-slate-100 text-xs md:text-sm"></tbody>
-                        </table>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- TAB CONTENT: GURU -->
-        <div id="tab-guru" class="tab-content space-y-5 hidden">
-            <div class="grid grid-cols-1 lg:grid-cols-3 gap-5">
-                <div class="bg-white rounded-2xl border border-slate-200 p-5 h-fit card-islamic">
-                    <h3 class="text-sm font-bold text-slate-800 mb-4 pb-2 border-b border-slate-100">Tambah Data Guru</h3>
-                    <form id="formGuru" onsubmit="addGuru(event)" class="space-y-3.5">
-                        <div>
-                            <label class="block text-[11px] font-semibold uppercase mb-1">NIP / ID Guru</label>
-                            <input type="text" id="guruNip" required class="w-full px-3 py-2 rounded-xl border border-slate-300 text-xs md:text-sm">
-                        </div>
-                        <div>
-                            <label class="block text-[11px] font-semibold uppercase mb-1">Nama Lengkap & Gelar</label>
-                            <input type="text" id="guruNama" required class="w-full px-3 py-2 rounded-xl border border-slate-300 text-xs md:text-sm">
-                        </div>
-                        <div>
-                            <label class="block text-[11px] font-semibold uppercase mb-1">Mata Pelajaran</label>
-                            <input type="text" id="guruMapel" required class="w-full px-3 py-2 rounded-xl border border-slate-300 text-xs md:text-sm">
-                        </div>
-                        <div>
-                            <label class="block text-[11px] font-semibold uppercase mb-1">No. HP / Kontak</label>
-                            <input type="text" id="guruKontak" placeholder="08xxxxxxxxxx" required class="w-full px-3 py-2 rounded-xl border border-slate-300 text-xs md:text-sm">
-                        </div>
-                        <button type="submit" class="w-full dynamic-btn text-white py-2.5 rounded-xl font-medium text-xs md:text-sm transition shadow-sm active:scale-95">Simpan Guru</button>
-                    </form>
-                </div>
-                <div class="bg-white rounded-2xl border border-slate-200 p-5 lg:col-span-2 overflow-hidden flex flex-col card-islamic">
-                    <h3 class="text-sm font-bold text-slate-800 mb-3">Daftar Pengajar & Staf</h3>
-                    <input type="text" id="searchGuru" onkeyup="renderGuru()" placeholder="Cari nama / NIP guru..." class="px-3 py-1.5 rounded-lg border border-slate-300 text-xs mb-3">
-                    <div class="overflow-x-auto flex-grow">
-                        <table class="w-full text-left border-collapse">
-                            <thead>
-                                <tr class="bg-slate-100 text-xs uppercase">
-                                    <th class="p-2.5">NIP</th>
-                                    <th class="p-2.5">Nama Guru</th>
-                                    <th class="p-2.5">Mapel</th>
-                                    <th class="p-2.5">Kontak</th>
-                                    <th class="p-2.5 text-center">Aksi</th>
-                                </tr>
-                            </thead>
-                            <tbody id="tabelGuruBody" class="divide-y divide-slate-100 text-xs md:text-sm"></tbody>
-                        </table>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-    </main>
-
-    <footer class="mt-auto py-4 text-center text-[11px] text-slate-400 border-t border-slate-200 bg-white">
-        Madrasah Manager Enterprise • Berjalan 100% Offline secara Aman
-    </footer>
-
-    <!-- TOAST CONTAINER -->
-    <div id="toastContainer" class="fixed top-20 right-4 z-[100] flex flex-col gap-2 pointer-events-none"></div>
-
-    <!-- EDIT MODAL -->
-    <div id="editModal" class="hidden fixed inset-0 bg-black/50 z-[60] flex items-center justify-center p-4 backdrop-blur-sm">
-        <div class="bg-white rounded-2xl shadow-xl w-full max-w-md max-h-[90vh] overflow-y-auto animate-fade-in border border-slate-200">
-            <div class="p-4 border-b border-slate-200 flex justify-between items-center sticky top-0 bg-white rounded-t-2xl">
-                <h3 id="editTitle" class="font-bold text-slate-800 text-sm">Edit Data</h3>
-                <button onclick="closeEdit()" class="text-slate-400 hover:text-slate-700 text-xl leading-none">&times;</button>
-            </div>
-            <form id="editForm" onsubmit="saveEdit(event)" class="p-4 space-y-3">
-                <div id="editBody" class="space-y-3"></div>
-                <div class="flex gap-2 pt-2">
-                    <button type="button" onclick="closeEdit()" class="flex-1 bg-slate-100 hover:bg-slate-200 text-slate-700 py-2.5 rounded-xl font-medium text-xs transition">Batal</button>
-                    <button type="submit" class="flex-1 dynamic-btn text-white py-2.5 rounded-xl font-medium text-xs transition shadow-sm">Simpan</button>
-                </div>
-            </form>
-        </div>
-    </div>
-
-    <!-- KELOLA KATEGORI MODAL -->
-    <div id="kategoriModal" class="hidden fixed inset-0 bg-black/50 z-[60] flex items-center justify-center p-4 backdrop-blur-sm">
-        <div class="bg-white rounded-2xl shadow-xl w-full max-w-md max-h-[90vh] overflow-y-auto animate-fade-in border border-slate-200">
-            <div class="p-4 border-b border-slate-200 flex justify-between items-center sticky top-0 bg-white rounded-t-2xl">
-                <h3 class="font-bold text-slate-800 text-sm">Kelola Kategori Transaksi</h3>
-                <button onclick="closeKelolaKategori()" class="text-slate-400 hover:text-slate-700 text-xl leading-none">&times;</button>
-            </div>
-            <div class="p-4 space-y-4">
-                <form onsubmit="addKategori(event)" class="flex gap-2">
-                    <input type="text" id="newKategoriInput" placeholder="Nama kategori baru..." required class="flex-1 px-3 py-1.5 rounded-xl border border-slate-300 text-xs">
-                    <button type="submit" class="dynamic-btn text-white px-3 py-1.5 rounded-xl text-xs font-medium">Tambah</button>
-                </form>
-                <div id="kategoriList" class="space-y-2"></div>
-            </div>
-        </div>
-    </div>
-
-    <!-- BULK NOMINAL MODAL -->
-    <div id="bulkNominalModal" class="hidden fixed inset-0 bg-black/50 z-[60] flex items-center justify-center p-4 backdrop-blur-sm">
-        <div class="bg-white rounded-2xl shadow-xl w-full max-w-md max-h-[90vh] overflow-y-auto animate-fade-in border border-slate-200">
-            <div class="p-4 border-b border-slate-200 flex justify-between items-center sticky top-0 bg-white rounded-t-2xl">
-                <h3 class="font-bold text-slate-800 text-sm">Atur Nominal SPP Massal</h3>
-                <button onclick="closeBulkNominal()" class="text-slate-400 hover:text-slate-700 text-xl leading-none">&times;</button>
-            </div>
-            <form onsubmit="applyBulkNominal(event)" class="p-4 space-y-3">
-                <div>
-                    <label class="block text-[11px] font-semibold uppercase mb-1">Target Kelas</label>
-                    <select id="bulkTargetKelas" onchange="previewBulkNominal()" class="w-full px-3 py-1.5 rounded-xl border border-slate-300 text-xs bg-white">
-                        <option value="">Semua Kelas</option>
-                    </select>
-                </div>
-                <div>
-                    <label class="block text-[11px] font-semibold uppercase mb-1">Filter Status</label>
-                    <select id="bulkTargetStatus" onchange="previewBulkNominal()" class="w-full px-3 py-1.5 rounded-xl border border-slate-300 text-xs bg-white">
-                        <option value="">Semua Status</option>
-                        <option value="Belum">Belum Lunas</option>
-                        <option value="Lunas">Sudah Lunas</option>
-                    </select>
-                </div>
-                <div>
-                    <label class="block text-[11px] font-semibold uppercase mb-1">Nominal Baru (Rp)</label>
-                    <input type="number" id="bulkNominalBaru" min="0" step="1000" required placeholder="75000" onchange="previewBulkNominal()" oninput="previewBulkNominal()" class="w-full px-3 py-1.5 rounded-xl border border-slate-300 text-xs">
-                </div>
-                <div id="bulkPreview" class="bg-amber-50 border border-amber-200 rounded-lg p-3 text-xs text-amber-900"></div>
-                <div class="flex gap-2 pt-2">
-                    <button type="button" onclick="closeBulkNominal()" class="flex-1 bg-slate-100 hover:bg-slate-200 text-slate-700 py-2 rounded-xl text-xs font-medium">Batal</button>
-                    <button type="submit" class="flex-1 dynamic-btn text-white py-2 rounded-xl text-xs font-medium">Terapkan</button>
-                </div>
-            </form>
-        </div>
-    </div>
-
-    <script>
-    /* ================= TEMA & SETUP ================= */
-    const themes = ['emerald', 'ocean', 'purple', 'dark'];
-    
-    function changeTheme(themeName) {
-        document.body.className = `theme-${themeName} font-sans antialiased min-h-screen flex flex-col`;
-        localStorage.setItem('madrasah_theme', themeName);
-    }
-
-    function cycleTheme() {
-        let current = localStorage.getItem('madrasah_theme') || 'emerald';
-        let idx = themes.indexOf(current);
-        let next = themes[(idx + 1) % themes.length];
-        changeTheme(next);
-        toast(`Tema: ${next.charAt(0).toUpperCase() + next.slice(1)}`);
-    }
-
-    const savedTheme = localStorage.getItem('madrasah_theme') || 'emerald';
-    changeTheme(savedTheme);
-
-    const DB_VERSION = 4;
-    const DEFAULT_KATEGORI = ['SPP','BOS','Dana Bantuan','ATK','Gaji/Honor','Listrik/Air','Perbaikan','Konsumsi','Lainnya'];
-    const BULAN_LIST = ['Juli','Agustus','September','Oktober','November','Desember','Januari','Februari','Maret','April','Mei','Juni'];
-
-    const CAT_COLORS = [
-        { bg: 'bg-emerald-100', text: 'text-emerald-800', dot: 'bg-emerald-500', ring: 'ring-emerald-200' },
-        { bg: 'bg-blue-100', text: 'text-blue-800', dot: 'bg-blue-500', ring: 'ring-blue-200' },
-        { bg: 'bg-amber-100', text: 'text-amber-800', dot: 'bg-amber-500', ring: 'ring-amber-200' },
-        { bg: 'bg-rose-100', text: 'text-rose-800', dot: 'bg-rose-500', ring: 'ring-rose-200' },
-        { bg: 'bg-violet-100', text: 'text-violet-800', dot: 'bg-violet-500', ring: 'ring-violet-200' },
+/* ---------- VIEWS ---------- */
+const Views = {
+  /* setup */
+  setup() {
+    return `<div class="auth-screen"><div class="auth-box">
+      <h2>🌱 Setup Awal</h2>
+      <p>Buat PIN admin (min. 4 digit)</p>
+      <form data-form="setup">
+        <div class="fld"><label>Nama Madrasah</label><input name="nama" required placeholder="MI Al-Hidayah"></div>
+        <div class="fld"><label>Tahun Ajaran</label><input name="tahun" value="${UI.esc(Store.data.settings.tahunAjaran)}" required></div>
+        <div class="fld"><label>PIN Admin</label><input name="pin" type="password" inputmode="numeric" minlength="4" required></div>
+        <div class="fld"><label>Ulangi PIN</label><input name="pin2" type="password" inputmode="numeric" minlength="4" required></div>
+        <button class="primary" style="width:100%">Simpan & Masuk</button>
+      </form></div></div>`;
+  },
+  /* login */
+  login() {
+    return `<div class="auth-screen"><div class="auth-box">
+      <h2>🔐 Kas Madrasah</h2>
+      <p>${UI.esc(Store.data.settings.namaMadrasah || 'Masuk ke aplikasi')}</p>
+      <form data-form="login">
+        <div class="fld"><label>PIN</label><input name="pin" type="password" inputmode="numeric" required autofocus></div>
+        <button class="primary" style="width:100%">Masuk</button>
+      </form></div></div>`;
+  },
+  /* shell */
+  shell() {
+    const nav = [
+      ['dashboard','📊','Dashboard'],
+      ['murid','👦','Data Murid'],
+      ['guru','👨‍🏫','Data Guru'],
+      ['kelas','🏫','Data Kelas'],
+      ['kategori','🏷️','Kategori'],
+      ['transaksi','💵','Transaksi Kas'],
+      ['spp','🎓','Pembayaran SPP'],
+      ['tabungan','🏦','Tabungan Siswa'],
+      ['laporan','📄','Laporan'],
+      ['backup','💾','Backup / Restore'],
+      ['settings','⚙️','Pengaturan']
     ];
-    function getCatColor(name) {
-        if (!name) name = 'Lainnya';
-        let hash = 0;
-        for (let i = 0; i < name.length; i++) { hash = ((hash << 5) - hash) + name.charCodeAt(i); hash |= 0; }
-        return CAT_COLORS[Math.abs(hash) % CAT_COLORS.length];
-    }
-    function formatRupiah(angka) {
-        return new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR', minimumFractionDigits: 0 }).format(angka || 0);
-    }
-    function escapeHtml(s) {
-        if (s === null || s === undefined) return '';
-        return String(s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
-    }
+    return `<aside class="sidebar">
+      <div class="brand">Kas Madrasah<small>${UI.esc(Store.data.settings.namaMadrasah || 'Offline Edition')}</small></div>
+      <nav class="nav">${nav.map(([k,i,t]) => `<a data-nav="${k}" href="#${k}"><span class="ico">${i}</span>${t}</a>`).join('')}</nav>
+      <div class="foot">
+        <a data-action="toggle-theme">${Store.data.settings.theme==='dark'?'☀️ Terang':'🌙 Gelap'}</a>
+        <a data-action="logout">🚪 Keluar</a>
+      </div></aside>
+      <main><div id="view"></div></main>`;
+  },
 
-    /* ================= TOAST & NOTIF ================= */
-    function toast(msg, type = 'success') {
-        const container = document.getElementById('toastContainer');
-        if (!container) return;
-        const styles = { success: 'bg-emerald-600', error: 'bg-red-600', info: 'bg-blue-600' };
-        const el = document.createElement('div');
-        el.className = `${styles[type]} text-white px-3 py-2 rounded-xl shadow-lg text-xs font-medium pointer-events-auto border-l-4 border-white max-w-xs`;
-        el.textContent = msg;
-        container.appendChild(el);
-        setTimeout(() => el.remove(), 3000);
-    }
+  /* dashboard */
+  dashboard() {
+    const d = Store.data;
+    const now = new Date();
+    const saldo = d.transaksi.reduce((s,t) => s + (t.jenis==='masuk'?1:-1)*(+t.jumlah||0), 0);
+    const bulan = d.transaksi.filter(t => { const x=new Date(t.tanggal); return x.getMonth()===now.getMonth() && x.getFullYear()===now.getFullYear(); });
+    const inBln = bulan.filter(t=>t.jenis==='masuk').reduce((s,t)=>s+(+t.jumlah||0),0);
+    const outBln = bulan.filter(t=>t.jenis==='keluar').reduce((s,t)=>s+(+t.jumlah||0),0);
+    const tunggakan = d.spp.filter(s=>s.status==='belum').reduce((s,x)=>s+(+x.nominal||0),0);
+    const saldoTabungan = d.tabungan.reduce((s,t)=>s+(t.jenis==='setor'?1:-1)*(+t.jumlah||0),0);
+    const recent = [...d.transaksi].sort((a,b)=>(b.tanggal||'').localeCompare(a.tanggal||'')).slice(0,8);
 
-    function toggleNotif(e) {
-        if (e) e.stopPropagation();
-        document.getElementById('notifPanel').classList.toggle('hidden');
+    // chart 6 bulan
+    const months = [];
+    for (let i=5; i>=0; i--) {
+      const dt = new Date(now.getFullYear(), now.getMonth()-i, 1);
+      const y = dt.getFullYear(), m = dt.getMonth();
+      const tx = d.transaksi.filter(t => { const x=new Date(t.tanggal); return x.getFullYear()===y && x.getMonth()===m; });
+      months.push({
+        label: BULAN_S[m],
+        in: tx.filter(t=>t.jenis==='masuk').reduce((s,t)=>s+(+t.jumlah||0),0),
+        out: tx.filter(t=>t.jenis==='keluar').reduce((s,t)=>s+(+t.jumlah||0),0)
+      });
     }
-    function closeNotifOnOutside(e) {
-        const panel = document.getElementById('notifPanel');
-        if (panel && !e.target.closest('button[onclick="toggleNotif(event)"]') && !e.target.closest('#notifPanel')) {
-            panel.classList.add('hidden');
-        }
-    }
-    function renderNotif() {
-        const map = {};
-        db.spp.filter(s => s.status === 'Belum').forEach(s => {
-            if (!map[s.nis]) map[s.nis] = { nama: s.nama, kelas: s.kelas, list: [] };
-            map[s.nis].list.push(`${s.bulan} ${s.tahun}`);
-        });
-        const keys = Object.keys(map);
-        const badge = document.getElementById('notifBadge');
-        badge.textContent = keys.length;
-        badge.classList.toggle('hidden', keys.length === 0);
+    const maxVal = Math.max(1, ...months.map(m=>Math.max(m.in,m.out)));
+    const chartHtml = `<div class="chart">${months.map(m=>`<div class="bar-wrap">
+        <div class="bar">
+          <div class="in" style="height:${(m.in/maxVal)*100}%"></div>
+          <div class="out" style="height:${(m.out/maxVal)*100}%"></div>
+        </div>
+        <div class="lbl">${m.label}</div>
+      </div>`).join('')}</div>
+      <div class="legend"><span class="in">Masuk</span><span class="out">Keluar</span></div>`;
 
-        const list = document.getElementById('notifList');
-        if (keys.length === 0) {
-            list.innerHTML = `<div class="p-6 text-center text-slate-500 text-xs">Tidak ada tunggakan 🎉</div>`;
-            return;
-        }
-        list.innerHTML = keys.map(k => {
-            const t = map[k];
-            return `<div class="p-2.5 border-b border-slate-100 text-xs"><p class="font-semibold">${escapeHtml(t.nama)} (${escapeHtml(t.kelas)})</p><p class="text-red-600 text-[11px]">${t.list.length} bln belum lunas</p></div>`;
-        }).join('');
-    }
+    return `<div class="topbar"><h1>Dashboard</h1><span style="color:var(--muted);font-size:12px">${UI.fmtDate(new Date())}</span></div>
+    <div class="stat-grid">
+      <div class="stat"><div class="lbl">Saldo Kas</div><div class="val ${saldo>=0?'pos':'neg'}">${UI.fmt(saldo)}</div></div>
+      <div class="stat"><div class="lbl">Pemasukan Bulan Ini</div><div class="val pos">${UI.fmt(inBln)}</div></div>
+      <div class="stat"><div class="lbl">Pengeluaran Bulan Ini</div><div class="val neg">${UI.fmt(outBln)}</div></div>
+      <div class="stat"><div class="lbl">Tunggakan SPP</div><div class="val ${tunggakan>0?'neg':''}">${UI.fmt(tunggakan)}</div></div>
+      <div class="stat"><div class="lbl">Saldo Tabungan</div><div class="val">${UI.fmt(saldoTabungan)}</div></div>
+      <div class="stat"><div class="lbl">Murid / Guru</div><div class="val">${d.murid.filter(m=>m.aktif!==false).length} / ${d.guru.length}</div></div>
+    </div>
+    <div class="card" style="margin-bottom:14px"><h3>Arus Kas 6 Bulan Terakhir</h3>${chartHtml}</div>
+    <div class="card"><h2>Transaksi Terbaru</h2>
+      ${recent.length ? `<div class="table-wrap"><table><thead><tr><th>Tanggal</th><th>Keterangan</th><th>Kategori</th><th class="money">Jumlah</th></tr></thead><tbody>
+        ${recent.map(t=>`<tr><td>${UI.fmtDate(t.tanggal)}</td><td>${UI.esc(t.keterangan||'-')}</td>
+          <td><span class="badge ${t.jenis==='masuk'?'s':'d'}">${UI.esc(t.kategori||t.jenis)}</span></td>
+          <td class="money ${t.jenis==='masuk'?'pos':'neg'}">${t.jenis==='masuk'?'+':'-'} ${UI.fmt(t.jumlah)}</td></tr>`).join('')}
+      </tbody></table></div>` : `<div class="empty">Belum ada transaksi.</div>`}
+    </div>`;
+  },
 
-    /* ================= DATABASE & INIT ================= */
-    function getDefaultDb() {
-        return {
-            version: DB_VERSION, tahunAjaran: '2025/2026', nominalSppDefault: 50000,
-            kategori: [...DEFAULT_KATEGORI], kategoriSpp: 'SPP',
-            kas: [{ id: 1, tanggal: '2026-05-01', keterangan: 'Saldo Awal Kas', jenis: 'Masuk', nominal: 5000000, kategori: 'Lainnya' }],
-            spp: [
-                { id: 1001, nis: '101', nama: 'Ahmad Fauzi', kelas: 'VII-A', bulan: 'Januari', tahun: 2026, nominal: 50000, status: 'Lunas', tanggalBayar: '2026-05-01', kasId: null },
-                { id: 1002, nis: '102', nama: 'Siti Aminah', kelas: 'VII-A', bulan: 'Januari', tahun: 2026, nominal: 50000, status: 'Belum', tanggalBayar: null, kasId: null }
-            ],
-            murid: [{ nis: '101', nama: 'Ahmad Fauzi', kelas: 'VII-A' }, { nis: '102', nama: 'Siti Aminah', kelas: 'VII-A' }],
-            guru: [{ nip: 'G001', nama: 'Drs. H. Abdullah, M.Pd', mapel: 'Fikih', kontak: '081234567890' }]
-        };
-    }
-    let db = JSON.parse(localStorage.getItem('madrasah_db')) || getDefaultDb();
+  /* murid */
+  murid() {
+    const f = App.muridFilter || (App.muridFilter = { kelas:'', q:'' });
+    let list = [...Store.data.murid];
+    if (f.kelas) list = list.filter(m => m.kelas === f.kelas);
+    if (f.q) { const q = f.q.toLowerCase(); list = list.filter(m => (m.nama||'').toLowerCase().includes(q) || (m.nis||'').toLowerCase().includes(q)); }
+    list.sort((a,b)=>(a.nama||'').localeCompare(b.nama||''));
+    const kelasList = [...new Set(Store.data.murid.map(m=>m.kelas).filter(Boolean))].sort();
 
-    function saveData() {
-        localStorage.setItem('madrasah_db', JSON.stringify(db));
-        renderAll();
-    }
+    return `<div class="topbar"><h1>Data Murid</h1><button class="primary" data-action="murid-add">+ Tambah Murid</button></div>
+    <div class="filter-bar card">
+      <select data-filter="muridKelas"><option value="">Semua Kelas</option>${kelasList.map(k=>`<option ${f.kelas===k?'selected':''}>${UI.esc(k)}</option>`).join('')}</select>
+      <input placeholder="Cari nama / NIS..." data-filter="muridQ" value="${UI.esc(f.q)}">
+      <button class="sm" data-action="export-csv-murid">⬇️ CSV</button>
+    </div>
+    ${list.length ? `<div class="table-wrap"><table><thead><tr><th>NIS</th><th>Nama</th><th>Kelas</th><th>L/P</th><th>Wali</th><th>Telepon</th><th>Status</th><th></th></tr></thead><tbody>
+      ${list.map(m=>`<tr><td>${UI.esc(m.nis||'-')}</td><td><b>${UI.esc(m.nama||'-')}</b></td><td>${UI.esc(m.kelas||'-')}</td><td>${UI.esc(m.jk||'-')}</td>
+        <td>${UI.esc(m.wali||'-')}</td><td>${UI.esc(m.telepon||'-')}</td>
+        <td><span class="badge ${m.aktif!==false?'s':'w'}">${m.aktif!==false?'Aktif':'Non-aktif'}</span></td>
+        <td class="actions-cell"><button class="sm" data-action="murid-edit" data-id="${m.id}">✏️</button><button class="sm danger" data-action="murid-del" data-id="${m.id}">🗑️</button></td></tr>`).join('')}
+    </tbody></table></div>` : `<div class="card empty">Belum ada data murid.</div>`}`;
+  },
 
-    /* ================= TAB NAVIGATION ================= */
-    function switchTab(tabId) {
-        document.querySelectorAll('.tab-content').forEach(el => el.classList.add('hidden'));
-        document.querySelectorAll('.tab-btn').forEach(el => {
-            el.classList.remove('dynamic-btn', 'text-white', 'shadow-sm');
-            el.classList.add('bg-slate-100', 'text-slate-600');
-        });
-        document.getElementById('tab-' + tabId).classList.remove('hidden');
-        const btn = document.getElementById('tab-btn-' + tabId);
-        btn.classList.remove('bg-slate-100', 'text-slate-600');
-        btn.classList.add('dynamic-btn', 'text-white', 'shadow-sm');
-    }
+  /* guru */
+  guru() {
+    const list = [...Store.data.guru].sort((a,b)=>(a.nama||'').localeCompare(b.nama||''));
+    return `<div class="topbar"><h1>Data Guru</h1><button class="primary" data-action="guru-add">+ Tambah Guru</button></div>
+    ${list.length ? `<div class="table-wrap"><table><thead><tr><th>NIP</th><th>Nama</th><th>Mapel</th><th>Jabatan</th><th>Telepon</th><th></th></tr></thead><tbody>
+      ${list.map(g=>`<tr><td>${UI.esc(g.nip||'-')}</td><td><b>${UI.esc(g.nama||'-')}</b></td><td>${UI.esc(g.mapel||'-')}</td><td>${UI.esc(g.jabatan||'-')}</td><td>${UI.esc(g.telepon||'-')}</td>
+        <td class="actions-cell"><button class="sm" data-action="guru-edit" data-id="${g.id}">✏️</button><button class="sm danger" data-action="guru-del" data-id="${g.id}">🗑️</button></td></tr>`).join('')}
+    </tbody></table></div>` : `<div class="card empty">Belum ada data guru.</div>`}`;
+  },
 
-    /* ================= KAS FUNCTIONS ================= */
-    function populateKategoriSelects() {
-        const catOpts = db.kategori.map(k => `<option value="${escapeHtml(k)}">${escapeHtml(k)}</option>`).join('');
-        const formSel = document.getElementById('kasKategori');
-        if (formSel) formSel.innerHTML = catOpts;
-        const filterSel = document.getElementById('kasFilterKategori');
-        if (filterSel) filterSel.innerHTML = `<option value="">Semua Kategori</option>${catOpts}`;
-    }
-    function addKas(e) {
-        e.preventDefault();
-        db.kas.push({
-            id: Date.now(),
-            jenis: document.getElementById('kasJenis').value,
-            tanggal: document.getElementById('kasTanggal').value,
-            keterangan: document.getElementById('kasKeterangan').value.trim(),
-            kategori: document.getElementById('kasKategori').value,
-            nominal: parseFloat(document.getElementById('kasNominal').value)
-        });
-        document.getElementById('formKas').reset();
-        document.getElementById('kasTanggal').valueAsDate = new Date();
-        saveData();
-        toast('Transaksi disimpan');
-    }
-    function deleteKas(id) {
-        if (!confirm('Hapus transaksi?')) return;
-        db.kas = db.kas.filter(k => k.id !== id);
-        saveData();
-        toast('Transaksi dihapus');
-    }
-    function resetKasFilter() {
-        document.getElementById('kasFilterJenis').value = '';
-        document.getElementById('kasFilterKategori').value = '';
-        document.getElementById('kasFilterDari').value = '';
-        document.getElementById('kasFilterSampai').value = '';
-        renderKas();
-    }
-    function renderKas() {
-        let totalMasuk = 0, totalKeluar = 0;
-        db.kas.forEach(k => { if (k.jenis === 'Masuk') totalMasuk += k.nominal; else totalKeluar += k.nominal; });
-        document.getElementById('heroSaldo').innerText = formatRupiah(totalMasuk - totalKeluar);
-        document.getElementById('heroPemasukan').innerText = formatRupiah(totalMasuk);
-        document.getElementById('heroPengeluaran').innerText = formatRupiah(totalKeluar);
+  /* kelas */
+  kelas() {
+    const list = [...Store.data.kelas].sort((a,b)=>(a.nama||'').localeCompare(b.nama||''));
+    return `<div class="topbar"><h1>Data Kelas</h1><button class="primary" data-action="kelas-add">+ Tambah Kelas</button></div>
+    ${list.length ? `<div class="table-wrap"><table><thead><tr><th>Nama Kelas</th><th>Wali Kelas</th><th>Jumlah Murid</th><th></th></tr></thead><tbody>
+      ${list.map(k=>{ const cnt = Store.data.murid.filter(m=>m.kelas===k.nama&&m.aktif!==false).length; return `<tr><td><b>${UI.esc(k.nama)}</b></td><td>${UI.esc(k.wali||'-')}</td><td>${cnt}</td>
+        <td class="actions-cell"><button class="sm" data-action="kelas-edit" data-id="${k.id}">✏️</button><button class="sm danger" data-action="kelas-del" data-id="${k.id}">🗑️</button></td></tr>`; }).join('')}
+    </tbody></table></div>` : `<div class="card empty">Belum ada kelas. Tambahkan untuk mempermudah filter murid.</div>`}`;
+  },
 
-        const fJenis = document.getElementById('kasFilterJenis').value;
-        const fKat = document.getElementById('kasFilterKategori').value;
-        const fDari = document.getElementById('kasFilterDari').value;
-        const fSampai = document.getElementById('kasFilterSampai').value;
+  /* kategori */
+  kategori() {
+    const list = [...Store.data.kategori].sort((a,b)=>(a.jenis||'').localeCompare(b.jenis||'') || (a.nama||'').localeCompare(b.nama||''));
+    return `<div class="topbar"><h1>Kategori Transaksi</h1><button class="primary" data-action="kategori-add">+ Tambah Kategori</button></div>
+    ${list.length ? `<div class="table-wrap"><table><thead><tr><th>Nama</th><th>Jenis</th><th>Jumlah Transaksi</th><th></th></tr></thead><tbody>
+      ${list.map(k=>{ const cnt = Store.data.transaksi.filter(t=>t.kategori===k.nama).length; return `<tr><td><b>${UI.esc(k.nama)}</b></td>
+        <td><span class="badge ${k.jenis==='masuk'?'s':'d'}">${k.jenis==='masuk'?'Masuk':'Keluar'}</span></td><td>${cnt}</td>
+        <td class="actions-cell"><button class="sm" data-action="kategori-edit" data-id="${k.id}">✏️</button><button class="sm danger" data-action="kategori-del" data-id="${k.id}">🗑️</button></td></tr>`; }).join('')}
+    </tbody></table></div>` : `<div class="card empty">Belum ada kategori. Kategori membantu pengelompokan laporan.</div>`}`;
+  },
 
-        const filtered = db.kas.filter(k => {
-            if (fJenis && k.jenis !== fJenis) return false;
-            if (fKat && k.kategori !== fKat) return false;
-            if (fDari && k.tanggal < fDari) return false;
-            if (fSampai && k.tanggal > fSampai) return false;
-            return true;
-        });
+  /* transaksi */
+  transaksi() {
+    const f = App.txFilter || (App.txFilter = { bulan:new Date().toISOString().slice(0,7), jenis:'', kategori:'', q:'' });
+    let list = [...Store.data.transaksi];
+    if (f.bulan) list = list.filter(t=>(t.tanggal||'').startsWith(f.bulan));
+    if (f.jenis) list = list.filter(t=>t.jenis===f.jenis);
+    if (f.kategori) list = list.filter(t=>t.kategori===f.kategori);
+    if (f.q) { const q=f.q.toLowerCase(); list = list.filter(t=>((t.keterangan||'')+' '+(t.kategori||'')).toLowerCase().includes(q)); }
+    list.sort((a,b)=>(b.tanggal||'').localeCompare(a.tanggal||'') || (b.id||'').localeCompare(a.id||''));
+    const tIn = list.filter(t=>t.jenis==='masuk').reduce((s,t)=>s+(+t.jumlah||0),0);
+    const tOut = list.filter(t=>t.jenis==='keluar').reduce((s,t)=>s+(+t.jumlah||0),0);
+    const kats = [...new Set(Store.data.transaksi.map(t=>t.kategori).filter(Boolean))].sort();
 
-        const tbody = document.getElementById('tabelKasBody');
-        tbody.innerHTML = '';
-        if (filtered.length === 0) {
-            tbody.innerHTML = `<tr><td colspan="6" class="p-4 text-center text-slate-400 text-xs">Belum ada transaksi</td></tr>`;
-            return;
-        }
-        filtered.sort((a,b) => new Date(b.tanggal) - new Date(a.tanggal)).forEach(k => {
-            const tr = document.createElement('tr');
-            tr.className = 'border-b border-slate-100 hover:bg-slate-50';
-            tr.innerHTML = `
-                <td class="p-2.5 whitespace-nowrap">${escapeHtml(k.tanggal)}</td>
-                <td class="p-2.5 font-medium">${escapeHtml(k.keterangan)}</td>
-                <td class="p-2.5"><span class="px-2 py-0.5 rounded-full text-[10px] font-semibold bg-slate-100">${escapeHtml(k.kategori || 'Lainnya')}</span></td>
-                <td class="p-2.5"><span class="px-2 py-0.5 rounded text-[10px] font-bold ${k.jenis === 'Masuk' ? 'bg-emerald-100 text-emerald-800' : 'bg-red-100 text-red-800'}">${k.jenis}</span></td>
-                <td class="p-2.5 text-right font-bold ${k.jenis === 'Masuk' ? 'text-emerald-600' : 'text-red-600'}">${k.jenis === 'Masuk' ? '+' : '-'} ${formatRupiah(k.nominal)}</td>
-                <td class="p-2.5 text-center">
-                    <button onclick="openEditKas(${k.id})" class="text-blue-500 hover:text-blue-700 mr-1">Edit</button>
-                    <button onclick="deleteKas(${k.id})" class="text-red-500 hover:text-red-700">Hapus</button>
-                </td>`;
-            tbody.appendChild(tr);
-        });
-    }
+    return `<div class="topbar"><h1>Transaksi Kas</h1><button class="primary" data-action="tx-add">+ Tambah Transaksi</button></div>
+    <div class="filter-bar card no-print">
+      <input type="month" data-filter="bulan" value="${UI.esc(f.bulan)}">
+      <select data-filter="jenis"><option value="">Semua Jenis</option><option value="masuk" ${f.jenis==='masuk'?'selected':''}>Pemasukan</option><option value="keluar" ${f.jenis==='keluar'?'selected':''}>Pengeluaran</option></select>
+      <select data-filter="kategori"><option value="">Semua Kategori</option>${kats.map(k=>`<option ${f.kategori===k?'selected':''}>${UI.esc(k)}</option>`).join('')}</select>
+      <input placeholder="Cari keterangan..." data-filter="txQ" value="${UI.esc(f.q)}">
+    </div>
+    <div class="card no-print" style="margin-bottom:12px;padding:10px 14px;display:flex;gap:20px;flex-wrap:wrap;font-size:13px">
+      <span>Masuk: <b class="money pos">${UI.fmt(tIn)}</b></span>
+      <span>Keluar: <b class="money neg">${UI.fmt(tOut)}</b></span>
+      <span>Selisih: <b class="money">${UI.fmt(tIn-tOut)}</b></span>
+    </div>
+    ${list.length ? `<div class="table-wrap"><table><thead><tr><th>Tanggal</th><th>Keterangan</th><th>Kategori</th><th>Jenis</th><th class="money">Jumlah</th><th></th></tr></thead><tbody>
+      ${list.map(t=>`<tr><td>${UI.fmtDate(t.tanggal)}</td><td>${UI.esc(t.keterangan||'-')}</td><td>${UI.esc(t.kategori||'-')}</td>
+        <td><span class="badge ${t.jenis==='masuk'?'s':'d'}">${t.jenis==='masuk'?'Masuk':'Keluar'}</span></td>
+        <td class="money ${t.jenis==='masuk'?'pos':'neg'}">${t.jenis==='masuk'?'+':'-'} ${UI.fmt(t.jumlah)}</td>
+        <td class="actions-cell"><button class="sm" data-action="tx-edit" data-id="${t.id}">✏️</button><button class="sm danger" data-action="tx-del" data-id="${t.id}">🗑️</button></td></tr>`).join('')}
+    </tbody></table></div>` : `<div class="card empty">Tidak ada transaksi pada filter ini.</div>`}`;
+  },
 
-    /* ================= SPP FUNCTIONS ================= */
-    function toggleSppStatus(id) {
-        const item = db.spp.find(s => s.id === id);
-        if (!item) return;
-        if (item.status === 'Belum') {
-            item.status = 'Lunas';
-            item.tanggalBayar = new Date().toISOString().split('T')[0];
-            const kasId = Date.now();
-            item.kasId = kasId;
-            db.kas.push({ id: kasId, tanggal: item.tanggalBayar, keterangan: `SPP ${item.bulan} ${item.tahun} - ${item.nama}`, jenis: 'Masuk', nominal: item.nominal, kategori: db.kategoriSpp || 'SPP' });
-            toast(`SPP ${item.nama} Lunas`);
-        } else {
-            item.status = 'Belum';
-            if (item.kasId) { db.kas = db.kas.filter(k => k.id !== item.kasId); item.kasId = null; }
-            item.tanggalBayar = null;
-            toast(`SPP dibatalkan`);
-        }
-        saveData();
-    }
-    function updateNominalDefault() {
-        const val = parseInt(document.getElementById('nominalSppDefault').value);
-        if (!isNaN(val) && val >= 0) { db.nominalSppDefault = val; saveData(); toast('Nominal default diubah'); }
-    }
-    function updateTahunAjaran() {
-        const val = document.getElementById('tahunAjaranInput').value.trim();
-        if (/^\d{4}\/\d{4}$/.test(val)) { db.tahunAjaran = val; saveData(); toast('Tahun ajaran diubah'); }
-    }
-    function generateSppForAll() {
-        if (db.murid.length === 0) { toast('Belum ada murid', 'error'); return; }
-        const [ta1, ta2] = db.tahunAjaran.split('/');
-        let created = 0;
-        db.murid.forEach(m => {
-            BULAN_LIST.forEach((bulan, idx) => {
-                const tahun = idx < 6 ? parseInt(ta1) : parseInt(ta2);
-                if (!db.spp.find(s => String(s.nis) === String(m.nis) && s.bulan === bulan && s.tahun === tahun)) {
-                    db.spp.push({ id: Date.now() + Math.random(), nis: m.nis, nama: m.nama, kelas: m.kelas, bulan, tahun, nominal: db.nominalSppDefault || 50000, status: 'Belum', tanggalBayar: null, kasId: null });
-                    created++;
-                }
-            });
-        });
-        saveData();
-        toast(`Berhasil membuat ${created} tagihan SPP`);
-    }
-    function renderSpp() {
-        const kelasSet = new Set(db.spp.map(s => s.kelas));
-        const kelasSel = document.getElementById('sppFilterKelas');
-        if(kelasSel) kelasSel.innerHTML = '<option value="">Semua Kelas</option>' + Array.from(kelasSet).map(k=>`<option value="${k}">${k}</option>`).join('');
-        
-        document.getElementById('tahunAjaranInput').value = db.tahunAjaran;
-        document.getElementById('nominalSppDefault').value = db.nominalSppDefault;
+  /* spp */
+  spp() {
+    const tahun = App.sppTahun || (App.sppTahun = new Date().getFullYear());
+    const f = App.sppFilter || (App.sppFilter = { kelas:'' });
+    const tahunList = [...new Set([tahun, ...Store.data.spp.map(s=>s.tahun), new Date().getFullYear()])].filter(Boolean).sort((a,b)=>b-a);
+    let murid = [...Store.data.murid].filter(m=>m.aktif!==false);
+    if (f.kelas) murid = murid.filter(m => m.kelas===f.kelas);
+    murid.sort((a,b)=>(a.kelas||'').localeCompare(b.kelas||'') || (a.nama||'').localeCompare(b.nama||''));
+    const list = Store.data.spp.filter(s=>+s.tahun===+tahun);
+    const totalTagihan = list.reduce((s,x)=>s+(+x.nominal||0),0);
+    const totalLunas = list.filter(s=>s.status==='lunas').reduce((s,x)=>s+(+x.nominal||0),0);
+    const kelasList = [...new Set(Store.data.murid.map(m=>m.kelas).filter(Boolean))].sort();
 
-        const kw = document.getElementById('searchSpp').value.toLowerCase();
-        const fK = document.getElementById('sppFilterKelas').value;
-        const fS = document.getElementById('sppFilterStatus').value;
+    return `<div class="topbar"><h1>Pembayaran SPP</h1>
+      <div class="row no-print">
+        <select data-filter="sppTahun" style="min-width:100px">${tahunList.map(y=>`<option ${+y===+tahun?'selected':''}>${y}</option>`).join('')}</select>
+        <select data-filter="sppKelas"><option value="">Semua Kelas</option>${kelasList.map(k=>`<option ${f.kelas===k?'selected':''}>${UI.esc(k)}</option>`).join('')}</select>
+        <button class="primary" data-action="spp-generate">⚙️ Generate ${tahun}</button>
+      </div>
+    </div>
+    <div class="stat-grid">
+      <div class="stat"><div class="lbl">Total Tagihan ${tahun}</div><div class="val">${UI.fmt(totalTagihan)}</div></div>
+      <div class="stat"><div class="lbl">Sudah Lunas</div><div class="val pos">${UI.fmt(totalLunas)}</div></div>
+      <div class="stat"><div class="lbl">Tunggakan</div><div class="val neg">${UI.fmt(totalTagihan-totalLunas)}</div></div>
+    </div>
+    ${murid.length ? murid.map(m => {
+      const rows = list.filter(s=>s.muridId===m.id).sort((a,b)=>a.bulan-b.bulan);
+      if (!rows.length) return '';
+      return `<div class="card" style="margin-bottom:12px">
+        <h3>${UI.esc(m.nama)} <span style="font-weight:400;color:var(--muted);font-size:12px">(${UI.esc(m.kelas||'-')} · ${UI.esc(m.nis||'-')})</span></h3>
+        <div class="spp-grid">
+          ${Array.from({length:12},(_,i)=>{ const s = rows.find(r=>+r.bulan===i+1); if(!s) return `<button disabled style="opacity:.4">${BULAN_S[i]}</button>`;
+            return `<button class="xs ${s.status==='lunas'?'success':''}" data-action="spp-toggle" data-id="${s.id}">${BULAN_S[i]} ${s.status==='lunas'?'✓':''}</button>`; }).join('')}
+        </div>
+        <div class="row" style="margin-top:8px;gap:6px" class="no-print">
+          <button class="xs" data-action="spp-bulk" data-id="${m.id}">✓ Lunas 1 Tahun</button>
+          <button class="xs" data-action="spp-kuitansi" data-id="${m.id}">🖨️ Kuitansi</button>
+        </div>
+      </div>`;
+    }).join('') : `<div class="card empty">Belum ada murid aktif pada filter ini.</div>`}`;
+  },
 
-        const filtered = db.spp.filter(s => {
-            if (kw && !(s.nama.toLowerCase().includes(kw) || String(s.nis).includes(kw))) return false;
-            if (fK && s.kelas !== fK) return false;
-            if (fS && s.status !== fS) return false;
-            return true;
-        });
+  /* tabungan */
+  tabungan() {
+    const list = [...Store.data.tabungan].sort((a,b)=>(b.tanggal||'').localeCompare(a.tanggal||''));
+    const perMurid = {};
+    Store.data.tabungan.forEach(t => { perMurid[t.muridId] = (perMurid[t.muridId]||0) + (t.jenis==='setor'?1:-1)*(+t.jumlah||0); });
+    const total = Object.values(perMurid).reduce((s,x)=>s+x,0);
+    const muridTab = Store.data.murid.filter(m=>perMurid[m.id]);
 
-        const tbody = document.getElementById('tabelSppBody');
-        tbody.innerHTML = '';
-        if (filtered.length === 0) {
-            tbody.innerHTML = `<tr><td colspan="7" class="p-4 text-center text-slate-400 text-xs">Tidak ada data SPP</td></tr>`;
-        } else {
-            filtered.forEach(s => {
-                const tr = document.createElement('tr');
-                tr.className = 'border-b border-slate-100 hover:bg-slate-50';
-                tr.innerHTML = `
-                    <td class="p-2.5 font-mono">${escapeHtml(s.nis)}</td>
-                    <td class="p-2.5 font-medium">${escapeHtml(s.nama)}</td>
-                    <td class="p-2.5">${escapeHtml(s.kelas)}</td>
-                    <td class="p-2.5">${escapeHtml(s.bulan)} ${s.tahun}</td>
-                    <td class="p-2.5 text-right">${formatRupiah(s.nominal)}</td>
-                    <td class="p-2.5 text-center"><button onclick="toggleSppStatus(${s.id})" class="px-2.5 py-0.5 rounded-full text-[10px] font-bold ${s.status === 'Lunas' ? 'bg-emerald-100 text-emerald-800' : 'bg-amber-100 text-amber-800'}">${s.status}</button></td>
-                    <td class="p-2.5 text-center"><button onclick="openEditSpp(${s.id})" class="text-blue-500 hover:text-blue-700">Edit</button></td>`;
-                tbody.appendChild(tr);
-            });
-        }
-        const totalTunggakan = db.spp.filter(s => s.status === 'Belum').reduce((sum, s) => sum + s.nominal, 0);
-        document.getElementById('sppSummary').innerHTML = `Tunggakan: ${formatRupiah(totalTunggakan)}`;
-        document.getElementById('heroTunggakan').innerText = formatRupiah(totalTunggakan);
-    }
+    return `<div class="topbar"><h1>Tabungan Siswa</h1><button class="primary" data-action="tabung-add">+ Transaksi Tabungan</button></div>
+    <div class="stat-grid"><div class="stat"><div class="lbl">Total Saldo Tabungan</div><div class="val">${UI.fmt(total)}</div></div>
+      <div class="stat"><div class="lbl">Murid Menabung</div><div class="val">${muridTab.length}</div></div></div>
+    <div class="card" style="margin-bottom:14px"><h3>Saldo per Murid</h3>
+      ${muridTab.length ? `<div class="table-wrap"><table><thead><tr><th>Nama</th><th>Kelas</th><th class="money">Saldo</th></tr></thead><tbody>
+        ${muridTab.sort((a,b)=>(a.nama||'').localeCompare(b.nama||'')).map(m=>`<tr><td><b>${UI.esc(m.nama)}</b></td><td>${UI.esc(m.kelas||'-')}</td>
+          <td class="money ${perMurid[m.id]>0?'pos':'neg'}">${UI.fmt(perMurid[m.id])}</td></tr>`).join('')}
+      </tbody></table></div>` : `<div class="empty">Belum ada tabungan.</div>`}
+    </div>
+    <div class="card"><h3>Riwayat Transaksi Tabungan</h3>
+      ${list.length ? `<div class="table-wrap"><table><thead><tr><th>Tanggal</th><th>Murid</th><th>Jenis</th><th class="money">Jumlah</th><th>Keterangan</th><th></th></tr></thead><tbody>
+        ${list.map(t=>{ const m = Store.find('murid', t.muridId); return `<tr><td>${UI.fmtDate(t.tanggal)}</td><td>${UI.esc(m?.nama||'-')}</td>
+          <td><span class="badge ${t.jenis==='setor'?'s':'d'}">${t.jenis==='setor'?'Setor':'Tarik'}</span></td>
+          <td class="money ${t.jenis==='setor'?'pos':'neg'}">${UI.fmt(t.jumlah)}</td><td>${UI.esc(t.keterangan||'-')}</td>
+          <td><button class="sm danger" data-action="tabung-del" data-id="${t.id}">🗑️</button></td></tr>`; }).join('')}
+      </tbody></table></div>` : `<div class="empty">Belum ada transaksi tabungan.</div>`}
+    </div>`;
+  },
 
-    /* ================= MURID & GURU ================= */
-    function addMurid(e) {
-        e.preventDefault();
-        const nis = document.getElementById('muridNis').value.trim();
-        const nama = document.getElementById('muridNama').value.trim();
-        const kelas = document.getElementById('muridKelas').value.trim();
-        if (db.murid.find(m => String(m.nis) === nis)) { toast('NIS sudah ada', 'error'); return; }
-        db.murid.push({ nis, nama, kelas });
-        document.getElementById('formMurid').reset();
-        saveData();
-        toast('Murid ditambahkan');
-    }
-    function deleteMurid(nis) {
-        if (!confirm('Hapus murid ini?')) return;
-        db.murid = db.murid.filter(m => String(m.nis) !== String(nis));
-        db.spp = db.spp.filter(s => String(s.nis) !== String(nis));
-        saveData();
-        toast('Murid dihapus');
-    }
-    function renderMurid() {
-        const kelasSet = new Set(db.murid.map(m => m.kelas));
-        const sel = document.getElementById('muridFilterKelas');
-        if(sel) sel.innerHTML = '<option value="">Semua Kelas</option>' + Array.from(kelasSet).map(k=>`<option value="${k}">${k}</option>`).join('');
+  /* laporan */
+  laporan() {
+    const f = App.lapFilter || (App.lapFilter = { dari:new Date(new Date().getFullYear(),new Date().getMonth(),1).toISOString().slice(0,10), sampai:UI.today() });
+    const list = Store.data.transaksi.filter(t=>t.tanggal>=f.dari && t.tanggal<=f.sampai).sort((a,b)=>(a.tanggal||'').localeCompare(b.tanggal||''));
+    let saldoAwal = 0;
+    Store.data.transaksi.forEach(t=>{ if(t.tanggal<f.dari) saldoAwal += (t.jenis==='masuk'?1:-1)*(+t.jumlah||0); });
+    let running = saldoAwal;
+    const rows = list.map(t=>{ running += (t.jenis==='masuk'?1:-1)*(+t.jumlah||0); return { ...t, saldo:running }; });
+    const totalIn = list.filter(t=>t.jenis==='masuk').reduce((s,t)=>s+(+t.jumlah||0),0);
+    const totalOut = list.filter(t=>t.jenis==='keluar').reduce((s,t)=>s+(+t.jumlah||0),0);
 
-        const kw = document.getElementById('searchMurid').value.toLowerCase();
-        const fK = document.getElementById('muridFilterKelas').value;
-        const tbody = document.getElementById('tabelMuridBody');
-        tbody.innerHTML = '';
-        
-        const filtered = db.murid.filter(m => {
-            if (fK && m.kelas !== fK) return false;
-            if (kw && !(m.nama.toLowerCase().includes(kw) || String(m.nis).includes(kw))) return false;
-            return true;
-        });
+    // rekap per kategori
+    const rekap = {};
+    list.forEach(t => { if (!rekap[t.kategori||'-']) rekap[t.kategori||'-'] = { masuk:0, keluar:0 }; rekap[t.kategori||'-'][t.jenis] += (+t.jumlah||0); });
 
-        if (filtered.length === 0) {
-            tbody.innerHTML = `<tr><td colspan="4" class="p-4 text-center text-slate-400 text-xs">Tidak ada data murid</td></tr>`;
-            return;
-        }
-        filtered.forEach(m => {
-            const tr = document.createElement('tr');
-            tr.className = 'border-b border-slate-100 hover:bg-slate-50';
-            tr.innerHTML = `
-                <td class="p-2.5 font-mono">${escapeHtml(m.nis)}</td>
-                <td class="p-2.5 font-medium">${escapeHtml(m.nama)}</td>
-                <td class="p-2.5">${escapeHtml(m.kelas)}</td>
-                <td class="p-2.5 text-center">
-                    <button onclick="openEditMurid('${escapeHtml(m.nis)}')" class="text-blue-500 hover:text-blue-700 mr-1">Edit</button>
-                    <button onclick="deleteMurid('${escapeHtml(m.nis)}')" class="text-red-500 hover:text-red-700">Hapus</button>
-                </td>`;
-            tbody.appendChild(tr);
-        });
-    }
+    // tunggakan per kelas
+    const tahun = App.sppTahun || new Date().getFullYear();
+    const tunggakanKelas = {};
+    Store.data.spp.filter(s=>+s.tahun===+tahun && s.status==='belum').forEach(s => {
+      const m = Store.find('murid', s.muridId); if (!m) return;
+      const k = m.kelas || '-';
+      tunggakanKelas[k] = (tunggakanKelas[k]||0) + (+s.nominal||0);
+    });
 
-    function addGuru(e) {
-        e.preventDefault();
-        const nip = document.getElementById('guruNip').value.trim();
-        const nama = document.getElementById('guruNama').value.trim();
-        const mapel = document.getElementById('guruMapel').value.trim();
-        const kontak = document.getElementById('guruKontak').value.trim();
-        if (db.guru.find(g => String(g.nip) === nip)) { toast('NIP sudah ada', 'error'); return; }
-        db.guru.push({ nip, nama, mapel, kontak });
-        document.getElementById('formGuru').reset();
-        saveData();
-        toast('Guru ditambahkan');
-    }
-    function deleteGuru(nip) {
-        if (!confirm('Hapus guru?')) return;
-        db.guru = db.guru.filter(g => String(g.nip) !== String(nip));
-        saveData();
-        toast('Guru dihapus');
-    }
-    function renderGuru() {
-        const kw = document.getElementById('searchGuru').value.toLowerCase();
-        const tbody = document.getElementById('tabelGuruBody');
-        tbody.innerHTML = '';
-        const filtered = db.guru.filter(g => !kw || g.nama.toLowerCase().includes(kw) || String(g.nip).includes(kw));
-        if (filtered.length === 0) {
-            tbody.innerHTML = `<tr><td colspan="5" class="p-4 text-center text-slate-400 text-xs">Tidak ada data guru</td></tr>`;
-            return;
-        }
-        filtered.forEach(g => {
-            const tr = document.createElement('tr');
-            tr.className = 'border-b border-slate-100 hover:bg-slate-50';
-            tr.innerHTML = `
-                <td class="p-2.5 font-mono">${escapeHtml(g.nip)}</td>
-                <td class="p-2.5 font-medium">${escapeHtml(g.nama)}</td>
-                <td class="p-2.5">${escapeHtml(g.mapel)}</td>
-                <td class="p-2.5">${escapeHtml(g.kontak)}</td>
-                <td class="p-2.5 text-center">
-                    <button onclick="openEditGuru('${escapeHtml(g.nip)}')" class="text-blue-500 hover:text-blue-700 mr-1">Edit</button>
-                    <button onclick="deleteGuru('${escapeHtml(g.nip)}')" class="text-red-500 hover:text-red-700">Hapus</button>
-                </td>`;
-            tbody.appendChild(tr);
-        });
-    }
+    return `<div class="topbar"><h1>Laporan</h1><button class="primary no-print" data-action="print">🖨️ Cetak / PDF</button></div>
+    <div class="filter-bar card no-print">
+      <label style="font-size:12px">Dari <input type="date" data-filter="lapDari" value="${UI.esc(f.dari)}" style="width:auto;display:inline-block;margin-left:4px"></label>
+      <label style="font-size:12px">Sampai <input type="date" data-filter="lapSampai" value="${UI.esc(f.sampai)}" style="width:auto;display:inline-block;margin-left:4px"></label>
+      <button class="sm" data-action="lap-csv">⬇️ CSV</button>
+    </div>
 
-    /* ================= MODALS & EDIT ================= */
-    let editContext = { type: null, id: null };
-    function openEditKas(id) {
-        const item = db.kas.find(k => k.id === id);
-        if (!item) return;
-        editContext = { type: 'kas', id };
-        document.getElementById('editTitle').textContent = 'Edit Transaksi Kas';
-        document.getElementById('editBody').innerHTML = `
-            <div><label class="block text-[10px] uppercase font-semibold mb-1">Jenis</label><select name="jenis" class="w-full px-3 py-1.5 rounded-xl border text-xs bg-white"><option value="Masuk" ${item.jenis==='Masuk'?'selected':''}>Masuk</option><option value="Keluar" ${item.jenis==='Keluar'?'selected':''}>Keluar</option></select></div>
-            <div><label class="block text-[10px] uppercase font-semibold mb-1">Tanggal</label><input type="date" name="tanggal" value="${item.tanggal}" required class="w-full px-3 py-1.5 rounded-xl border text-xs"></div>
-            <div><label class="block text-[10px] uppercase font-semibold mb-1">Keterangan</label><input type="text" name="keterangan" value="${item.keterangan}" required class="w-full px-3 py-1.5 rounded-xl border text-xs"></div>
-            <div><label class="block text-[10px] uppercase font-semibold mb-1">Kategori</label><select name="kategori" class="w-full px-3 py-1.5 rounded-xl border text-xs bg-white">${db.kategori.map(k=>`<option value="${k}" ${item.kategori===k?'selected':''}>${k}</option>`).join('')}</select></div>
-            <div><label class="block text-[10px] uppercase font-semibold mb-1">Nominal</label><input type="number" name="nominal" value="${item.nominal}" min="1" required class="w-full px-3 py-1.5 rounded-xl border text-xs"></div>`;
-        document.getElementById('editModal').classList.remove('hidden');
-    }
-    function openEditMurid(nis) {
-        const item = db.murid.find(m => String(m.nis) === String(nis));
-        if (!item) return;
-        editContext = { type: 'murid', id: nis };
-        document.getElementById('editTitle').textContent = 'Edit Murid';
-        document.getElementById('editBody').innerHTML = `
-            <div><label class="block text-[10px] uppercase font-semibold mb-1">Nama</label><input type="text" name="nama" value="${item.nama}" required class="w-full px-3 py-1.5 rounded-xl border text-xs"></div>
-            <div><label class="block text-[10px] uppercase font-semibold mb-1">Kelas</label><input type="text" name="kelas" value="${item.kelas}" required class="w-full px-3 py-1.5 rounded-xl border text-xs"></div>`;
-        document.getElementById('editModal').classList.remove('hidden');
-    }
-    function openEditGuru(nip) {
-        const item = db.guru.find(g => String(g.nip) === String(nip));
-        if (!item) return;
-        editContext = { type: 'guru', id: nip };
-        document.getElementById('editTitle').textContent = 'Edit Guru';
-        document.getElementById('editBody').innerHTML = `
-            <div><label class="block text-[10px] uppercase font-semibold mb-1">Nama</label><input type="text" name="nama" value="${item.nama}" required class="w-full px-3 py-1.5 rounded-xl border text-xs"></div>
-            <div><label class="block text-[10px] uppercase font-semibold mb-1">Mapel</label><input type="text" name="mapel" value="${item.mapel}" required class="w-full px-3 py-1.5 rounded-xl border text-xs"></div>
-            <div><label class="block text-[10px] uppercase font-semibold mb-1">Kontak</label><input type="text" name="kontak" value="${item.kontak}" required class="w-full px-3 py-1.5 rounded-xl border text-xs"></div>`;
-        document.getElementById('editModal').classList.remove('hidden');
-    }
-    function openEditSpp(id) {
-        const item = db.spp.find(s => s.id === id);
-        if (!item) return;
-        editContext = { type: 'spp', id };
-        document.getElementById('editTitle').textContent = 'Edit Nominal SPP';
-        document.getElementById('editBody').innerHTML = `<div><label class="block text-[10px] uppercase font-semibold mb-1">Nominal</label><input type="number" name="nominal" value="${item.nominal}" min="1" required class="w-full px-3 py-1.5 rounded-xl border text-xs"></div>`;
-        document.getElementById('editModal').classList.remove('hidden');
-    }
-    function closeEdit() { document.getElementById('editModal').classList.add('hidden'); }
-    function saveEdit(e) {
-        e.preventDefault();
-        const data = Object.fromEntries(new FormData(e.target).entries());
-        if (editContext.type === 'kas') {
-            const item = db.kas.find(k => k.id === editContext.id);
-            Object.assign(item, { jenis: data.jenis, tanggal: data.tanggal, keterangan: data.keterangan, kategori: data.kategori, nominal: parseFloat(data.nominal) });
-        } else if (editContext.type === 'murid') {
-            const item = db.murid.find(m => String(m.nis) === String(editContext.id));
-            item.nama = data.nama; item.kelas = data.kelas;
-        } else if (editContext.type === 'guru') {
-            const item = db.guru.find(g => String(g.nip) === String(editContext.id));
-            item.nama = data.nama; item.mapel = data.mapel; item.kontak = data.kontak;
-        } else if (editContext.type === 'spp') {
-            const item = db.spp.find(s => s.id === editContext.id);
-            item.nominal = parseFloat(data.nominal);
-        }
-        closeEdit(); saveData(); toast('Perubahan disimpan');
-    }
+    <div class="card" style="margin-bottom:14px">
+      <h3 style="text-align:center">${UI.esc(Store.data.settings.namaMadrasah || 'Madrasah')}</h3>
+      <div style="text-align:center;color:var(--muted);font-size:12px;margin-bottom:10px">Laporan Kas · ${UI.fmtDate(f.dari)} s/d ${UI.fmtDate(f.sampai)}</div>
+      <div class="table-wrap"><table><thead><tr><th>Tanggal</th><th>Keterangan</th><th>Kategori</th><th class="money">Masuk</th><th class="money">Keluar</th><th class="money">Saldo</th></tr></thead><tbody>
+        <tr><td colspan="5"><i>Saldo awal</i></td><td class="money">${UI.fmt(saldoAwal)}</td></tr>
+        ${rows.map(t=>`<tr><td>${UI.fmtDate(t.tanggal)}</td><td>${UI.esc(t.keterangan||'-')}</td><td>${UI.esc(t.kategori||'-')}</td>
+          <td class="money pos">${t.jenis==='masuk'?UI.fmt(t.jumlah):''}</td>
+          <td class="money neg">${t.jenis==='keluar'?UI.fmt(t.jumlah):''}</td>
+          <td class="money">${UI.fmt(t.saldo)}</td></tr>`).join('')}
+        <tr style="font-weight:700;background:var(--bg)"><td colspan="3">TOTAL</td>
+          <td class="money pos">${UI.fmt(totalIn)}</td><td class="money neg">${UI.fmt(totalOut)}</td><td class="money">${UI.fmt(running)}</td></tr>
+      </tbody></table></div>
+    </div>
 
-    /* ================= KATEGORI & BULK ================= */
-    function openKelolaKategori() {
-        renderKategoriList();
-        document.getElementById('kategoriModal').classList.remove('hidden');
-    }
-    function closeKelolaKategori() { document.getElementById('kategoriModal').classList.add('hidden'); populateKategoriSelects(); }
-    function renderKategoriList() {
-        document.getElementById('kategoriList').innerHTML = db.kategori.map(k => `
-            <div class="flex items-center gap-2 p-1.5 bg-slate-50 rounded-lg text-xs">
-                <input type="text" value="${escapeHtml(k)}" onchange="renameKategori('${escapeHtml(k)}', this.value)" class="flex-1 px-2 py-1 rounded border bg-white">
-                <button type="button" onclick="deleteKategori('${escapeHtml(k)}')" class="text-red-500 font-bold px-2">&times;</button>
-            </div>`).join('');
-    }
-    function addKategori(e) {
-        e.preventDefault();
-        const val = document.getElementById('newKategoriInput').value.trim();
-        if (val && !db.kategori.includes(val)) { db.kategori.push(val); document.getElementById('newKategoriInput').value = ''; saveData(); renderKategoriList(); }
-    }
-    function renameKategori(oldName, newName) {
-        if (!newName || db.kategori.includes(newName)) return;
-        db.kategori[db.kategori.indexOf(oldName)] = newName;
-        db.kas.forEach(k => { if (k.kategori === oldName) k.kategori = newName; });
-        saveData(); renderKategoriList();
-    }
-    function deleteKategori(name) {
-        if (name === 'SPP' || name === 'Lainnya') { toast('Kategori sistem', 'error'); return; }
-        db.kategori = db.kategori.filter(k => k !== name);
-        db.kas.forEach(k => { if (k.kategori === name) k.kategori = 'Lainnya'; });
-        saveData(); renderKategoriList();
-    }
+    <div class="card" style="margin-bottom:14px"><h3>Rekap per Kategori (Periode Ini)</h3>
+      ${Object.keys(rekap).length ? `<div class="table-wrap"><table><thead><tr><th>Kategori</th><th class="money">Pemasukan</th><th class="money">Pengeluaran</th></tr></thead><tbody>
+        ${Object.entries(rekap).map(([k,v])=>`<tr><td>${UI.esc(k)}</td><td class="money pos">${v.masuk?UI.fmt(v.masuk):''}</td><td class="money neg">${v.keluar?UI.fmt(v.keluar):''}</td></tr>`).join('')}
+      </tbody></table></div>` : `<div class="empty">Tidak ada transaksi.</div>`}
+    </div>
 
-    function openBulkNominal() {
-        const kelasSet = new Set(db.spp.map(s => s.kelas));
-        document.getElementById('bulkTargetKelas').innerHTML = '<option value="">Semua Kelas</option>' + Array.from(kelasSet).map(k=>`<option value="${k}">${k}</option>`).join('');
-        document.getElementById('bulkNominalBaru').value = db.nominalSppDefault;
-        document.getElementById('bulkNominalModal').classList.remove('hidden');
-        previewBulkNominal();
-    }
-    function closeBulkNominal() { document.getElementById('bulkNominalModal').classList.add('hidden'); }
-    function previewBulkNominal() {
-        const kelas = document.getElementById('bulkTargetKelas').value;
-        const status = document.getElementById('bulkTargetStatus').value;
-        const matches = db.spp.filter(s => (!kelas || s.kelas === kelas) && (!status || s.status === status));
-        document.getElementById('bulkPreview').innerHTML = `Akan mengubah <strong>${matches.length} tagihan</strong>.`;
-    }
-    function applyBulkNominal(e) {
-        e.preventDefault();
-        const nominal = parseInt(document.getElementById('bulkNominalBaru').value);
-        const kelas = document.getElementById('bulkTargetKelas').value;
-        const status = document.getElementById('bulkTargetStatus').value;
-        db.spp.forEach(s => {
-            if ((!kelas || s.kelas === kelas) && (!status || s.status === status)) s.nominal = nominal;
-        });
-        closeBulkNominal(); saveData(); toast('Nominal massal diperbarui');
-    }
+    <div class="card" style="margin-bottom:14px"><h3>Tunggakan SPP per Kelas — ${tahun}</h3>
+      ${Object.keys(tunggakanKelas).length ? `<div class="table-wrap"><table><thead><tr><th>Kelas</th><th class="money">Tunggakan</th></tr></thead><tbody>
+        ${Object.entries(tunggakanKelas).sort((a,b)=>a[0].localeCompare(b[0])).map(([k,v])=>`<tr><td>${UI.esc(k)}</td><td class="money neg">${UI.fmt(v)}</td></tr>`).join('')}
+        <tr style="font-weight:700;background:var(--bg)"><td>TOTAL</td><td class="money neg">${UI.fmt(Object.values(tunggakanKelas).reduce((s,x)=>s+x,0))}</td></tr>
+      </tbody></table></div>` : `<div class="empty">Tidak ada tunggakan.</div>`}
+    </div>
 
-    /* ================= BACKUP & EXCEL ================= */
-    function backupJSON() {
-        const blob = new Blob([JSON.stringify(db, null, 2)], { type: 'application/json' });
-        const a = document.createElement('a'); a.href = URL.createObjectURL(blob);
-        a.download = `madrasah_backup_${new Date().toISOString().slice(0, 10)}.json`; a.click();
-        toast('Backup diunduh');
-    }
-    function restoreJSON(e) {
-        const file = e.target.files[0]; if (!file) return;
-        const reader = new FileReader();
-        reader.onload = function(ev) {
-            try { db = JSON.parse(ev.target.result); saveData(); toast('Restore berhasil'); }
-            catch(err) { toast('Gagal restore', 'error'); }
-            e.target.value = '';
-        };
-        reader.readAsText(file);
-    }
-    function exportToExcel() {
-        const wb = XLSX.utils.book_new();
-        XLSX.utils.book_append_sheet(wb, XLSX.utils.json_to_sheet(db.kas), 'Jurnal Kas');
-        XLSX.utils.book_append_sheet(wb, XLSX.utils.json_to_sheet(db.spp), 'Data SPP');
-        XLSX.utils.book_append_sheet(wb, XLSX.utils.json_to_sheet(db.murid), 'Data Murid');
-        XLSX.utils.book_append_sheet(wb, XLSX.utils.json_to_sheet(db.guru), 'Data Guru');
-        XLSX.writeFile(wb, `Madrasah_Manager_${new Date().toISOString().slice(0, 10)}.xlsx`);
-        toast('Excel diekspor');
-    }
-    function importData(e) {
-        const file = e.target.files[0]; if (!file) return;
-        const reader = new FileReader();
-        reader.onload = function(ev) {
-            try {
-                const wb = XLSX.read(new Uint8Array(ev.target.result), { type: 'array' });
-                if (wb.SheetNames.includes('Jurnal Kas')) db.kas = XLSX.utils.sheet_to_json(wb.Sheets['Jurnal Kas']);
-                if (wb.SheetNames.includes('Data SPP')) db.spp = XLSX.utils.sheet_to_json(wb.Sheets['Data SPP']);
-                if (wb.SheetNames.includes('Data Murid')) db.murid = XLSX.utils.sheet_to_json(wb.Sheets['Data Murid']);
-                if (wb.SheetNames.includes('Data Guru')) db.guru = XLSX.utils.sheet_to_json(wb.Sheets['Data Guru']);
-                saveData(); toast('Import Excel berhasil');
-            } catch(err) { toast('Gagal import', 'error'); }
-            e.target.value = '';
-        };
-        reader.readAsArrayBuffer(file);
-    }
+    <div class="card"><h3>Rekap SPP Tahun ${tahun}</h3>
+      ${(()=>{ const l = Store.data.spp.filter(s=>+s.tahun===+tahun); if(!l.length) return `<div class="empty">Belum ada data SPP.</div>`;
+        return `<div class="table-wrap"><table><thead><tr><th>Murid</th><th>Kelas</th>${BULAN_S.map(b=>`<th>${b}</th>`).join('')}<th class="money">Tunggakan</th></tr></thead><tbody>
+          ${Store.data.murid.filter(m=>m.aktif!==false).map(m=>{ const rows=l.filter(s=>s.muridId===m.id); if(!rows.length) return '';
+            const t = rows.reduce((s,x)=>s+(x.status==='belum'?(+x.nominal||0):0),0);
+            return `<tr><td><b>${UI.esc(m.nama)}</b></td><td>${UI.esc(m.kelas||'-')}</td>
+              ${Array.from({length:12},(_,i)=>{ const r=rows.find(s=>+s.bulan===i+1); if(!r) return `<td style="color:var(--muted)">-</td>`;
+                return `<td>${r.status==='lunas'?'<span class="badge s">✓</span>':'<span class="badge d">✗</span>'}</td>`; }).join('')}
+              <td class="money ${t>0?'neg':''}">${t>0?UI.fmt(t):'-'}</td></tr>`; }).join('')}
+        </tbody></table></div>`; })()}
+    </div>`;
+  },
 
-    /* ================= RENDER ALL ================= */
-    function renderAll() {
-        renderKas();
-        renderSpp();
-        renderMurid();
-        renderGuru();
-        renderNotif();
-    }
+  /* backup */
+  backup() {
+    return `<div class="topbar"><h1>Backup / Restore</h1></div>
+    <div class="card" style="margin-bottom:14px"><h3>📤 Ekspor Data (JSON)</h3>
+      <p style="color:var(--muted);font-size:13px">Unduh seluruh data sebagai file JSON.</p>
+      <button class="primary" data-action="backup-export">⬇️ Backup JSON</button></div>
+    <div class="card" style="margin-bottom:14px"><h3>📥 Impor Data</h3>
+      <p style="color:var(--muted);font-size:13px">Data saat ini akan diganti dengan isi file.</p>
+      <input type="file" accept="application/json" data-action="backup-import"></div>
+    <div class="card" style="margin-bottom:14px"><h3>📊 Ekspor CSV</h3>
+      <div class="row"><button data-action="export-csv-tx">Transaksi</button><button data-action="export-csv-spp">SPP</button><button data-action="export-csv-murid">Murid</button></div></div>
+    <div class="card" style="border-color:var(--danger)"><h3 style="color:var(--danger)">⚠️ Reset Data</h3>
+      <p style="color:var(--muted);font-size:13px">Menghapus SEMUA data kecuali PIN.</p>
+      <button class="danger" data-action="reset">Hapus Semua Data</button></div>`;
+  },
 
-    populateKategoriSelects();
-    if(document.getElementById('kasTanggal')) document.getElementById('kasTanggal').valueAsDate = new Date();
-    renderAll();
-    </script>
+  /* settings */
+  settings() {
+    const s = Store.data.settings;
+    return `<div class="topbar"><h1>Pengaturan</h1></div>
+    <div class="card" style="max-width:640px;margin-bottom:14px"><form data-form="settings">
+      <div class="fld"><label>Nama Madrasah</label><input name="namaMadrasah" value="${UI.esc(s.namaMadrasah)}"></div>
+      <div class="fld"><label>Alamat</label><input name="alamat" value="${UI.esc(s.alamat)}"></div>
+      <div class="fld"><label>Kepala Madrasah</label><input name="kepala" value="${UI.esc(s.kepala)}"></div>
+      <div class="fld"><label>Tahun Ajaran</label><input name="tahunAjaran" value="${UI.esc(s.tahunAjaran)}"></div>
+      <div class="fld"><label>Nominal SPP Default (Rp)</label><input name="nominalSPP" type="number" min="0" value="${+s.nominalSPP||0}"></div>
+      <button class="primary">Simpan</button>
+    </form></div>
+    <div class="card" style="max-width:640px"><h3>🔐 Ganti PIN</h3><form data-form="changePin">
+      <div class="fld"><label>PIN Lama</label><input name="old" type="password" inputmode="numeric" required></div>
+      <div class="fld"><label>PIN Baru (min 4 digit)</label><input name="new" type="password" inputmode="numeric" minlength="4" required></div>
+      <button class="primary">Ganti PIN</button></form></div>`;
+  }
+};
+
+/* ---------- DIALOG ---------- */
+function openDialog({ title, body, formName, submitText='Simpan', onSubmit }) {
+  const dlg = document.createElement('dialog');
+  dlg.innerHTML = `<form method="dialog" data-form="${formName}">
+    <div class="dlg-hd">${title}</div>
+    <div class="dlg-bd">${body}</div>
+    <div class="dlg-ft">
+      <button type="button" value="cancel" data-action="dlg-cancel">Batal</button>
+      <button class="primary" value="ok">${submitText}</button>
+    </div></form>`;
+  document.body.appendChild(dlg); dlg._onSubmit = onSubmit; dlg.showModal(); return dlg;
+}
+
+/* ---------- ACTIONS ---------- */
+const Actions = {
+  logout(){ if(UI.confirm('Keluar?')) Auth.logout(); },
+  'toggle-theme'(){ Store.data.settings.theme = Store.data.settings.theme==='dark'?'light':'dark'; Store.save(); App.render(); },
+  'dlg-cancel'(id, el){ el.closest('dialog').close(); el.closest('dialog').remove(); },
+
+  /* submit handlers */
+  'submit_setup'(fd){
+    const v = Object.fromEntries(fd);
+    if (v.pin !== v.pin2) return UI.toast('PIN tidak sama','error');
+    if (v.pin.length < 4) return UI.toast('PIN min 4 digit','error');
+    Store.data.settings.namaMadrasah = v.nama || 'Madrasah';
+    Store.data.settings.tahunAjaran = v.tahun || Store.data.settings.tahunAjaran;
+    Auth.setup(v.pin); UI.toast('Berhasil!','success'); App.render();
+  },
+  'submit_login'(fd){ const v=Object.fromEntries(fd); if(Auth.login(v.pin)){ UI.toast('Selamat datang','success'); App.render(); } else UI.toast('PIN salah','error'); },
+  'submit_settings'(fd){ const v=Object.fromEntries(fd); Object.assign(Store.data.settings,{...v,nominalSPP:+v.nominalSPP||0}); Store.save(); UI.toast('Tersimpan','success'); App.render(); },
+  'submit_changePin'(fd){ const v=Object.fromEntries(fd);
+    if(String(v.old)!==String(Store.data.settings.pin)) return UI.toast('PIN lama salah','error');
+    if(String(v.new).length<4) return UI.toast('PIN baru min 4 digit','error');
+    Store.data.settings.pin=String(v.new); Store.save(); UI.toast('PIN diubah','success'); },
+
+  /* generic CRUD submit factory */
+  _submitGeneric(coll, validate, fields) {
+    return (fd, form) => {
+      const v = Object.fromEntries(fd);
+      const err = validate && validate(v); if (err) return UI.toast(err,'error');
+      const id = form.dataset.id;
+      const data = fields ? fields(v) : v;
+      if (id) Store.update(coll, id, data); else Store.add(coll, data);
+      form.closest('dialog').remove(); UI.toast(id?'Diperbarui':'Ditambahkan','success'); App.render();
+    };
+  },
+
+  /* murid */
+  'murid-add'(){ Actions._muridForm(); },
+  'murid-edit'(id){ Actions._muridForm(id); },
+  _muridForm(id){
+    const m = id ? Store.find('murid',id) : {};
+    const dlg = openDialog({
+      title: id?'Edit Murid':'Tambah Murid', formName:'murid',
+      body: `<div class="fld"><label>Nama *</label><input name="nama" value="${UI.esc(m.nama||'')}" required></div>
+        <div class="row"><div class="fld" style="flex:1"><label>NIS</label><input name="nis" value="${UI.esc(m.nis||'')}"></div>
+        <div class="fld" style="flex:1"><label>Kelas</label><input name="kelas" value="${UI.esc(m.kelas||'')}"></div></div>
+        <div class="fld"><label>Jenis Kelamin</label><select name="jk"><option value="">-</option><option ${m.jk==='L'?'selected':''} value="L">Laki-laki</option><option ${m.jk==='P'?'selected':''} value="P">Perempuan</option></select></div>
+        <div class="row"><div class="fld" style="flex:1"><label>Wali Murid</label><input name="wali" value="${UI.esc(m.wali||'')}"></div>
+        <div class="fld" style="flex:1"><label>Telepon</label><input name="telepon" value="${UI.esc(m.telepon||'')}"></div></div>
+        <div class="fld"><label>Alamat</label><textarea name="alamat" rows="2">${UI.esc(m.alamat||'')}</textarea></div>
+        <div class="fld"><label><input type="checkbox" name="aktif" ${m.aktif!==false?'checked':''} style="width:auto"> Aktif</label></div>`
+    });
+    if (id) dlg.querySelector('form').dataset.id = id;
+  },
+  'murid-del'(id){ if(!UI.confirm('Hapus murid ini? SPP & tabungan terkait juga dihapus.')) return;
+    Store.remove('murid',id); Store.data.spp=Store.data.spp.filter(s=>s.muridId!==id); Store.data.tabungan=Store.data.tabungan.filter(t=>t.muridId!==id); Store.save();
+    UI.toast('Murid dihapus','success'); App.render(); },
+
+  /* guru */
+  'guru-add'(){ Actions._guruForm(); },
+  'guru-edit'(id){ Actions._guruForm(id); },
+  _guruForm(id){
+    const g = id ? Store.find('guru',id) : {};
+    const dlg = openDialog({ title: id?'Edit Guru':'Tambah Guru', formName:'guru',
+      body: `<div class="fld"><label>Nama *</label><input name="nama" value="${UI.esc(g.nama||'')}" required></div>
+        <div class="fld"><label>NIP</label><input name="nip" value="${UI.esc(g.nip||'')}"></div>
+        <div class="row"><div class="fld" style="flex:1"><label>Mapel</label><input name="mapel" value="${UI.esc(g.mapel||'')}"></div>
+        <div class="fld" style="flex:1"><label>Jabatan</label><input name="jabatan" value="${UI.esc(g.jabatan||'')}"></div></div>
+        <div class="fld"><label>Telepon</label><input name="telepon" value="${UI.esc(g.telepon||'')}"></div>
+        <div class="fld"><label>Alamat</label><textarea name="alamat" rows="2">${UI.esc(g.alamat||'')}</textarea></div>` });
+    if (id) dlg.querySelector('form').dataset.id = id;
+  },
+  'guru-del'(id){ if(!UI.confirm('Hapus guru ini?')) return; Store.remove('guru',id); UI.toast('Dihapus','success'); App.render(); },
+
+  /* kelas */
+  'kelas-add'(){ Actions._kelasForm(); },
+  'kelas-edit'(id){ Actions._kelasForm(id); },
+  _kelasForm(id){
+    const k = id ? Store.find('kelas',id) : {};
+    const dlg = openDialog({ title: id?'Edit Kelas':'Tambah Kelas', formName:'kelas',
+      body: `<div class="fld"><label>Nama Kelas *</label><input name="nama" value="${UI.esc(k.nama||'')}" required placeholder="5A, 6B..."></div>
+        <div class="fld"><label>Wali Kelas</label><input name="wali" value="${UI.esc(k.wali||'')}"></div>` });
+    if (id) dlg.querySelector('form').dataset.id = id;
+  },
+  'kelas-del'(id){ if(!UI.confirm('Hapus kelas ini?')) return; Store.remove('kelas',id); UI.toast('Dihapus','success'); App.render(); },
+
+  /* kategori */
+  'kategori-add'(){ Actions._kategoriForm(); },
+  'kategori-edit'(id){ Actions._kategoriForm(id); },
+  _kategoriForm(id){
+    const k = id ? Store.find('kategori',id) : {};
+    const dlg = openDialog({ title: id?'Edit Kategori':'Tambah Kategori', formName:'kategori',
+      body: `<div class="fld"><label>Nama Kategori *</label><input name="nama" value="${UI.esc(k.nama||'')}" required placeholder="SPP, Donasi, ATK..."></div>
+        <div class="fld"><label>Jenis</label><select name="jenis"><option value="masuk" ${k.jenis==='masuk'?'selected':''}>Masuk</option><option value="keluar" ${k.jenis==='keluar'?'selected':''}>Keluar</option></select></div>` });
+    if (id) dlg.querySelector('form').dataset.id = id;
+  },
+  'kategori-del'(id){ if(!UI.confirm('Hapus kategori ini?')) return; Store.remove('kategori',id); UI.toast('Dihapus','success'); App.render(); },
+
+  /* transaksi */
+  'tx-add'(){ Actions._txForm(); },
+  'tx-edit'(id){ Actions._txForm(id); },
+  _txForm(id){
+    const t = id ? Store.find('transaksi',id) : { tanggal:UI.today(), jenis:'masuk' };
+    const kats = Store.data.kategori.map(k=>k.nama);
+    const dlg = openDialog({ title: id?'Edit Transaksi':'Tambah Transaksi', formName:'tx',
+      body: `<div class="fld"><label>Tanggal *</label><input type="date" name="tanggal" value="${UI.esc(t.tanggal||UI.today())}" required></div>
+        <div class="fld"><label>Jenis *</label><select name="jenis"><option value="masuk" ${t.jenis==='masuk'?'selected':''}>Pemasukan</option><option value="keluar" ${t.jenis==='keluar'?'selected':''}>Pengeluaran</option></select></div>
+        <div class="fld"><label>Kategori</label><input name="kategori" list="kats" value="${UI.esc(t.kategori||'')}" placeholder="SPP, Donasi, ATK...">
+          <datalist id="kats">${kats.map(k=>`<option value="${UI.esc(k)}">`).join('')}</datalist></div>
+        <div class="fld"><label>Jumlah (Rp) *</label><input type="number" min="1" name="jumlah" value="${t.jumlah||''}" required></div>
+        <div class="fld"><label>Keterangan</label><textarea name="keterangan" rows="2">${UI.esc(t.keterangan||'')}</textarea></div>` });
+    if (id) dlg.querySelector('form').dataset.id = id;
+  },
+  'tx-del'(id){ if(!UI.confirm('Hapus transaksi ini?')) return; Store.remove('transaksi',id); UI.toast('Dihapus','success'); App.render(); },
+
+  /* SPP */
+  'spp-generate'(){
+    const tahun = App.sppTahun || new Date().getFullYear();
+    const murid = Store.data.murid.filter(m=>m.aktif!==false);
+    if(!murid.length) return UI.toast('Belum ada murid aktif','error');
+    const nominal = +Store.data.settings.nominalSPP || 0;
+    if(nominal<=0) return UI.toast('Atur Nominal SPP di Pengaturan dulu','error');
+    if(!UI.confirm(`Generate SPP ${tahun} untuk ${murid.length} murid?\nNominal ${UI.fmt(nominal)}/bulan\nMurid yang sudah punya SPP tahun ini dilewati.`)) return;
+    let count=0;
+    murid.forEach(m=>{
+      const exists = Store.data.spp.some(s=>s.muridId===m.id && +s.tahun===+tahun);
+      if(exists) return;
+      for(let b=1;b<=12;b++){ Store.data.spp.push({ id:Store.id(), muridId:m.id, tahun:+tahun, bulan:b, nominal, status:'belum', tanggalBayar:null }); count++; }
+    });
+    Store.save(); UI.toast(count?`${count} tagihan dibuat`:'Semua sudah punya SPP','success'); App.render();
+  },
+  'spp-toggle'(id){
+    const s = Store.find('spp', id); if(!s) return;
+    const m = Store.find('murid', s.muridId);
+    if(s.status==='lunas'){
+      if(!UI.confirm(`Batalkan pembayaran ${m?.nama||''} ${BULAN[s.bulan-1]} ${s.tahun}?`)) return;
+      Store.update('spp', id, { status:'belum', tanggalBayar:null });
+      Store.data.transaksi = Store.data.transaksi.filter(t=>t.referensi!==id); Store.save();
+      UI.toast('Dibatalkan','warn');
+    } else {
+      const tgl = UI.today();
+      Store.update('spp', id, { status:'lunas', tanggalBayar:tgl });
+      Store.add('transaksi', { tanggal:tgl, jenis:'masuk', kategori:'SPP', keterangan:`SPP ${m?.nama||''} - ${BULAN[s.bulan-1]} ${s.tahun}`, jumlah:+s.nominal, referensi:id });
+      UI.toast('Pembayaran dicatat','success');
+    }
+    App.render();
+  },
+  'spp-bulk'(muridId){
+    const tahun = App.sppTahun || new Date().getFullYear();
+    const rows = Store.data.spp.filter(s=>s.muridId===muridId && +s.tahun===+tahun && s.status==='belum');
+    if(!rows.length) return UI.toast('Semua sudah lunas','warn');
+    const m = Store.find('murid', muridId);
+    if(!UI.confirm(`Tandai ${rows.length} tagihan ${tahun} lunas untuk ${m?.nama||''}?\nTotal: ${UI.fmt(rows.reduce((s,x)=>s+(+x.nominal||0),0))}`)) return;
+    rows.forEach(s=>{
+      const tgl = UI.today();
+      Store.update('spp', s.id, { status:'lunas', tanggalBayar:tgl });
+      Store.add('transaksi', { tanggal:tgl, jenis:'masuk', kategori:'SPP', keterangan:`SPP ${m?.nama||''} - ${BULAN[s.bulan-1]} ${tahun}`, jumlah:+s.nominal, referensi:s.id });
+    });
+    UI.toast(`${rows.length} tagihan dilunasi`,'success'); App.render();
+  },
+  'spp-kuitansi'(muridId){
+    const tahun = App.sppTahun || new Date().getFullYear();
+    const m = Store.find('murid', muridId);
+    const rows = Store.data.spp.filter(s=>s.muridId===muridId && +s.tahun===+tahun && s.status==='lunas');
+    if(!rows.length) return UI.toast('Belum ada pembayaran lunas','warn');
+    const total = rows.reduce((s,x)=>s+(+x.nominal||0),0);
+    const body = `<div class="kuitansi">
+      <h3>${UI.esc(Store.data.settings.namaMadrasah||'Madrasah')}</h3>
+      <div class="sub">Kuitansi Pembayaran SPP ${tahun}</div>
+      <table>
+        <tr><td>Nama</td><td><b>${UI.esc(m.nama)}</b></td></tr>
+        <tr><td>NIS</td><td>${UI.esc(m.nis||'-')}</td></tr>
+        <tr><td>Kelas</td><td>${UI.esc(m.kelas||'-')}</td></tr>
+        <tr><td>Bulan Lunas</td><td>${rows.map(r=>BULAN_S[r.bulan-1]).join(', ')}</td></tr>
+        <tr><td>Total</td><td><b>${UI.fmt(total)}</b></td></tr>
+        <tr><td>Tanggal Cetak</td><td>${UI.fmtDate(UI.today())}</td></tr>
+      </table>
+      <div style="margin-top:16px;text-align:right;font-size:11px">Bendahara<br><br><br>____________</div>
+    </div>`;
+    const dlg = openDialog({ title:'Kuitansi', formName:'kuitansi', body, submitText:'🖨️ Cetak',
+      onSubmit:()=>{ window.print(); } });
+    dlg.querySelector('button[value="ok"]').onclick = (e)=>{ e.preventDefault(); window.print(); };
+  },
+
+  /* tabungan */
+  'tabung-add'(){
+    const murid = Store.data.murid.filter(m=>m.aktif!==false);
+    if(!murid.length) return UI.toast('Belum ada murid aktif','error');
+    const dlg = openDialog({ title:'Transaksi Tabungan', formName:'tabung',
+      body: `<div class="fld"><label>Murid *</label><select name="muridId" required>${murid.map(m=>`<option value="${m.id}">${UI.esc(m.nama)} (${UI.esc(m.kelas||'-')})</option>`).join('')}</select></div>
+        <div class="fld"><label>Tanggal *</label><input type="date" name="tanggal" value="${UI.today()}" required></div>
+        <div class="fld"><label>Jenis</label><select name="jenis"><option value="setor">Setor</option><option value="tarik">Tarik</option></select></div>
+        <div class="fld"><label>Jumlah (Rp) *</label><input type="number" min="1" name="jumlah" required></div>
+        <div class="fld"><label>Keterangan</label><input name="keterangan"></div>` });
+  },
+  'submit_tabung'(fd, form){
+    const v = Object.fromEntries(fd);
+    if(!v.muridId || !v.jumlah || +v.jumlah<=0) return UI.toast('Data tidak valid','error');
+    Store.add('tabungan', { muridId:v.muridId, tanggal:v.tanggal, jenis:v.jenis, jumlah:+v.jumlah, keterangan:v.keterangan||'' });
+    form.closest('dialog').remove(); UI.toast('Tersimpan','success'); App.render();
+  },
+  'tabung-del'(id){ if(!UI.confirm('Hapus transaksi tabungan ini?')) return; Store.remove('tabungan',id); UI.toast('Dihapus','success'); App.render(); },
+
+  /* export/import */
+  'backup-export'(){ download(new Blob([JSON.stringify(Store.data,null,2)],{type:'application/json'}), `kas-madrasah-backup-${UI.today()}.json`); UI.toast('Backup diunduh','success'); },
+  'backup-import'(id, el){ const file = el.files?.[0]; if(!file) return;
+    const r = new FileReader(); r.onload = () => { try {
+      const d = JSON.parse(r.result);
+      if(!d.settings || !Array.isArray(d.transaksi)) throw new Error('Struktur tidak dikenali');
+      if(!UI.confirm('Data saat ini akan DIGANTI. Lanjutkan?')) { el.value=''; return; }
+      Store.data = d; Store.save(); UI.toast('Restore berhasil','success'); App.render();
+    } catch(e){ UI.toast('File tidak valid: '+e.message,'error'); } el.value=''; };
+    r.readAsText(file); },
+  'export-csv-tx'(){ const rows=[['Tanggal','Jenis','Kategori','Keterangan','Jumlah']]; Store.data.transaksi.forEach(t=>rows.push([t.tanggal,t.jenis,t.kategori||'',t.keterangan||'',t.jumlah])); downloadCSV(rows,'transaksi.csv'); UI.toast('CSV diunduh','success'); },
+  'export-csv-spp'(){ const rows=[['Nama','Kelas','Tahun','Bulan','Nominal','Status','Tanggal Bayar']]; Store.data.spp.forEach(s=>{ const m=Store.find('murid',s.muridId); rows.push([m?.nama||'',m?.kelas||'',s.tahun,BULAN[s.bulan-1],s.nominal,s.status,s.tanggalBayar||'']); }); downloadCSV(rows,'spp.csv'); UI.toast('CSV diunduh','success'); },
+  'export-csv-murid'(){ const rows=[['NIS','Nama','Kelas','JK','Wali','Telepon','Alamat','Aktif']]; Store.data.murid.forEach(m=>rows.push([m.nis||'',m.nama,m.kelas||'',m.jk||'',m.wali||'',m.telepon||'',m.alamat||'',m.aktif!==false?'Ya':'Tidak'])); downloadCSV(rows,'murid.csv'); UI.toast('CSV diunduh','success'); },
+  'lap-csv'(){ const f = App.lapFilter; const rows=[['Tanggal','Jenis','Kategori','Keterangan','Jumlah']]; Store.data.transaksi.filter(t=>t.tanggal>=f.dari && t.tanggal<=f.sampai).forEach(t=>rows.push([t.tanggal,t.jenis,t.kategori||'',t.keterangan||'',t.jumlah])); downloadCSV(rows,`laporan-${f.dari}-sd-${f.sampai}.csv`); UI.toast('CSV diunduh','success'); },
+  'reset'(){ if(!UI.confirm('HAPUS SEMUA DATA? Tidak bisa dibatalkan.')) return; if(!UI.confirm('Yakin?')) return;
+    const pin = Store.data.settings.pin; Store.data = Store.default(); Store.data.settings.pin = pin; Store.save(); UI.toast('Direset','warn'); App.render(); },
+  'print'(){ window.print(); }
+};
+
+/* ---------- DOWNLOAD HELPERS ---------- */
+function download(blob, filename){ const a=document.createElement('a'); a.href=URL.createObjectURL(blob); a.download=filename; document.body.appendChild(a); a.click(); setTimeout(()=>{URL.revokeObjectURL(a.href);a.remove();},100); }
+function downloadCSV(rows, filename){ const csv = rows.map(r=>r.map(v=>`"${String(v??'').replace(/"/g,'""')}"`).join(',')).join('\r\n'); download(new Blob(['\ufeff'+csv],{type:'text/csv;charset=utf-8'}), filename); }
+
+/* ---------- SUBMIT GENERIC HANDLERS ---------- */
+Actions['submit_murid'] = Actions._submitGeneric('murid',
+  v => !v.nama ? 'Nama wajib diisi' : null,
+  v => ({ nama:v.nama, nis:v.nis, kelas:v.kelas, jk:v.jk, wali:v.wali, telepon:v.telepon, alamat:v.alamat, aktif:v.aktif==='on' }));
+Actions['submit_guru'] = Actions._submitGeneric('guru',
+  v => !v.nama ? 'Nama wajib diisi' : null);
+Actions['submit_kelas'] = Actions._submitGeneric('kelas',
+  v => !v.nama ? 'Nama kelas wajib diisi' : null);
+Actions['submit_kategori'] = Actions._submitGeneric('kategori',
+  v => !v.nama ? 'Nama kategori wajib diisi' : null);
+Actions['submit_tx'] = Actions._submitGeneric('transaksi',
+  v => (!v.tanggal || !v.jumlah || +v.jumlah<=0) ? 'Tanggal & jumlah wajib valid' : null,
+  v => ({ tanggal:v.tanggal, jenis:v.jenis, kategori:v.kategori||'-', keterangan:v.keterangan||'', jumlah:+v.jumlah }));
+
+/* ---------- EVENT DELEGATION ---------- */
+document.addEventListener('click', (e) => {
+  const btn = e.target.closest('[data-action]');
+  if (btn && btn.tagName !== 'INPUT' && btn.tagName !== 'SELECT') {
+    const fn = Actions[btn.dataset.action];
+    if (fn) { e.preventDefault(); fn(btn.dataset.id, btn); return; }
+  }
+  const nav = e.target.closest('[data-nav]');
+  if (nav) { e.preventDefault(); App.nav(nav.dataset.nav); }
+});
+
+document.addEventListener('submit', (e) => {
+  const form = e.target.closest('form[data-form]');
+  if (!form) return;
+  e.preventDefault();
+  const fn = Actions['submit_' + form.dataset.form];
+  if (fn) {
+    fn(new FormData(form), form);
+    const dlg = form.closest('dialog');
+    if (dlg && dlg.open) { dlg.close(); if (dlg.parentNode) dlg.remove(); }
+  }
+});
+
+document.addEventListener('change', (e) => {
+  const el = e.target;
+  if (['bulan','jenis','kategori'].includes(el.dataset.filter)) { App.txFilter = App.txFilter||{}; App.txFilter[el.dataset.filter] = el.value; App.render(); }
+  if (el.dataset.filter === 'sppTahun') { App.sppTahun = +el.value; App.render(); }
+  if (el.dataset.filter === 'sppKelas') { App.sppFilter = App.sppFilter||{}; App.sppFilter.kelas = el.value; App.render(); }
+  if (el.dataset.filter === 'muridKelas') { App.muridFilter = App.muridFilter||{}; App.muridFilter.kelas = el.value; App.render(); }
+  if (el.dataset.filter === 'lapDari' || el.dataset.filter === 'lapSampai') { App.lapFilter = App.lapFilter||{}; App.lapFilter[el.dataset.filter==='lapDari'?'dari':'sampai'] = el.value; App.render(); }
+});
+
+document.addEventListener('input', (e) => {
+  const el = e.target;
+  if (el.dataset.filter === 'muridQ') { clearTimeout(window._mq); window._mq = setTimeout(()=>{ App.muridFilter=App.muridFilter||{}; App.muridFilter.q = el.value; App.render(); }, 250); }
+  if (el.dataset.filter === 'txQ') { clearTimeout(window._tq); window._tq = setTimeout(()=>{ App.txFilter=App.txFilter||{}; App.txFilter.q = el.value; App.render(); }, 250); }
+});
+
+/* ---------- BOOT ---------- */
+Store.load();
+App.render();
+window.addEventListener('hashchange', () => {
+  const v = location.hash.replace('#','');
+  if (v && Views[v]) { App.view = v; App.render(); }
+});
+</script>
 </body>
 </html>

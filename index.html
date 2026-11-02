@@ -464,7 +464,7 @@
     <!-- ================= JAVASCRIPT LOGIC ================= -->
     <script>
     /* --- 1. SETUP DASAR & STATE --- */
-    const DB_VERSION = 4;
+    const DB_VERSION = 5; // Naikkan versi agar data Excel otomatis ter-load jika sebelumnya belum
     const DEFAULT_KATEGORI = ['SPP','BOS','Dana Bantuan','ATK','Gaji/Honor','Listrik/Air','Perbaikan','Konsumsi','Lainnya'];
     const BULAN_LIST = ['Juli','Agustus','September','Oktober','November','Desember','Januari','Februari','Maret','April','Mei','Juni'];
     
@@ -477,8 +477,65 @@
         { bg: 'bg-cyan-100 dark:bg-cyan-900/30', text: 'text-cyan-800 dark:text-cyan-400', dot: 'bg-cyan-500', ring: 'ring-cyan-200' },
     ];
 
+    // Data Bawaan dari Excel
+    const defaultMurid = [
+        { nis: '993', nama: 'SYAHER RIZKY MAULANA', kelas: '1' }, { nis: '994', nama: 'M. RENDRA HADRIYANTO', kelas: '1' },
+        { nis: '995', nama: 'SAKHA IBADIS SODIQ', kelas: '1' }, { nis: '996', nama: 'MUHAMMAD BAQIR', kelas: '1' },
+        { nis: '997', nama: 'DAFFA IBNU HAFIDZ', kelas: '1' }, { nis: '998', nama: 'M. LABIB ASYROFI', kelas: '1' },
+        { nis: '999', nama: 'MUHAMMAD SURYA ABDURRAHMAN', kelas: '1' }, { nis: '977', nama: 'ABDILLAH ZAQUAN SODIQ', kelas: '2' },
+        { nis: '978', nama: 'MUHAMMAD RIZQI RIDHO RAMADHANI', kelas: '2' }, { nis: '979', nama: 'HAIKAL AULIAN KURNIAWAN', kelas: '2' },
+        { nis: '980', nama: 'MUHAMMAD NAZRIL ILHAM', kelas: '2' }, { nis: '981', nama: 'MOCH. MAULANA HAKIMUL ASHOM', kelas: '2' },
+        { nis: '982', nama: 'MUKHAMMAD ASYROFUL ANAM', kelas: '2' }, { nis: '983', nama: 'MUHAMMAD KHOLILUL ROHMAN', kelas: '2' },
+        { nis: '984', nama: 'MUHAMMAD REHAN FARTAMA', kelas: '2' }, { nis: '985', nama: 'RENDI MAULANA', kelas: '2' },
+        { nis: '986', nama: 'AHMAD TORIQ RAMDANI', kelas: '2' }, { nis: '987', nama: 'MOCH. ROYCHAN FAUQI', kelas: '2' },
+        { nis: '988', nama: 'MAULANA IBRAHIM', kelas: '2' }, { nis: '989', nama: 'ALDI DWI FIRMANSYAH', kelas: '2' },
+        { nis: '990', nama: 'ANDRE ABI MANYU', kelas: '2' }, { nis: '991', nama: 'MUCHAMAD ABI YUSUF', kelas: '2' },
+        { nis: '992', nama: 'ADAM SURYA AKBAR', kelas: '2' }, { nis: '976', nama: 'A. SYAUQIN NABI', kelas: '2' },
+        { nis: '951', nama: 'MUHAMMAD YUSUFALIGANI', kelas: '3' }, { nis: '952', nama: 'M. FARHANDIKA PRATAMA', kelas: '3' },
+        { nis: '953', nama: 'M. NAUFAL AZ ZAMRONI', kelas: '3' }, { nis: '954', nama: 'DIVA FERDIANSYAH PUTRA', kelas: '3' },
+        { nis: '955', nama: 'RENDI DRAJAT RAMADHAN', kelas: '3' }, { nis: '956', nama: 'MUHAMMAD SYAIKHUL ISLAM', kelas: '3' },
+        { nis: '957', nama: 'JALALUDIN EL RUMY', kelas: '3' }, { nis: '958', nama: "IHSAN HABIB ALBA'IS", kelas: '3' },
+        { nis: '959', nama: 'RIFAQ CELOH DWI EFENDI', kelas: '3' }, { nis: '960', nama: 'M. HAYDAR ALI BAFAGIH', kelas: '3' },
+        { nis: '961', nama: 'ACHMAD MASHURI', kelas: '3' }, { nis: '962', nama: 'MUHAMMAD IRFAN', kelas: '3' },
+        { nis: '963', nama: 'M. IRFAN SYARIFUDIN', kelas: '3' }, { nis: '964', nama: 'MOCHAMMAD BIBIT WIJILAKSONO', kelas: '3' },
+        { nis: '965', nama: 'MUHAMMAD ABBAD', kelas: '3' }, { nis: '966', nama: 'AZKA EL FADEL UTOMO', kelas: '3' },
+        { nis: '967', nama: 'ACHMAD ARSYAD LABIB', kelas: '3' }, { nis: '968', nama: "MOCHAMMAD MIKA'IL KHOLILULLOH", kelas: '3' },
+        { nis: '969', nama: 'ACHMAD IVANDER SYAIFUL BAHKRIE', kelas: '3' }, { nis: '970', nama: 'MUH. AGHA NAILUN NABHAN', kelas: '3' },
+        { nis: '971', nama: 'MUHAMMAD NORHAFES', kelas: '3' }, { nis: '972', nama: 'RAGIEL RAMADHANI', kelas: '3' },
+        { nis: '973', nama: 'DAVIN APRILIO', kelas: '3' }, { nis: '974', nama: 'MUKHAMMAD ALFI MULIANA', kelas: '3' },
+        { nis: '975', nama: 'MUCH. SATRIA BAGUS SISWANTO', kelas: '3' }, { nis: '924', nama: 'DAMAR SATRIO ABDI NEGORO', kelas: '4' },
+        { nis: '925', nama: 'ALFINO NOVEMBRIANSYAH PUTRA', kelas: '4' }, { nis: '926', nama: 'ACHMAD FAJAR HIDAYAT', kelas: '4' },
+        { nis: '927', nama: 'MUHAMMAD ABIL KHOIRONY', kelas: '4' }, { nis: '928', nama: 'ABDULLOH', kelas: '4' },
+        { nis: '929', nama: 'M. DAVIN MARSYID AR RIZQI', kelas: '4' }, { nis: '930', nama: 'M. DAVAN MARSYID AL VARISI', kelas: '4' },
+        { nis: '931', nama: 'ILMI FADLI MAULUDDIN', kelas: '4' }, { nis: '932', nama: 'RACHMAT MAULANA JUNAIDI', kelas: '4' },
+        { nis: '933', nama: 'REVLI AMINUDDIN', kelas: '4' }, { nis: '934', nama: 'LUTFIAN SAIFUL HIDAYAH', kelas: '4' },
+        { nis: '935', nama: 'MOCH. ALDYANSYAH', kelas: '4' }, { nis: '936', nama: 'NUR CANDRA MULYA', kelas: '4' },
+        { nis: '937', nama: 'ABIE TULUS PRAWIRA', kelas: '4' }, { nis: '938', nama: 'MUHAMMAD IQBAL RIDHO MAULANA', kelas: '4' },
+        { nis: '939', nama: 'RAFI PUTRA WIGUNA', kelas: '4' }, { nis: '940', nama: 'MUHAMMAD SALMAN REYHAN', kelas: '4' },
+        { nis: '941', nama: 'MUHAMMAD KHOIRUT TAMAM', kelas: '4' }, { nis: '942', nama: 'ACHMAD ROMADHON', kelas: '4' },
+        { nis: '943', nama: 'MOHAMMAD NURUL ZAMZAMI', kelas: '4' }, { nis: '944', nama: 'M. HAFIZ SANJAYA', kelas: '4' },
+        { nis: '945', nama: 'DIKI ADISTIA WARDANA', kelas: '4' }, { nis: '946', nama: 'FAHRUDIN ROHMANUR ROZI', kelas: '4' },
+        { nis: '947', nama: 'SHOBRIYAN ANDIKA ZAIDAN', kelas: '4' }, { nis: '948', nama: 'MOCHAMMAD MISBAHUR MUNIR', kelas: '4' },
+        { nis: '949', nama: 'ACHMAD FAHRI QOLBI', kelas: '4' }, { nis: '950', nama: 'ACHMAD REYHAN NUR IKSHAN', kelas: '4' },
+        { nis: '951', nama: 'MUHAMMAD ARIFIN', kelas: '4' }, { nis: '913', nama: 'MUHAMMAD DICKO IRWANSYAH', kelas: '5' },
+        { nis: '914', nama: 'MUHAMMAD SOFYAN SYAURI', kelas: '5' }, { nis: '915', nama: 'MOCHAMMAD RIDHO SAPUTRA', kelas: '5' },
+        { nis: '916', nama: 'ZAINAL ARIF AL BUSTHOMI', kelas: '5' }, { nis: '917', nama: 'MOCH. UBAIDILLAH', kelas: '5' },
+        { nis: '918', nama: 'DAMAR SATRIO ABDI NEGORO', kelas: '5' }, { nis: '919', nama: 'MAHRUS', kelas: '5' },
+        { nis: '920', nama: 'SHOBRIYAN ANDIKA ZAIDAN', kelas: '5' }, { nis: '921', nama: 'MUHAMMAD ABIL KHOIRONY', kelas: '5' },
+        { nis: '922', nama: 'ILMI FADLI MAULUDDIN', kelas: '5' }, { nis: '923', nama: 'MUHAMMAD NARJUN NAJIH', kelas: '5' },
+        { nis: '835', nama: 'AKHMAD ZARKASIH', kelas: '6' }, { nis: '838', nama: 'AKMAD MASDUQI', kelas: '6' }
+    ];
+
+    const defaultGuru = [
+        { nip: '3513231007610002', nama: 'ACHMAD MUCHAMAD', mapel: 'NAHWU', kontak: '-' },
+        { nip: '3513230407630002', nama: "M. JA'FAR", mapel: 'SORROF', kontak: '-' },
+        { nip: '3513232609940000', nama: 'MOH. SHOLIKHIN', mapel: 'AKHLAQ', kontak: '-' },
+        { nip: '3514212304860004', nama: 'MOHAMMAD SODIQ', mapel: 'FIQIH', kontak: '-' },
+        { nip: '351421005930007', nama: 'LUTFI', mapel: 'KHOLASOH', kontak: '-' }
+    ];
+
     // State Settings
-    let appSettings = JSON.parse(localStorage.getItem('madrasah_settings')) || { nama: 'Madrasah Manager', alamat: '', kepala: '', pin: null, themeColor: 'green' };
+    let appSettings = JSON.parse(localStorage.getItem('madrasah_settings')) || { nama: 'MIFTAHUL ULUM ULA', alamat: 'Tongas, Probolinggo', kepala: 'ACHMAD MUCHAMAD', pin: null, themeColor: 'green' };
 
     // Init Theme Mode (Dark/Light)
     if (localStorage.getItem('themeMode') === 'dark' || (!('themeMode' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
@@ -494,7 +551,6 @@
         document.body.classList.remove('theme-blue', 'theme-purple', 'theme-rose');
         if (color !== 'green') document.body.classList.add('theme-' + color);
         
-        // Update UI Button Ring
         ['green', 'blue', 'purple', 'rose'].forEach(c => {
             const btn = document.getElementById('btn-theme-' + c);
             if(btn) {
@@ -550,10 +606,8 @@
         }
     }
 
-    // Panggil fungsi inisialisasi lock screen
     initLockScreen();
     document.getElementById('pinInput').addEventListener('keypress', function (e) { if (e.key === 'Enter') document.getElementById('btnPin').click(); });
-
 
     function toggleThemeMode() {
         const html = document.documentElement;
@@ -593,30 +647,35 @@
     function getDefaultDb() {
         return {
             version: DB_VERSION, tahunAjaran: '2025/2026', nominalSppDefault: 50000, kategori: [...DEFAULT_KATEGORI], kategoriSpp: 'SPP',
-            kas: [{ id: 1, tanggal: '2026-05-01', keterangan: 'Saldo Awal Kas', jenis: 'Masuk', nominal: 5000000, kategori: 'Lainnya' }],
-            spp: [{ id: 1001, nis: '101', nama: 'Ahmad Fauzi', kelas: 'VII-A', bulan: 'Januari', tahun: 2026, nominal: 50000, status: 'Lunas', tanggalBayar: '2026-05-01', kasId: null }],
-            murid: [{ nis: '101', nama: 'Ahmad Fauzi', kelas: 'VII-A' }, { nis: '102', nama: 'Siti Aminah', kelas: 'VII-A' }],
-            guru: [{ nip: 'G001', nama: 'Drs. H. Abdullah', mapel: 'Fikih', kontak: '0812' }]
+            kas: [{ id: 1, tanggal: new Date().toISOString().slice(0,10), keterangan: 'Saldo Awal Kas', jenis: 'Masuk', nominal: 5000000, kategori: 'Lainnya' }],
+            spp: [], 
+            murid: [...defaultMurid], 
+            guru: [...defaultGuru]
         };
     }
 
     function migrateDb(db) {
         if (!db.version || db.version < DB_VERSION) {
-            db.tahunAjaran = db.tahunAjaran || '2025/2026';
-            db.nominalSppDefault = Number(db.nominalSppDefault) || 50000;
-            const [ta1] = db.tahunAjaran.split('/');
-            db.kas = (db.kas || []).map(k => ({ ...k, kategori: k.kategori || 'Lainnya' }));
-            db.spp = (db.spp || []).map(s => ({ ...s, tahun: s.tahun || parseInt(ta1), nominal: s.nominal || db.nominalSppDefault || 50000, tanggalBayar: s.tanggalBayar || null, kasId: s.kasId || null }));
-            db.murid = db.murid || []; db.guru = db.guru || [];
-            db.kategori = (Array.isArray(db.kategori) && db.kategori.length > 0) ? db.kategori : [...DEFAULT_KATEGORI];
-            if (!db.kategori.includes('Lainnya')) db.kategori.push('Lainnya');
-            db.kategoriSpp = (db.kategoriSpp && db.kategori.includes(db.kategoriSpp)) ? db.kategoriSpp : 'SPP';
+            db.murid = [...defaultMurid];
+            db.guru = [...defaultGuru];
+            db.spp = [];
             db.version = DB_VERSION;
         }
+        db.tahunAjaran = db.tahunAjaran || '2025/2026';
+        db.nominalSppDefault = Number(db.nominalSppDefault) || 50000;
+        db.kas = db.kas || [];
+        db.murid = db.murid || [];
+        db.guru = db.guru || [];
+        db.spp = db.spp || [];
+        db.kategori = (Array.isArray(db.kategori) && db.kategori.length > 0) ? db.kategori : [...DEFAULT_KATEGORI];
+        if (!db.kategori.includes('Lainnya')) db.kategori.push('Lainnya');
+        db.kategoriSpp = (db.kategoriSpp && db.kategori.includes(db.kategoriSpp)) ? db.kategoriSpp : 'SPP';
         return db;
     }
 
     let db = migrateDb(JSON.parse(localStorage.getItem('madrasah_db')) || getDefaultDb());
+    localStorage.setItem('madrasah_db', JSON.stringify(db));
+
     function saveData() { localStorage.setItem('madrasah_db', JSON.stringify(db)); renderAll(); }
 
     /* --- 3. NAVIGASI & TABS --- */
@@ -665,7 +724,6 @@
         if (chartInstance) chartInstance.destroy();
         const isDark = document.documentElement.classList.contains('dark');
         
-        // Ambil warna primary dari CSS variable
         const primaryColor = getComputedStyle(document.documentElement).getPropertyValue('--c-primary').trim().split(' ').join(', ');
         
         chartInstance = new Chart(ctx, { 
@@ -1029,47 +1087,84 @@
 
                 // 1. DETEKSI FORMAT KHUSUS KEMENAG (MURID)
                 if (wb.SheetNames.includes('MURID')) {
-                    const rows = XLSX.utils.sheet_to_json(wb.Sheets['MURID'], { range: 7 });
-                    rows.forEach(row => {
-                        const nis = row['NOMER INDUK'] || row['NOMOR INDUK'] || row['NIS'];
-                        const nama = row['NAMA SANTRI'] || row['NAMA MURID'];
-                        const kelas = row['KELAS'];
-                        
-                        if (nis && nama) {
-                            const exists = db.murid.find(m => String(m.nis) === String(nis));
-                            if (!exists) {
-                                db.murid.push({ nis: String(nis).trim(), nama: String(nama).trim(), kelas: String(kelas || '-').trim() });
-                                countMurid++;
+                    // Membaca sebagai raw array (baris demi baris)
+                    const rawRows = XLSX.utils.sheet_to_json(wb.Sheets['MURID'], { header: 1 });
+                    
+                    // Cari baris header secara dinamis (yang mengandung kata 'NAMA SANTRI' atau 'NOMER INDUK')
+                    let headerRowIndex = -1;
+                    for (let i = 0; i < rawRows.length; i++) {
+                        const rowStr = rawRows[i].map(c => String(c).toUpperCase()).join(' ');
+                        if (rowStr.includes('NAMA SANTRI') || rowStr.includes('NOMER INDUK')) {
+                            headerRowIndex = i;
+                            break;
+                        }
+                    }
+
+                    if (headerRowIndex > -1) {
+                        const headers = rawRows[headerRowIndex].map(h => h ? String(h).toUpperCase().trim() : '');
+                        const idxNis = headers.findIndex(h => h.includes('NOMER INDUK') || h.includes('NIS'));
+                        const idxNama = headers.findIndex(h => h.includes('NAMA SANTRI') || h.includes('NAMA MURID'));
+                        const idxKelas = headers.findIndex(h => h.includes('KELAS'));
+
+                        // Loop data setelah header
+                        for (let i = headerRowIndex + 1; i < rawRows.length; i++) {
+                            const row = rawRows[i];
+                            if (!row || row.length === 0) continue;
+
+                            const nis = row[idxNis];
+                            const nama = row[idxNama];
+                            const kelas = row[idxKelas];
+
+                            if (nis && nama && String(nama).trim() !== '') {
+                                const exists = db.murid.find(m => String(m.nis) === String(nis).trim());
+                                if (!exists) {
+                                    db.murid.push({ nis: String(nis).trim(), nama: String(nama).trim(), kelas: String(kelas || '-').trim() });
+                                    countMurid++;
+                                }
                             }
                         }
-                    });
+                    }
                 } 
                 
                 // 2. DETEKSI FORMAT KHUSUS KEMENAG (GURU)
-                else if (wb.SheetNames.includes('ASATIDZ')) {
-                    const rows = XLSX.utils.sheet_to_json(wb.Sheets['ASATIDZ'], { range: 7 });
-                    rows.forEach(row => {
-                        const nip = row['NIK'] || row['NO'];
-                        const nama = row['NAMA GURU'];
-                        const mapel = row['MENGAJAR'];
-                        
-                        if (nip && nama) {
-                            const exists = db.guru.find(g => String(g.nip) === String(nip));
-                            if (!exists) {
-                                db.guru.push({ nip: String(nip).trim(), nama: String(nama).trim(), mapel: String(mapel || '-').trim(), kontak: '-' });
-                                countGuru++;
+                if (wb.SheetNames.includes('ASATIDZ')) {
+                    const rawRows = XLSX.utils.sheet_to_json(wb.Sheets['ASATIDZ'], { header: 1 });
+                    
+                    let headerRowIndex = -1;
+                    for (let i = 0; i < rawRows.length; i++) {
+                        const rowStr = rawRows[i].map(c => String(c).toUpperCase()).join(' ');
+                        if (rowStr.includes('NAMA GURU') || rowStr.includes('NIK')) {
+                            headerRowIndex = i;
+                            break;
+                        }
+                    }
+
+                    if (headerRowIndex > -1) {
+                        const headers = rawRows[headerRowIndex].map(h => h ? String(h).toUpperCase().trim() : '');
+                        const idxNip = headers.findIndex(h => h.includes('NIK') || h.includes('NO'));
+                        const idxNama = headers.findIndex(h => h.includes('NAMA GURU'));
+                        const idxMapel = headers.findIndex(h => h.includes('MENGAJAR'));
+
+                        for (let i = headerRowIndex + 1; i < rawRows.length; i++) {
+                            const row = rawRows[i];
+                            if (!row || row.length === 0) continue;
+
+                            const nip = row[idxNip];
+                            const nama = row[idxNama];
+                            const mapel = row[idxMapel];
+
+                            if (nip && nama && String(nama).trim() !== '') {
+                                const exists = db.guru.find(g => String(g.nip) === String(nip).trim());
+                                if (!exists) {
+                                    db.guru.push({ nip: String(nip).trim(), nama: String(nama).trim(), mapel: String(mapel || '-').trim(), kontak: '-' });
+                                    countGuru++;
+                                }
                             }
                         }
-                    });
+                    }
                 }
 
-                // 3. DETEKSI FORMAT STANDAR APLIKASI
-                if (wb.SheetNames.includes('Jurnal Kas')) {
-                    db.kas = XLSX.utils.sheet_to_json(wb.Sheets['Jurnal Kas']).map((r, i) => ({ id: Date.now() + i, tanggal: r['Tanggal'] || new Date().toISOString().slice(0, 10), keterangan: r['Keterangan'] || '-', kategori: r['Kategori'] || 'Lainnya', jenis: (r['Jenis']) === 'Keluar' ? 'Keluar' : 'Masuk', nominal: Number(r['Nominal (Rp)'] || r['Nominal'] || 0) }));
-                }
-                if (wb.SheetNames.includes('Data SPP')) {
-                    db.spp = XLSX.utils.sheet_to_json(wb.Sheets['Data SPP']).map((r, i) => ({ id: Date.now() + 1000 + i, nis: String(r['NIS'] || ''), nama: r['Nama Murid'] || '-', kelas: r['Kelas'] || '-', bulan: r['Bulan'] || r['Bulan SPP'] || 'Januari', tahun: Number(r['Tahun']) || 2026, nominal: Number(r['Nominal (Rp)'] || r['Nominal'] || 50000), status: (r['Status']) === 'Lunas' ? 'Lunas' : 'Belum', tanggalBayar: null, kasId: null }));
-                }
+                // 3. DETEKSI FORMAT STANDAR APLIKASI (Jika impor dari hasil ekspor aplikasi sendiri)
                 if (wb.SheetNames.includes('Data Murid')) {
                     XLSX.utils.sheet_to_json(wb.Sheets['Data Murid']).forEach(r => {
                         const nis = String(r['NIS'] || '');
@@ -1095,7 +1190,7 @@
                 if (countMurid > 0 || countGuru > 0) {
                     toast(`Import sukses! ${countMurid} Murid & ${countGuru} Guru baru ditambahkan.`);
                 } else {
-                    toast('Tidak ada data baru yang ditemukan (mungkin sudah ada).', 'info');
+                    toast('Tidak ada data baru yang ditemukan (mungkin semua data sudah ada di aplikasi).', 'info');
                 }
 
             } catch (err) { 

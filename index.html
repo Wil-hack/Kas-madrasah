@@ -67,7 +67,11 @@
         <div class="flex gap-3 mb-6">
             <input type="password" id="pinInput" maxlength="6" inputmode="numeric" class="w-48 text-center text-2xl tracking-[0.5em] font-bold px-4 py-3 rounded-xl bg-slate-800 text-white border border-slate-700 focus:outline-none focus:border-primary theme-transition">
         </div>
-        <button id="btnPin" onclick="checkPin()" class="w-48 bg-primary hover:opacity-90 text-white font-bold py-3 rounded-xl transition shadow-lg shadow-primary/30 active:scale-95 theme-transition">Buka Aplikasi</button>
+        
+        <button id="btnPin" class="w-48 bg-primary hover:opacity-90 text-white font-bold py-3 rounded-xl transition shadow-lg shadow-primary/30 active:scale-95 theme-transition">Buka Aplikasi</button>
+        
+        <!-- Tombol Reset jika Lupa PIN -->
+        <button type="button" onclick="resetPin()" class="mt-6 text-sm text-slate-500 hover:text-white transition">Lupa PIN? Reset Aplikasi</button>
     </div>
 
     <!-- ================= MAIN APP ================= -->
@@ -575,16 +579,17 @@
     document.getElementById('appNameDisplay').innerText = appSettings.nama;
 
     function initLockScreen() {
+        const btn = document.getElementById('btnPin');
         if (!appSettings.pin) {
             document.getElementById('lockTitle').innerText = 'Buat PIN Baru';
             document.getElementById('lockDesc').innerText = 'Amankan aplikasi dengan PIN (4-6 digit)';
-            document.getElementById('btnPin').innerText = 'Simpan PIN';
-            document.getElementById('btnPin').onclick = setupPin;
+            btn.innerText = 'Simpan PIN';
+            btn.onclick = setupPin;
         } else {
             document.getElementById('lockTitle').innerText = 'Akses Terkunci';
             document.getElementById('lockDesc').innerText = 'Masukkan PIN untuk membuka aplikasi';
-            document.getElementById('btnPin').innerText = 'Buka Aplikasi';
-            document.getElementById('btnPin').onclick = checkPin;
+            btn.innerText = 'Buka Aplikasi';
+            btn.onclick = checkPin;
         }
     }
 
@@ -612,6 +617,13 @@
         }
     }
 
+    function resetPin() {
+        if(!confirm('Reset PIN? Data Kas, Murid, dan SPP Anda TIDAK akan terhapus. Anda hanya akan diminta membuat PIN baru.')) return;
+        appSettings.pin = null;
+        localStorage.setItem('madrasah_settings', JSON.stringify(appSettings));
+        location.reload(); // Reload halaman agar memunculkan setup PIN baru
+    }
+
     initLockScreen();
     document.getElementById('pinInput').addEventListener('keypress', function (e) { if (e.key === 'Enter') document.getElementById('btnPin').click(); });
 
@@ -627,10 +639,9 @@
         renderChart();
     }
 
-    // LOGIKA TUTUP BUKU
     function isPeriodClosed(tanggal) {
         if (!appSettings.closedPeriods || appSettings.closedPeriods.length === 0) return false;
-        const bulan = tanggal.slice(0, 7); // Format YYYY-MM
+        const bulan = tanggal.slice(0, 7);
         return appSettings.closedPeriods.includes(bulan);
     }
 
@@ -643,6 +654,7 @@
         appSettings.closedPeriods.push(bulan);
         localStorage.setItem('madrasah_settings', JSON.stringify(appSettings));
         renderLockedPeriods();
+        renderKas(); // Refresh tabel
         toast('Data bulan ' + bulan + ' dikunci.');
     }
 
@@ -651,6 +663,7 @@
         appSettings.closedPeriods = appSettings.closedPeriods.filter(b => b !== bulan);
         localStorage.setItem('madrasah_settings', JSON.stringify(appSettings));
         renderLockedPeriods();
+        renderKas(); // Refresh tabel
         toast('Kunci data dibuka.');
     }
 
@@ -761,7 +774,6 @@
     function toggleNotif(e) { if(e) e.stopPropagation(); document.getElementById('notifPanel').classList.toggle('hidden'); }
     function closeNotifOnOutside(e) { const p = document.getElementById('notifPanel'); if (!p) return; if (!e.target.closest('button[onclick="toggleNotif(event)"]') && !e.target.closest('#notifPanel')) p.classList.add('hidden'); }
     
-    // RAPIHKAN NOTIFIKASI
     function renderNotif() {
         const map = {};
         db.spp.filter(s => s.status === 'Belum').forEach(s => {
@@ -807,7 +819,6 @@
         chartInstance = new Chart(ctx, { type: 'bar', data: { labels: months.map(m => m.label), datasets: [ { label: 'Masuk', data: dataMasuk, backgroundColor: `rgb(${primaryColor})`, borderRadius: 4 }, { label: 'Keluar', data: dataKeluar, backgroundColor: '#ef4444', borderRadius: 4 } ] }, options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { labels: { color: isDark ? '#fff' : '#333' } } }, scales: { x: { ticks: { color: isDark ? '#94a3b8' : '#64748b' }, grid: { display: false } }, y: { ticks: { color: isDark ? '#94a3b8' : '#64748b' }, grid: { color: isDark ? '#334155' : '#e2e8f0' } } } } });
     }
 
-    // LAPORAN BULANAN TERPADU
     function renderLaporan() {
         const input = document.getElementById('lapBulan');
         if (!input.value) input.value = new Date().toISOString().slice(0, 7);
@@ -817,14 +828,6 @@
         const tMasuk = filterKas.filter(k => k.jenis === 'Masuk').reduce((s, k) => s + k.nominal, 0);
         const tKeluar = filterKas.filter(k => k.jenis === 'Keluar').reduce((s, k) => s + k.nominal, 0);
         
-        const filterSpp = db.spp.filter(s => {
-            if (s.tanggalBayar && s.tanggalBayar.startsWith(bulan)) return true;
-            const [thn, bln] = bulan.split('-');
-            const blnName = BULAN_LIST[parseInt(bln) - 1]; 
-            return false;
-        });
-        
-        // Perbaikan logika filter SPP karena bulan di SPP berbentuk teks
         let sppLunasBulanIni = 0, sppNominalLunas = 0;
         db.spp.forEach(s => {
             if (s.status === 'Lunas' && s.tanggalBayar && s.tanggalBayar.startsWith(bulan)) {
@@ -845,7 +848,7 @@
                     <p class="text-lg font-extrabold text-red-700 dark:text-red-300">${formatRupiah(tKeluar)}</p>
                 </div>
                 <div class="bg-primary-light/50 dark:bg-primary-dark/20 border border-primary/20 p-4 rounded-2xl">
-                    <p class="text-xs font-bold text-primary mb-1">SPP Lunas (Hari ini/Bln ini)</p>
+                    <p class="text-xs font-bold text-primary mb-1">SPP Lunas</p>
                     <p class="text-lg font-extrabold text-primary">${sppLunasBulanIni} Tagihan</p>
                     <p class="text-xs font-bold text-primary mt-1">${formatRupiah(sppNominalLunas)}</p>
                 </div>
@@ -1313,4 +1316,57 @@
                 console.error(err);
                 toast('Gagal membaca file. Pastikan format Excel sesuai.', 'error'); 
             } 
-            e.target.value =
+            e.target.value = '';
+        };
+        r.readAsArrayBuffer(f);
+    }
+
+    function openMobileForm(type = null) {
+        let tab = document.querySelector('.tab-content:not(.hidden)').id.replace('tab-',''); if(type) tab = type;
+        if(tab === 'kas') {
+            editContext = { type: 'kas_new' }; document.getElementById('editTitle').innerText = 'Tambah Kas';
+            document.getElementById('editBody').innerHTML = `<select name="jenis" class="w-full px-3 py-2 rounded-xl border mb-3 dark:bg-slate-900 dark:border-slate-700"><option value="Masuk">Masuk</option><option value="Keluar">Keluar</option></select><input type="date" name="tanggal" value="${new Date().toISOString().slice(0,10)}" required class="w-full px-3 py-2 rounded-xl border mb-3 dark:bg-slate-900 dark:border-slate-700"><input type="text" name="keterangan" required class="w-full px-3 py-2 rounded-xl border mb-3 dark:bg-slate-900 dark:border-slate-700" placeholder="Keterangan"><input type="number" name="nominal" required class="w-full px-3 py-2 rounded-xl border mb-3 dark:bg-slate-900 dark:border-slate-700" placeholder="Nominal"><select name="kategori" class="w-full px-3 py-2 rounded-xl border mb-3 dark:bg-slate-900 dark:border-slate-700">${db.kategori.map(k=>`<option value="${k}">${k}</option>`).join('')}</select>`;
+        } else if (tab === 'murid') {
+            editContext = { type: 'murid_new' }; document.getElementById('editTitle').innerText = 'Tambah Murid';
+            document.getElementById('editBody').innerHTML = `<input type="text" name="nis" required class="w-full px-3 py-2 rounded-xl border mb-3 dark:bg-slate-900 dark:border-slate-700" placeholder="NIS"><input type="text" name="nama" required class="w-full px-3 py-2 rounded-xl border mb-3 dark:bg-slate-900 dark:border-slate-700" placeholder="Nama"><input type="text" name="kelas" required class="w-full px-3 py-2 rounded-xl border mb-3 dark:bg-slate-900 dark:border-slate-700" placeholder="Kelas">`;
+        } else if (tab === 'guru') {
+            editContext = { type: 'guru_new' }; document.getElementById('editTitle').innerText = 'Tambah Guru';
+            document.getElementById('editBody').innerHTML = `<input type="text" name="nip" required class="w-full px-3 py-2 rounded-xl border mb-3 dark:bg-slate-900 dark:border-slate-700" placeholder="NIP"><input type="text" name="nama" required class="w-full px-3 py-2 rounded-xl border mb-3 dark:bg-slate-900 dark:border-slate-700" placeholder="Nama"><input type="text" name="mapel" required class="w-full px-3 py-2 rounded-xl border mb-3 dark:bg-slate-900 dark:border-slate-700" placeholder="Mapel"><input type="text" name="kontak" required class="w-full px-3 py-2 rounded-xl border mb-3 dark:bg-slate-900 dark:border-slate-700" placeholder="Kontak">`;
+        }
+        document.getElementById('editModal').classList.remove('hidden');
+    }
+
+    const originalSaveEdit = saveEdit;
+    saveEdit = function(e) {
+        e.preventDefault(); const data = Object.fromEntries(new FormData(e.target).entries());
+        if (editContext.type === 'kas_new') { 
+            if (isPeriodClosed(data.tanggal)) return toast('Bulan ini sudah ditutup buku (terkunci)', 'error');
+            db.kas.push({ id: Date.now(), ...data, nominal: parseFloat(data.nominal) }); closeEdit(); saveData(); toast('Kas ditambah'); return; 
+        }
+        if (editContext.type === 'murid_new') { db.murid.push(data); closeEdit(); saveData(); toast('Murid ditambah'); return; }
+        if (editContext.type === 'guru_new') { db.guru.push(data); closeEdit(); saveData(); toast('Guru ditambah'); return; }
+        originalSaveEdit(e);
+    };
+
+    function openSettings() {
+        document.getElementById('setNama').value = appSettings.nama; document.getElementById('setAlamat').value = appSettings.alamat;
+        document.getElementById('setKepala').value = appSettings.kepala; document.getElementById('setPin').value = '';
+        setThemeColor(appSettings.themeColor);
+        renderLockedPeriods();
+        document.getElementById('settingsModal').classList.remove('hidden');
+    }
+    function closeSettings() { document.getElementById('settingsModal').classList.add('hidden'); }
+    function saveSettings(e) {
+        e.preventDefault(); appSettings.nama = document.getElementById('setNama').value;
+        appSettings.alamat = document.getElementById('setAlamat').value; appSettings.kepala = document.getElementById('setKepala').value;
+        const newPin = document.getElementById('setPin').value; if (newPin && newPin.length >= 4) appSettings.pin = newPin;
+        localStorage.setItem('madrasah_settings', JSON.stringify(appSettings)); document.getElementById('appNameDisplay').innerText = appSettings.nama;
+        closeSettings(); toast('Pengaturan disimpan');
+    }
+
+    populateKategoriSelects();
+    document.getElementById('kasTanggal').valueAsDate = new Date();
+    renderAll();
+    </script>
+</body>
+</html>

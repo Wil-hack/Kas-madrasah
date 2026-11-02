@@ -22,7 +22,10 @@
                 extend: {
                     fontFamily: { sans: ['"Plus Jakarta Sans"', 'sans-serif'] },
                     colors: {
-                        emerald: { 50: '#ecfdf5', 100: '#d1fae5', 500: '#10b981', 600: '#059669', 700: '#047857', 800: '#065f46', 900: '#064e3b' },
+                        primary: 'rgb(var(--c-primary) / <alpha-value>)',
+                        'primary-hover': 'rgb(var(--c-primary-hover) / <alpha-value>)',
+                        'primary-light': 'rgb(var(--c-primary-light) / <alpha-value>)',
+                        'primary-dark': 'rgb(var(--c-primary-dark) / <alpha-value>)',
                         gold: { 300: '#fcd34d', 400: '#fbbf24', 500: '#f59e0b', 600: '#d97706' },
                     },
                     animation: {
@@ -38,6 +41,32 @@
         }
     </script>
     <style>
+        /* CSS Variables untuk Tema Warna */
+        :root {
+            --c-primary: 5 150 105;       /* Default: Emerald */
+            --c-primary-hover: 4 120 87;
+            --c-primary-light: 209 250 229;
+            --c-primary-dark: 6 78 59;
+        }
+        .theme-blue {
+            --c-primary: 37 99 235;       /* Blue */
+            --c-primary-hover: 29 78 216;
+            --c-primary-light: 219 234 254;
+            --c-primary-dark: 30 58 138;
+        }
+        .theme-purple {
+            --c-primary: 124 58 237;      /* Violet */
+            --c-primary-hover: 109 40 217;
+            --c-primary-light: 237 233 254;
+            --c-primary-dark: 76 29 149;
+        }
+        .theme-rose {
+            --c-primary: 225 29 72;       /* Rose */
+            --c-primary-hover: 190 18 60;
+            --c-primary-light: 255 228 230;
+            --c-primary-dark: 136 19 55;
+        }
+
         .scrollbar-none::-webkit-scrollbar { display: none; }
         .scrollbar-none { -ms-overflow-style: none; scrollbar-width: none; }
         .glass {
@@ -55,17 +84,16 @@
 
     <!-- ================= SCREEN LOCK (PIN) ================= -->
     <div id="lockScreen" class="fixed inset-0 z-[999] bg-slate-900 flex flex-col items-center justify-center p-6 transition-opacity duration-300">
-        <div class="w-20 h-20 bg-emerald-600 rounded-3xl flex items-center justify-center mb-6 shadow-lg shadow-emerald-500/30">
+        <div class="w-20 h-20 bg-primary-600 rounded-3xl flex items-center justify-center mb-6 shadow-lg shadow-primary-500/30">
             <svg class="w-10 h-10 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"></path></svg>
         </div>
-        <h2 class="text-2xl font-bold text-white mb-2">Akses Terkunci</h2>
-        <p class="text-slate-400 text-sm mb-8">Masukkan PIN untuk membuka aplikasi</p>
+        <h2 id="lockTitle" class="text-2xl font-bold text-white mb-2">Akses Terkunci</h2>
+        <p id="lockDesc" class="text-slate-400 text-sm mb-8">Masukkan PIN untuk membuka aplikasi</p>
         
         <div class="flex gap-3 mb-6">
-            <input type="password" id="pinInput" maxlength="6" inputmode="numeric" class="w-48 text-center text-2xl tracking-[0.5em] font-bold px-4 py-3 rounded-xl bg-slate-800 text-white border border-slate-700 focus:outline-none focus:border-emerald-500">
+            <input type="password" id="pinInput" maxlength="6" inputmode="numeric" class="w-48 text-center text-2xl tracking-[0.5em] font-bold px-4 py-3 rounded-xl bg-slate-800 text-white border border-slate-700 focus:outline-none focus:border-primary-500">
         </div>
-        <button onclick="checkPin()" class="w-48 bg-emerald-600 hover:bg-emerald-500 text-white font-bold py-3 rounded-xl transition shadow-lg shadow-emerald-500/30 active:scale-95">Buka Aplikasi</button>
-        <p class="text-slate-500 text-xs mt-6">PIN Default: 123456</p>
+        <button id="btnPin" onclick="checkPin()" class="w-48 bg-primary-600 hover:bg-primary-500 text-white font-bold py-3 rounded-xl transition shadow-lg shadow-primary-500/30 active:scale-95">Buka Aplikasi</button>
     </div>
 
     <!-- ================= MAIN APP ================= -->
@@ -75,7 +103,7 @@
             <div class="max-w-7xl mx-auto px-4 py-3 flex justify-between items-center gap-3">
                 <!-- Logo & Identity -->
                 <div class="flex items-center space-x-3">
-                    <div class="bg-gradient-to-br from-emerald-500 to-emerald-700 p-2 rounded-xl shadow-md">
+                    <div class="bg-gradient-to-br from-primary-500 to-primary-700 p-2 rounded-xl shadow-md">
                         <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"></path></svg>
                     </div>
                     <div>
@@ -102,13 +130,13 @@
                         </div>
                     </div>
 
-                    <!-- Theme Toggle -->
-                    <button onclick="toggleTheme()" class="p-2 rounded-xl bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-700 transition">
+                    <!-- Theme Toggle (Dark/Light) -->
+                    <button onclick="toggleThemeMode()" class="p-2 rounded-xl bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-700 transition">
                         <svg id="iconSun" class="w-5 h-5 hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"></path></svg>
                         <svg id="iconMoon" class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"></path></svg>
                     </button>
 
-                    <!-- Tombol Pengaturan (Muncul di HP & Desktop) -->
+                    <!-- Tombol Pengaturan -->
                     <button onclick="openSettings()" class="px-3 py-2 rounded-xl text-xs font-bold bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 transition flex items-center gap-1">
                         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path></svg>
                         <span class="hidden md:inline">Pengaturan</span>
@@ -121,18 +149,18 @@
         <main class="max-w-7xl mx-auto px-4 py-6 w-full flex-grow space-y-6" onclick="closeNotifOnOutside(event)">
             
             <!-- HERO DASHBOARD -->
-            <section class="bg-gradient-to-br from-emerald-800 to-teal-900 rounded-3xl shadow-xl p-6 md:p-8 text-white relative overflow-hidden">
+            <section class="bg-gradient-to-br from-primary-800 to-primary-dark rounded-3xl shadow-xl p-6 md:p-8 text-white relative overflow-hidden transition-colors">
                 <div class="absolute -right-10 -top-10 opacity-10 pointer-events-none">
                     <svg class="w-64 h-64 text-white" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-2h2v2zm0-4h-2V7h2v6z"/></svg>
                 </div>
                 <div class="relative z-10">
-                    <p class="text-xs uppercase tracking-widest text-emerald-200 font-bold mb-1">Total Saldo Kas</p>
+                    <p class="text-xs uppercase tracking-widest text-primary-light font-bold mb-1">Total Saldo Kas</p>
                     <h2 id="heroSaldo" class="text-4xl md:text-5xl font-extrabold tracking-tight mb-6 text-white drop-shadow-md">Rp 0</h2>
                     
-                    <div class="grid grid-cols-1 sm:grid-cols-3 gap-3 pt-5 border-t border-emerald-600/50">
+                    <div class="grid grid-cols-1 sm:grid-cols-3 gap-3 pt-5 border-t border-primary-500/50">
                         <div class="flex items-center space-x-3 bg-white/10 p-3 rounded-2xl backdrop-blur-sm border border-white/10">
-                            <div class="bg-emerald-500/30 p-2 rounded-xl"><svg class="w-5 h-5 text-emerald-300" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M7 11l5-5m0 0l5 5m-5-5v12"></path></svg></div>
-                            <div><p class="text-[10px] text-emerald-200 font-bold uppercase tracking-wider">Pemasukan</p><p id="heroPemasukan" class="text-sm font-bold">Rp 0</p></div>
+                            <div class="bg-primary-500/30 p-2 rounded-xl"><svg class="w-5 h-5 text-primary-light" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M7 11l5-5m0 0l5 5m-5-5v12"></path></svg></div>
+                            <div><p class="text-[10px] text-primary-light font-bold uppercase tracking-wider">Pemasukan</p><p id="heroPemasukan" class="text-sm font-bold">Rp 0</p></div>
                         </div>
                         <div class="flex items-center space-x-3 bg-white/10 p-3 rounded-2xl backdrop-blur-sm border border-white/10">
                             <div class="bg-red-500/30 p-2 rounded-xl"><svg class="w-5 h-5 text-red-300" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M17 13l-5 5m0 0l-5-5m5 5V6"></path></svg></div>
@@ -148,7 +176,7 @@
 
             <!-- TABS (DESKTOP) -->
             <div class="hidden md:flex space-x-2 border-b border-slate-200 dark:border-slate-700 pb-px overflow-x-auto scrollbar-none">
-                <button onclick="switchTab('kas')" id="tab-btn-kas" class="tab-btn px-5 py-3 rounded-t-xl font-bold text-sm whitespace-nowrap transition flex items-center gap-2 border-b-2 border-emerald-500 text-emerald-700 dark:text-emerald-400">
+                <button onclick="switchTab('kas')" id="tab-btn-kas" class="tab-btn px-5 py-3 rounded-t-xl font-bold text-sm whitespace-nowrap transition flex items-center gap-2 border-b-2 border-primary-500 text-primary-700 dark:text-primary-400">
                     <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z"></path></svg>
                     Jurnal Kas
                 </button>
@@ -178,11 +206,11 @@
                     
                     <div class="hidden lg:block bg-white dark:bg-slate-800 rounded-3xl border border-slate-200 dark:border-slate-700 p-6 shadow-sm h-fit">
                         <h3 class="text-base font-bold mb-5 pb-3 border-b border-slate-100 dark:border-slate-700 flex items-center gap-2">
-                            <svg class="w-5 h-5 text-emerald-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path></svg>
+                            <svg class="w-5 h-5 text-primary-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path></svg>
                             Tambah Kas
                         </h3>
                         <form id="formKas" onsubmit="addKas(event)" class="space-y-4">
-                            <select id="kasJenis" class="w-full px-3 py-2.5 rounded-xl border border-slate-300 dark:border-slate-600 bg-slate-50 dark:bg-slate-900 text-sm focus:ring-2 focus:ring-emerald-500">
+                            <select id="kasJenis" class="w-full px-3 py-2.5 rounded-xl border border-slate-300 dark:border-slate-600 bg-slate-50 dark:bg-slate-900 text-sm focus:ring-2 focus:ring-primary-500">
                                 <option value="Masuk">Pemasukan (+)</option>
                                 <option value="Keluar">Pengeluaran (-)</option>
                             </select>
@@ -190,11 +218,11 @@
                             <input type="text" id="kasKeterangan" placeholder="Keterangan / Uraian" required class="w-full px-3 py-2.5 rounded-xl border border-slate-300 dark:border-slate-600 bg-slate-50 dark:bg-slate-900 text-sm">
                             <div class="flex justify-between items-center text-xs font-bold text-slate-500 mb-1">
                                 <span>Kategori</span>
-                                <button type="button" onclick="openKelolaKategori()" class="text-emerald-600 hover:underline">+ Kelola</button>
+                                <button type="button" onclick="openKelolaKategori()" class="text-primary-600 hover:underline">+ Kelola</button>
                             </div>
                             <select id="kasKategori" class="w-full px-3 py-2.5 rounded-xl border border-slate-300 dark:border-slate-600 bg-slate-50 dark:bg-slate-900 text-sm"></select>
                             <input type="number" id="kasNominal" placeholder="Nominal (Rp)" min="1" required class="w-full px-3 py-2.5 rounded-xl border border-slate-300 dark:border-slate-600 bg-slate-50 dark:bg-slate-900 text-sm">
-                            <button type="submit" class="w-full bg-emerald-600 hover:bg-emerald-700 text-white py-3 rounded-xl font-bold text-sm transition">Simpan Kas</button>
+                            <button type="submit" class="w-full bg-primary-600 hover:bg-primary-700 text-white py-3 rounded-xl font-bold text-sm transition">Simpan Kas</button>
                         </form>
                     </div>
                 </div>
@@ -202,7 +230,7 @@
                 <div class="bg-white dark:bg-slate-800 rounded-3xl border border-slate-200 dark:border-slate-700 p-0 shadow-sm overflow-hidden flex flex-col">
                     <div class="p-5 border-b border-slate-100 dark:border-slate-700 flex justify-between items-center">
                         <h3 class="text-base font-bold">Riwayat Jurnal Kas</h3>
-                        <button onclick="resetKasFilter()" class="text-xs text-emerald-600 font-bold hover:underline">Reset Filter</button>
+                        <button onclick="resetKasFilter()" class="text-xs text-primary-600 font-bold hover:underline">Reset Filter</button>
                     </div>
                     <div class="p-4 bg-slate-50 dark:bg-slate-900/50 grid grid-cols-2 md:grid-cols-4 gap-2 border-b border-slate-100 dark:border-slate-700">
                         <select id="kasFilterJenis" onchange="renderKas()" class="px-2 py-2 rounded-lg border text-xs"><option value="">Semua Jenis</option><option value="Masuk">Masuk</option><option value="Keluar">Keluar</option></select>
@@ -224,7 +252,7 @@
                 <div class="bg-white dark:bg-slate-800 rounded-3xl border border-slate-200 dark:border-slate-700 p-5 shadow-sm">
                     <div class="bg-slate-50 dark:bg-slate-900/50 border border-slate-200 dark:border-slate-700 rounded-2xl p-4 mb-5 flex flex-col md:flex-row md:items-center justify-between gap-4">
                         <div>
-                            <p class="text-sm font-bold flex items-center gap-2"><svg class="w-4 h-4 text-emerald-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>Pengaturan SPP</p>
+                            <p class="text-sm font-bold flex items-center gap-2"><svg class="w-4 h-4 text-primary-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>Pengaturan SPP</p>
                             <p class="text-xs text-slate-500 mt-0.5">Atur nominal default sebelum generate.</p>
                         </div>
                         <div class="flex items-center gap-2">
@@ -237,7 +265,7 @@
                         <h3 class="text-base font-bold">Rekap Pembayaran SPP Murid</h3>
                         <div class="flex items-center gap-2">
                             <input type="text" id="tahunAjaranInput" onchange="updateTahunAjaran()" class="px-2 py-1.5 rounded-lg border text-xs w-24 text-center font-bold">
-                            <button onclick="generateSppForAll()" class="bg-emerald-600 text-white px-4 py-2 rounded-xl text-xs font-bold shadow-md shadow-emerald-500/20">Generate SPP</button>
+                            <button onclick="generateSppForAll()" class="bg-primary-600 text-white px-4 py-2 rounded-xl text-xs font-bold shadow-md shadow-primary-500/20">Generate SPP</button>
                         </div>
                     </div>
 
@@ -298,7 +326,7 @@
 
         <!-- BOTTOM NAV (MOBILE ONLY) -->
         <nav class="md:hidden fixed bottom-0 left-0 right-0 bg-white/95 dark:bg-slate-800/95 backdrop-blur-lg border-t border-slate-200 dark:border-slate-700 z-50 flex justify-around items-center h-[65px] pb-safe">
-            <button onclick="switchTab('kas')" id="nav-btn-kas" class="nav-btn flex flex-col items-center flex-1 h-full text-emerald-600 space-y-1 pt-2">
+            <button onclick="switchTab('kas')" id="nav-btn-kas" class="nav-btn flex flex-col items-center flex-1 h-full text-primary-600 space-y-1 pt-2">
                 <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z"></path></svg>
                 <span class="text-[10px] font-bold">Kas</span>
             </button>
@@ -320,7 +348,7 @@
         </nav>
 
         <!-- FAB (MOBILE) -->
-        <button id="fabBtn" onclick="openMobileForm()" class="md:hidden fixed bottom-[80px] right-4 bg-gradient-to-r from-emerald-500 to-teal-500 text-white w-14 h-14 rounded-full shadow-xl flex items-center justify-center z-40 active:scale-90 transition">
+        <button id="fabBtn" onclick="openMobileForm()" class="md:hidden fixed bottom-[80px] right-4 bg-gradient-to-r from-primary-500 to-primary-600 text-white w-14 h-14 rounded-full shadow-xl flex items-center justify-center z-40 active:scale-90 transition">
             <svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M12 4v16m8-8H4"></path></svg>
         </button>
     </div>
@@ -339,13 +367,13 @@
                 <div id="editBody"></div>
                 <div class="flex gap-3 pt-2">
                     <button type="button" onclick="closeEdit()" class="flex-1 bg-slate-100 dark:bg-slate-700 py-3 rounded-xl font-bold text-sm">Batal</button>
-                    <button type="submit" class="flex-1 bg-emerald-600 text-white py-3 rounded-xl font-bold text-sm">Simpan</button>
+                    <button type="submit" class="flex-1 bg-primary-600 text-white py-3 rounded-xl font-bold text-sm">Simpan</button>
                 </div>
             </form>
         </div>
     </div>
 
-    <!-- SETTINGS MODAL (Pusat Ekspor/Impor) -->
+    <!-- SETTINGS MODAL -->
     <div id="settingsModal" class="hidden fixed inset-0 bg-slate-900/60 z-[60] flex items-end md:items-center justify-center p-0 md:p-4 backdrop-blur-sm">
         <div class="bg-white dark:bg-slate-800 rounded-t-3xl md:rounded-3xl shadow-2xl w-full max-w-md max-h-[90vh] overflow-y-auto">
             <div class="p-5 border-b flex justify-between items-center sticky top-0 bg-white dark:bg-slate-800 z-10 rounded-t-3xl">
@@ -358,8 +386,20 @@
                     <div><label class="block text-xs font-bold text-slate-500 mb-1">Nama Madrasah</label><input type="text" id="setNama" required class="w-full px-3 py-2 rounded-xl border dark:bg-slate-900 dark:border-slate-700"></div>
                     <div><label class="block text-xs font-bold text-slate-500 mb-1">Alamat</label><input type="text" id="setAlamat" class="w-full px-3 py-2 rounded-xl border dark:bg-slate-900 dark:border-slate-700"></div>
                     <div><label class="block text-xs font-bold text-slate-500 mb-1">Kepala Madrasah</label><input type="text" id="setKepala" class="w-full px-3 py-2 rounded-xl border dark:bg-slate-900 dark:border-slate-700"></div>
-                    <div><label class="block text-xs font-bold text-slate-500 mb-1">Ganti PIN (6 digit)</label><input type="text" id="setPin" maxlength="6" placeholder="Kosongkan jika tidak diganti" class="w-full px-3 py-2 rounded-xl border dark:bg-slate-900 dark:border-slate-700"></div>
-                    <button type="submit" class="w-full bg-emerald-600 text-white py-2.5 rounded-xl font-bold text-sm shadow-md">Simpan Profil</button>
+                    <div><label class="block text-xs font-bold text-slate-500 mb-1">Ganti PIN (4-6 digit)</label><input type="password" id="setPin" maxlength="6" placeholder="Kosongkan jika tidak diganti" class="w-full px-3 py-2 rounded-xl border dark:bg-slate-900 dark:border-slate-700"></div>
+                    
+                    <!-- Pilihan Tema -->
+                    <div>
+                        <label class="block text-xs font-bold text-slate-500 mb-2">Tema Warna Aplikasi</label>
+                        <div class="flex gap-3">
+                            <button type="button" onclick="setThemeColor('green')" id="btn-theme-green" class="w-10 h-10 rounded-full bg-emerald-600 border-2 border-transparent hover:border-slate-300 transition-all"></button>
+                            <button type="button" onclick="setThemeColor('blue')" id="btn-theme-blue" class="w-10 h-10 rounded-full bg-blue-600 border-2 border-transparent hover:border-slate-300 transition-all"></button>
+                            <button type="button" onclick="setThemeColor('purple')" id="btn-theme-purple" class="w-10 h-10 rounded-full bg-purple-600 border-2 border-transparent hover:border-slate-300 transition-all"></button>
+                            <button type="button" onclick="setThemeColor('rose')" id="btn-theme-rose" class="w-10 h-10 rounded-full bg-rose-600 border-2 border-transparent hover:border-slate-300 transition-all"></button>
+                        </div>
+                    </div>
+
+                    <button type="submit" class="w-full bg-primary-600 text-white py-2.5 rounded-xl font-bold text-sm shadow-md mt-4">Simpan Profil</button>
                 </form>
 
                 <!-- Manajemen Data Section -->
@@ -375,7 +415,7 @@
                             <span class="text-xs font-bold">Restore JSON</span>
                             <input type="file" id="restoreFile" accept=".json" onchange="restoreJSON(event)" class="hidden">
                         </label>
-                        <button onclick="exportToExcel()" class="flex flex-col items-center justify-center p-3 bg-emerald-50 dark:bg-emerald-900/20 text-emerald-700 dark:text-emerald-400 rounded-xl hover:bg-emerald-100 transition">
+                        <button onclick="exportToExcel()" class="flex flex-col items-center justify-center p-3 bg-primary-50 dark:bg-primary-900/20 text-primary-700 dark:text-primary-400 rounded-xl hover:bg-primary-100 transition">
                             <svg class="w-6 h-6 mb-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 17v-2m3 2v-4m3 4v-6m2 10H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path></svg>
                             <span class="text-xs font-bold">Ekspor Excel</span>
                         </button>
@@ -400,7 +440,7 @@
             <div class="p-5">
                 <form onsubmit="addKategori(event)" class="flex gap-2 mb-4">
                     <input type="text" id="newKategoriInput" required class="flex-1 px-3 py-2 rounded-xl border dark:bg-slate-900 dark:border-slate-700 text-sm">
-                    <button type="submit" class="bg-emerald-600 text-white px-4 py-2 rounded-xl text-sm font-bold">Tambah</button>
+                    <button type="submit" class="bg-primary-600 text-white px-4 py-2 rounded-xl text-sm font-bold">Tambah</button>
                 </form>
                 <div id="kategoriList" class="space-y-2"></div>
             </div>
@@ -416,12 +456,12 @@
                 <select id="bulkTargetStatus" onchange="previewBulkNominal()" class="w-full px-3 py-2 rounded-xl border dark:bg-slate-900 dark:border-slate-700"><option value="">Semua Status</option><option value="Belum">Belum</option><option value="Lunas">Lunas</option></select>
                 <input type="number" id="bulkNominalBaru" onchange="previewBulkNominal()" oninput="previewBulkNominal()" required class="w-full px-3 py-2 rounded-xl border dark:bg-slate-900 dark:border-slate-700 font-bold">
                 <div id="bulkPreview" class="bg-amber-50 dark:bg-amber-900/30 text-amber-900 dark:text-amber-400 p-3 rounded-xl text-xs">Isi nominal...</div>
-                <div class="flex gap-2 pt-2"><button type="button" onclick="closeBulkNominal()" class="flex-1 bg-slate-100 dark:bg-slate-700 py-3 rounded-xl font-bold">Batal</button><button type="submit" class="flex-1 bg-emerald-600 text-white py-3 rounded-xl font-bold">Terapkan</button></div>
+                <div class="flex gap-2 pt-2"><button type="button" onclick="closeBulkNominal()" class="flex-1 bg-slate-100 dark:bg-slate-700 py-3 rounded-xl font-bold">Batal</button><button type="submit" class="flex-1 bg-primary-600 text-white py-3 rounded-xl font-bold">Terapkan</button></div>
             </form>
         </div>
     </div>
 
-    <!-- ================= JAVASCRIPT LOGIC (GABUNGAN FULL) ================= -->
+    <!-- ================= JAVASCRIPT LOGIC ================= -->
     <script>
     /* --- 1. SETUP DASAR & STATE --- */
     const DB_VERSION = 4;
@@ -429,7 +469,7 @@
     const BULAN_LIST = ['Juli','Agustus','September','Oktober','November','Desember','Januari','Februari','Maret','April','Mei','Juni'];
     
     const CAT_COLORS = [
-        { bg: 'bg-emerald-100 dark:bg-emerald-900/30', text: 'text-emerald-800 dark:text-emerald-400', dot: 'bg-emerald-500', ring: 'ring-emerald-200' },
+        { bg: 'bg-primary-100 dark:bg-primary-900/30', text: 'text-primary-800 dark:text-primary-400', dot: 'bg-primary-500', ring: 'ring-primary-200' },
         { bg: 'bg-blue-100 dark:bg-blue-900/30', text: 'text-blue-800 dark:text-blue-400', dot: 'bg-blue-500', ring: 'ring-blue-200' },
         { bg: 'bg-amber-100 dark:bg-amber-900/30', text: 'text-amber-800 dark:text-amber-400', dot: 'bg-amber-500', ring: 'ring-amber-200' },
         { bg: 'bg-rose-100 dark:bg-rose-900/30', text: 'text-rose-800 dark:text-rose-400', dot: 'bg-rose-500', ring: 'ring-rose-200' },
@@ -438,38 +478,90 @@
     ];
 
     // State Settings
-    let appSettings = JSON.parse(localStorage.getItem('madrasah_settings')) || { nama: 'Madrasah Manager', alamat: '', kepala: '', pin: '123456' };
+    let appSettings = JSON.parse(localStorage.getItem('madrasah_settings')) || { nama: 'Madrasah Manager', alamat: '', kepala: '', pin: null, themeColor: 'green' };
 
-    // Init Theme
-    if (localStorage.getItem('theme') === 'dark' || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+    // Init Theme Mode (Dark/Light)
+    if (localStorage.getItem('themeMode') === 'dark' || (!('themeMode' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
         document.documentElement.classList.add('dark');
         document.getElementById('iconSun').classList.remove('hidden');
     } else {
         document.documentElement.classList.remove('dark');
         document.getElementById('iconMoon').classList.add('hidden');
     }
+
+    // Init Theme Color
+    function setThemeColor(color) {
+        document.body.classList.remove('theme-blue', 'theme-purple', 'theme-rose');
+        if (color !== 'green') document.body.classList.add('theme-' + color);
+        
+        // Update UI Button Ring
+        ['green', 'blue', 'purple', 'rose'].forEach(c => {
+            const btn = document.getElementById('btn-theme-' + c);
+            if(btn) {
+                if (c === color) btn.classList.add('ring-2', 'ring-offset-2', 'ring-slate-400');
+                else btn.classList.remove('ring-2', 'ring-offset-2', 'ring-slate-400');
+            }
+        });
+        
+        appSettings.themeColor = color;
+        localStorage.setItem('madrasah_settings', JSON.stringify(appSettings));
+    }
+
+    // Apply saved color on load
+    setThemeColor(appSettings.themeColor);
+
+    // Init App Name
     document.getElementById('appNameDisplay').innerText = appSettings.nama;
 
-    // Lock Screen Logic
-    document.getElementById('pinInput').addEventListener('keypress', function (e) { if (e.key === 'Enter') checkPin(); });
+    // Lock Screen Setup
+    function initLockScreen() {
+        if (!appSettings.pin) {
+            document.getElementById('lockTitle').innerText = 'Buat PIN Baru';
+            document.getElementById('lockDesc').innerText = 'Amankan aplikasi dengan PIN (4-6 digit)';
+            document.getElementById('btnPin').innerText = 'Simpan PIN';
+            document.getElementById('btnPin').onclick = setupPin;
+        } else {
+            document.getElementById('lockTitle').innerText = 'Akses Terkunci';
+            document.getElementById('lockDesc').innerText = 'Masukkan PIN untuk membuka aplikasi';
+            document.getElementById('btnPin').innerText = 'Buka Aplikasi';
+            document.getElementById('btnPin').onclick = checkPin;
+        }
+    }
+
+    function setupPin() {
+        const val = document.getElementById('pinInput').value;
+        if (val.length < 4) return alert('PIN minimal 4 digit!');
+        appSettings.pin = val;
+        localStorage.setItem('madrasah_settings', JSON.stringify(appSettings));
+        document.getElementById('lockScreen').classList.add('hidden');
+        document.getElementById('appContainer').classList.remove('hidden');
+        renderChart();
+        toast('PIN berhasil dibuat!');
+    }
+
     function checkPin() {
         const input = document.getElementById('pinInput').value;
         if (input === appSettings.pin) {
             document.getElementById('lockScreen').classList.add('hidden');
             document.getElementById('appContainer').classList.remove('hidden');
-            renderChart(); // Render chart after unlock so canvas has size
+            renderChart(); 
         } else {
             alert('PIN Salah!'); document.getElementById('pinInput').value = '';
         }
     }
 
-    function toggleTheme() {
+    // Panggil fungsi inisialisasi lock screen
+    initLockScreen();
+    document.getElementById('pinInput').addEventListener('keypress', function (e) { if (e.key === 'Enter') document.getElementById('btnPin').click(); });
+
+
+    function toggleThemeMode() {
         const html = document.documentElement;
         if (html.classList.contains('dark')) {
-            html.classList.remove('dark'); localStorage.setItem('theme', 'light');
+            html.classList.remove('dark'); localStorage.setItem('themeMode', 'light');
             document.getElementById('iconSun').classList.add('hidden'); document.getElementById('iconMoon').classList.remove('hidden');
         } else {
-            html.classList.add('dark'); localStorage.setItem('theme', 'dark');
+            html.classList.add('dark'); localStorage.setItem('themeMode', 'dark');
             document.getElementById('iconSun').classList.remove('hidden'); document.getElementById('iconMoon').classList.add('hidden');
         }
         renderChart();
@@ -491,7 +583,7 @@
             error: '<svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M6 18L18 6M6 6l12 12"/></svg>'
         };
         const el = document.createElement('div');
-        el.className = `${type === 'success' ? 'bg-emerald-600 border-emerald-500' : 'bg-red-600 border-red-500'} text-white px-4 py-3 rounded-xl shadow-lg text-sm font-bold flex items-center gap-2 pointer-events-auto border-l-4 max-w-xs animate-slide-in`;
+        el.className = `${type === 'success' ? 'bg-primary-600 border-primary-500' : 'bg-red-600 border-red-500'} text-white px-4 py-3 rounded-xl shadow-lg text-sm font-bold flex items-center gap-2 pointer-events-auto border-l-4 max-w-xs animate-slide-in`;
         el.innerHTML = `${icons[type]}<span>${escapeHtml(msg)}</span>`;
         container.appendChild(el);
         setTimeout(() => { el.style.opacity = '0'; setTimeout(() => el.remove(), 300); }, 3000);
@@ -530,14 +622,14 @@
     /* --- 3. NAVIGASI & TABS --- */
     function switchTab(tabId) {
         document.querySelectorAll('.tab-content').forEach(el => el.classList.add('hidden'));
-        document.querySelectorAll('.tab-btn').forEach(el => { el.classList.remove('border-emerald-500', 'text-emerald-700', 'dark:text-emerald-400'); el.classList.add('border-transparent', 'text-slate-500'); });
-        document.querySelectorAll('.nav-btn').forEach(el => { el.classList.remove('text-emerald-600'); el.classList.add('text-slate-400'); });
+        document.querySelectorAll('.tab-btn').forEach(el => { el.classList.remove('border-primary-500', 'text-primary-700', 'dark:text-primary-400'); el.classList.add('border-transparent', 'text-slate-500'); });
+        document.querySelectorAll('.nav-btn').forEach(el => { el.classList.remove('text-primary-600'); el.classList.add('text-slate-400'); });
 
         document.getElementById('tab-' + tabId).classList.remove('hidden');
         const btn = document.getElementById('tab-btn-' + tabId);
-        if (btn) { btn.classList.remove('border-transparent', 'text-slate-500'); btn.classList.add('border-emerald-500', 'text-emerald-700', 'dark:text-emerald-400'); }
+        if (btn) { btn.classList.remove('border-transparent', 'text-slate-500'); btn.classList.add('border-primary-500', 'text-primary-700', 'dark:text-primary-400'); }
         const navBtn = document.getElementById('nav-btn-' + tabId);
-        if (navBtn) { navBtn.classList.remove('text-slate-400'); navBtn.classList.add('text-emerald-600'); }
+        if (navBtn) { navBtn.classList.remove('text-slate-400'); navBtn.classList.add('text-primary-600'); }
 
         const fab = document.getElementById('fabBtn');
         if(tabId === 'spp') fab.classList.add('hidden'); else fab.classList.remove('hidden');
@@ -572,7 +664,28 @@
         db.kas.forEach(k => { const d = new Date(k.tanggal); const idx = months.findIndex(m => m.year === d.getFullYear() && m.month === d.getMonth()); if (idx > -1) { if (k.jenis === 'Masuk') dataMasuk[idx] += k.nominal; else dataKeluar[idx] += k.nominal; } });
         if (chartInstance) chartInstance.destroy();
         const isDark = document.documentElement.classList.contains('dark');
-        chartInstance = new Chart(ctx, { type: 'bar', data: { labels: months.map(m => m.label), datasets: [ { label: 'Masuk', data: dataMasuk, backgroundColor: '#10b981', borderRadius: 4 }, { label: 'Keluar', data: dataKeluar, backgroundColor: '#ef4444', borderRadius: 4 } ] }, options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { labels: { color: isDark ? '#fff' : '#333' } } }, scales: { x: { ticks: { color: isDark ? '#94a3b8' : '#64748b' }, grid: { display: false } }, y: { ticks: { color: isDark ? '#94a3b8' : '#64748b' }, grid: { color: isDark ? '#334155' : '#e2e8f0' } } } } });
+        
+        // Ambil warna primary dari CSS variable
+        const primaryColor = getComputedStyle(document.documentElement).getPropertyValue('--c-primary').trim().split(' ').join(', ');
+        
+        chartInstance = new Chart(ctx, { 
+            type: 'bar', 
+            data: { 
+                labels: months.map(m => m.label), 
+                datasets: [ 
+                    { label: 'Masuk', data: dataMasuk, backgroundColor: `rgb(${primaryColor})`, borderRadius: 4 }, 
+                    { label: 'Keluar', data: dataKeluar, backgroundColor: '#ef4444', borderRadius: 4 } 
+                ] 
+            }, 
+            options: { 
+                responsive: true, maintainAspectRatio: false, 
+                plugins: { legend: { labels: { color: isDark ? '#fff' : '#333' } } }, 
+                scales: { 
+                    x: { ticks: { color: isDark ? '#94a3b8' : '#64748b' }, grid: { display: false } }, 
+                    y: { ticks: { color: isDark ? '#94a3b8' : '#64748b' }, grid: { color: isDark ? '#334155' : '#e2e8f0' } } 
+                } 
+            } 
+        });
     }
 
     // KAS
@@ -599,9 +712,9 @@
                 <td class="p-4 text-xs text-slate-500 whitespace-nowrap">${escapeHtml(item.tanggal)}</td>
                 <td class="p-4 font-bold">${escapeHtml(item.keterangan)}</td>
                 <td class="p-4 hidden sm:table-cell"><span class="inline-flex items-center gap-1.5 ${color.bg} ${color.text} px-2.5 py-1 rounded-lg text-[11px] font-bold"><span class="w-1.5 h-1.5 rounded-full ${color.dot}"></span>${escapeHtml(item.kategori)}</span></td>
-                <td class="p-4 text-right font-extrabold ${item.jenis === 'Masuk' ? 'text-emerald-500' : 'text-red-500'} whitespace-nowrap">${item.jenis === 'Masuk' ? '+' : '-'} ${formatRupiah(item.nominal)}</td>
+                <td class="p-4 text-right font-extrabold ${item.jenis === 'Masuk' ? 'text-primary-500' : 'text-red-500'} whitespace-nowrap">${item.jenis === 'Masuk' ? '+' : '-'} ${formatRupiah(item.nominal)}</td>
                 <td class="p-4 text-center">
-                    <button onclick="openEditKas(${item.id})" class="text-slate-400 hover:text-emerald-500 p-1">✏️</button>
+                    <button onclick="openEditKas(${item.id})" class="text-slate-400 hover:text-primary-500 p-1">✏️</button>
                     <button onclick="deleteKas(${item.id})" class="text-slate-400 hover:text-red-500 p-1">🗑️</button>
                 </td>
             </tr>`;
@@ -650,8 +763,8 @@
                     <td class="p-3 hidden sm:table-cell text-xs">${escapeHtml(item.kelas)}</td>
                     <td class="p-3 text-xs whitespace-nowrap">${escapeHtml(item.bulan)} ${item.tahun}</td>
                     <td class="p-3 text-right font-medium text-xs whitespace-nowrap">${formatRupiah(item.nominal)}</td>
-                    <td class="p-3 text-center"><button onclick="toggleSppStatus(${item.id})" class="px-3 py-1 rounded-lg text-xs font-bold transition ${item.status === 'Lunas' ? 'bg-emerald-100 text-emerald-700' : 'bg-amber-100 text-amber-700'}">${item.status}</button></td>
-                    <td class="p-3 text-center"><button onclick="openEditSpp(${item.id})" class="text-slate-400 hover:text-emerald-500 p-1">✏️</button></td>
+                    <td class="p-3 text-center"><button onclick="toggleSppStatus(${item.id})" class="px-3 py-1 rounded-lg text-xs font-bold transition ${item.status === 'Lunas' ? 'bg-primary-100 text-primary-700' : 'bg-amber-100 text-amber-700'}">${item.status}</button></td>
+                    <td class="p-3 text-center"><button onclick="openEditSpp(${item.id})" class="text-slate-400 hover:text-primary-500 p-1">✏️</button></td>
                 </tr>
             `).join('');
         }
@@ -720,13 +833,13 @@
         let curK = '';
         tbody.innerHTML = sorted.map(item => {
             let group = '';
-            if (item.kelas !== curK && !fK) { curK = item.kelas; group = `<tr><td colspan="4" class="bg-slate-50 dark:bg-slate-900 text-emerald-700 dark:text-emerald-400 font-extrabold text-[11px] uppercase px-4 py-2 tracking-widest">Kelas ${escapeHtml(item.kelas)}</td></tr>`; }
+            if (item.kelas !== curK && !fK) { curK = item.kelas; group = `<tr><td colspan="4" class="bg-slate-50 dark:bg-slate-900 text-primary-700 dark:text-primary-400 font-extrabold text-[11px] uppercase px-4 py-2 tracking-widest">Kelas ${escapeHtml(item.kelas)}</td></tr>`; }
             return group + `<tr class="hover:bg-slate-50 dark:hover:bg-slate-800/50 transition border-b border-slate-100 dark:border-slate-700/50">
                 <td class="p-4 text-slate-500 font-mono text-xs">${escapeHtml(item.nis)}</td>
                 <td class="p-4 font-bold">${escapeHtml(item.nama)}</td>
                 <td class="p-4 text-xs"><span class="bg-slate-100 dark:bg-slate-800 px-2 py-1 rounded-md font-semibold">${escapeHtml(item.kelas)}</span></td>
                 <td class="p-4 text-center whitespace-nowrap">
-                    <button onclick="openEditMurid('${escapeHtml(item.nis)}')" class="text-slate-400 hover:text-emerald-500 p-1">✏️</button>
+                    <button onclick="openEditMurid('${escapeHtml(item.nis)}')" class="text-slate-400 hover:text-primary-500 p-1">✏️</button>
                     <button onclick="deleteMurid('${escapeHtml(item.nis)}')" class="text-slate-400 hover:text-red-500 p-1">🗑️</button>
                 </td></tr>`;
         }).join('');
@@ -751,7 +864,7 @@
             <td class="p-4 text-xs">${escapeHtml(item.mapel)}</td>
             <td class="p-4 text-xs">${escapeHtml(item.kontak)}</td>
             <td class="p-4 text-center whitespace-nowrap">
-                <button onclick="openEditGuru('${escapeHtml(item.nip)}')" class="text-slate-400 hover:text-emerald-500 p-1">✏️</button>
+                <button onclick="openEditGuru('${escapeHtml(item.nip)}')" class="text-slate-400 hover:text-primary-500 p-1">✏️</button>
                 <button onclick="deleteGuru('${escapeHtml(item.nip)}')" class="text-slate-400 hover:text-red-500 p-1">🗑️</button>
             </td></tr>`).join('') : '<tr><td colspan="5" class="p-8 text-center text-slate-400">Tidak ada guru.</td></tr>';
     }
@@ -850,7 +963,7 @@
         saveData(); renderKategoriList(); populateKategoriSelects(); renderKas(); toast('Dihapus');
     }
 
-    /* --- 8. BACKUP, RESTORE & EXCEL (VERSI RAPI) --- */
+    /* --- 8. BACKUP, RESTORE & EXCEL --- */
     function backupJSON() { const b = new Blob([JSON.stringify(db, null, 2)], { type: 'application/json' }); const a = document.createElement('a'); a.href = URL.createObjectURL(b); a.download = `backup_madrasah_${new Date().toISOString().slice(0, 10)}.json`; a.click(); toast('Backup diunduh'); }
     function restoreJSON(e) {
         const f = e.target.files[0]; if (!f) return; if (!confirm('Data diganti?')) { e.target.value = ''; return; }
@@ -941,13 +1054,14 @@
     function openSettings() {
         document.getElementById('setNama').value = appSettings.nama; document.getElementById('setAlamat').value = appSettings.alamat;
         document.getElementById('setKepala').value = appSettings.kepala; document.getElementById('setPin').value = '';
+        setThemeColor(appSettings.themeColor); // Update UI button selection
         document.getElementById('settingsModal').classList.remove('hidden');
     }
     function closeSettings() { document.getElementById('settingsModal').classList.add('hidden'); }
     function saveSettings(e) {
         e.preventDefault(); appSettings.nama = document.getElementById('setNama').value;
         appSettings.alamat = document.getElementById('setAlamat').value; appSettings.kepala = document.getElementById('setKepala').value;
-        const newPin = document.getElementById('setPin').value; if (newPin && newPin.length === 6) appSettings.pin = newPin;
+        const newPin = document.getElementById('setPin').value; if (newPin && newPin.length >= 4) appSettings.pin = newPin;
         localStorage.setItem('madrasah_settings', JSON.stringify(appSettings)); document.getElementById('appNameDisplay').innerText = appSettings.nama;
         closeSettings(); toast('Pengaturan disimpan');
     }

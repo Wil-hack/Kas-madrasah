@@ -482,7 +482,7 @@
         setTimeout(() => { el.style.opacity = '0'; setTimeout(() => el.remove(), 300); }, 3000);
     }
 
-    /* --- 2. DATABASE LOCALSTORAGE (DARI KODE ASLI ANDA) --- */
+    /* --- 2. DATABASE LOCALSTORAGE --- */
     function getDefaultDb() {
         return {
             version: DB_VERSION, tahunAjaran: '2025/2026', nominalSppDefault: 50000, kategori: [...DEFAULT_KATEGORI], kategoriSpp: 'SPP',
@@ -602,7 +602,7 @@
     function deleteKas(id) { if (!confirm('Hapus?')) return; db.kas = db.kas.filter(item => item.id !== id); saveData(); toast('Dihapus'); }
     function resetKasFilter() { document.getElementById('kasFilterJenis').value = ''; document.getElementById('kasFilterKategori').value = ''; document.getElementById('kasFilterDari').value = ''; document.getElementById('kasFilterSampai').value = ''; renderKas(); }
 
-    // SPP (Logika Sinkronisasi Asli Anda Tetap Utuh)
+    // SPP
     function toggleSppStatus(id) {
         const item = db.spp.find(s => s.id === id); if (!item) return;
         if (item.status === 'Belum') {
@@ -658,7 +658,7 @@
         if (created === 0) toast('Semua sudah punya tagihan lengkap', 'info'); else { saveData(); toast(`Membuat ${created} tagihan SPP`); }
     }
 
-    // BULK NOMINAL (Logika Asli)
+    // BULK NOMINAL
     function openBulkNominal() {
         const kelasSel = document.getElementById('bulkTargetKelas'); kelasSel.innerHTML = '<option value="">Semua Kelas</option>' + Array.from(new Set(db.spp.map(s => s.kelas))).sort().map(k => `<option value="${escapeHtml(k)}">${escapeHtml(k)}</option>`).join('');
         document.getElementById('bulkTargetStatus').value = ''; document.getElementById('bulkNominalBaru').value = db.nominalSppDefault;
@@ -741,7 +741,7 @@
             </td></tr>`).join('') : '<tr><td colspan="5" class="p-8 text-center text-slate-400">Tidak ada guru.</td></tr>';
     }
 
-    /* --- 6. EDIT MODAL (DARI KODE ASLI ANDA) --- */
+    /* --- 6. EDIT MODAL --- */
     let editContext = { type: null, id: null };
     function closeEdit() { document.getElementById('editModal').classList.add('hidden'); editContext = { type: null, id: null }; }
     
@@ -806,7 +806,7 @@
         closeEdit(); saveData(); toast('Perubahan disimpan');
     }
 
-    /* --- 7. KATEGORI (LOGIKA ASLI ANDA) --- */
+    /* --- 7. KATEGORI --- */
     function openKelolaKategori() { renderKategoriList(); document.getElementById('kategoriModal').classList.remove('hidden'); }
     function closeKelolaKategori() { document.getElementById('kategoriModal').classList.add('hidden'); populateKategoriSelects(); renderKas(); }
     function renderKategoriList() {
@@ -835,22 +835,88 @@
         saveData(); renderKategoriList(); populateKategoriSelects(); renderKas(); toast('Dihapus');
     }
 
-    /* --- 8. BACKUP, RESTORE & EXCEL (LOGIKA ASLI ANDA 100%) --- */
+    /* --- 8. BACKUP, RESTORE & EXCEL (VERSI RAPI) --- */
     function backupJSON() { const b = new Blob([JSON.stringify(db, null, 2)], { type: 'application/json' }); const a = document.createElement('a'); a.href = URL.createObjectURL(b); a.download = `backup_madrasah_${new Date().toISOString().slice(0, 10)}.json`; a.click(); toast('Backup diunduh'); }
     function restoreJSON(e) {
         const f = e.target.files[0]; if (!f) return; if (!confirm('Data diganti?')) { e.target.value = ''; return; }
         const r = new FileReader(); r.onload = ev => { try { const p = JSON.parse(ev.target.result); if (!p.kas || !p.murid) throw new Error('Format salah'); db = migrateDb(p); localStorage.setItem('madrasah_db', JSON.stringify(db)); saveData(); toast('Restore berhasil'); } catch (err) { toast(err.message, 'error'); } e.target.value = ''; }; r.readAsText(f);
     }
 
+    // FUNGSI EXCEL YANG SUDAH DIRAPIKAN
     function exportToExcel() {
         const wb = XLSX.utils.book_new();
-        const wsK = XLSX.utils.json_to_sheet(db.kas.map(k => ({ 'Tanggal': k.tanggal, 'Keterangan': k.keterangan, 'Kategori': k.kategori, 'Jenis': k.jenis, 'Nominal (Rp)': k.nominal })));
-        XLSX.utils.book_append_sheet(wb, wsK, 'Jurnal Kas');
-        const wsS = XLSX.utils.json_to_sheet(db.spp.map(s => ({ 'NIS': s.nis, 'Nama': s.nama, 'Kelas': s.kelas, 'Bulan': s.bulan, 'Tahun': s.tahun, 'Nominal': s.nominal, 'Status': s.status })));
-        XLSX.utils.book_append_sheet(wb, wsS, 'Data SPP');
-        const wsM = XLSX.utils.json_to_sheet(db.murid.map(m => ({ 'NIS': m.nis, 'Nama': m.nama, 'Kelas': m.kelas })));
-        XLSX.utils.book_append_sheet(wb, wsM, 'Data Murid');
-        XLSX.writeFile(wb, `Madrasah_${new Date().toISOString().slice(0, 10)}.xlsx`); toast('Excel dibuat');
+
+        // Helper Lebar Kolom Otomatis
+        function getAutoWidth(data, headers) {
+            return headers.map(h => {
+                let maxLen = h.length;
+                data.forEach(row => {
+                    if (row[h]) maxLen = Math.max(maxLen, String(row[h]).length);
+                });
+                return { wch: maxLen + 2 };
+            });
+        }
+
+        // 1. Jurnal Kas
+        const kasData = db.kas.map(k => ({
+            'Tanggal': k.tanggal,
+            'Keterangan': k.keterangan,
+            'Kategori': k.kategori,
+            'Jenis': k.jenis,
+            'Nominal': k.nominal
+        }));
+        const wsKas = XLSX.utils.json_to_sheet(kasData);
+        wsKas['!cols'] = getAutoWidth(kasData, ['Tanggal', 'Keterangan', 'Kategori', 'Jenis', 'Nominal']);
+        wsKas['!autofilter'] = { ref: "A1:E1" };
+        for (let i = 2; i <= kasData.length + 1; i++) {
+            if (wsKas['E' + i]) wsKas['E' + i].z = '"Rp"#,##0';
+        }
+        XLSX.utils.book_append_sheet(wb, wsKas, 'Jurnal Kas');
+
+        // 2. Data SPP
+        const sppData = db.spp.map(s => ({
+            'NIS': s.nis,
+            'Nama Murid': s.nama,
+            'Kelas': s.kelas,
+            'Bulan': s.bulan,
+            'Tahun': s.tahun,
+            'Nominal': s.nominal,
+            'Status': s.status,
+            'Tgl Bayar': s.tanggalBayar || '-'
+        }));
+        const wsSpp = XLSX.utils.json_to_sheet(sppData);
+        wsSpp['!cols'] = getAutoWidth(sppData, ['NIS', 'Nama Murid', 'Kelas', 'Bulan', 'Tahun', 'Nominal', 'Status', 'Tgl Bayar']);
+        wsSpp['!autofilter'] = { ref: "A1:H1" };
+        for (let i = 2; i <= sppData.length + 1; i++) {
+            if (wsSpp['F' + i]) wsSpp['F' + i].z = '"Rp"#,##0';
+        }
+        XLSX.utils.book_append_sheet(wb, wsSpp, 'Data SPP');
+
+        // 3. Data Murid
+        const muridData = db.murid.map(m => ({
+            'NIS': m.nis,
+            'Nama Murid': m.nama,
+            'Kelas': m.kelas
+        }));
+        const wsMurid = XLSX.utils.json_to_sheet(muridData);
+        wsMurid['!cols'] = getAutoWidth(muridData, ['NIS', 'Nama Murid', 'Kelas']);
+        wsMurid['!autofilter'] = { ref: "A1:C1" };
+        XLSX.utils.book_append_sheet(wb, wsMurid, 'Data Murid');
+
+        // 4. Data Guru
+        const guruData = db.guru.map(g => ({
+            'NIP': g.nip,
+            'Nama Guru': g.nama,
+            'Mata Pelajaran': g.mapel,
+            'Kontak/HP': g.kontak
+        }));
+        const wsGuru = XLSX.utils.json_to_sheet(guruData);
+        wsGuru['!cols'] = getAutoWidth(guruData, ['NIP', 'Nama Guru', 'Mata Pelajaran', 'Kontak/HP']);
+        wsGuru['!autofilter'] = { ref: "A1:D1" };
+        XLSX.utils.book_append_sheet(wb, wsGuru, 'Data Guru');
+
+        XLSX.writeFile(wb, `Laporan_Madrasah_${new Date().toISOString().slice(0, 10)}.xlsx`);
+        toast('Ekspor Excel berhasil (Rapi)');
     }
 
     function importData(e) {
@@ -859,8 +925,9 @@
         r.onload = function(ev) {
             try {
                 const data = new Uint8Array(ev.target.result); const wb = XLSX.read(data, { type: 'array' });
-                if (wb.SheetNames.includes('Jurnal Kas')) db.kas = XLSX.utils.sheet_to_json(wb.Sheets['Jurnal Kas']).map((r, i) => ({ id: Date.now() + i, tanggal: r['Tanggal'] || new Date().toISOString().slice(0, 10), keterangan: r['Keterangan'] || '-', kategori: r['Kategori'] || 'Lainnya', jenis: (r['Jenis']) === 'Keluar' ? 'Keluar' : 'Masuk', nominal: Number(r['Nominal (Rp)']) || 0 }));
-                if (wb.SheetNames.includes('Data SPP')) db.spp = XLSX.utils.sheet_to_json(wb.Sheets['Data SPP']).map((r, i) => ({ id: Date.now() + 1000 + i, nis: String(r['NIS'] || ''), nama: r['Nama Murid'] || '-', kelas: r['Kelas'] || '-', bulan: r['Bulan SPP'] || 'Januari', tahun: Number(r['Tahun']) || 2026, nominal: Number(r['Nominal (Rp)']) || 50000, status: (r['Status']) === 'Lunas' ? 'Lunas' : 'Belum', tanggalBayar: null, kasId: null }));
+                // Baca Jurnal Kas (Mendukung kolom 'Nominal' baru maupun 'Nominal (Rp)' lama)
+                if (wb.SheetNames.includes('Jurnal Kas')) db.kas = XLSX.utils.sheet_to_json(wb.Sheets['Jurnal Kas']).map((r, i) => ({ id: Date.now() + i, tanggal: r['Tanggal'] || new Date().toISOString().slice(0, 10), keterangan: r['Keterangan'] || '-', kategori: r['Kategori'] || 'Lainnya', jenis: (r['Jenis']) === 'Keluar' ? 'Keluar' : 'Masuk', nominal: Number(r['Nominal (Rp)'] || r['Nominal'] || 0) }));
+                if (wb.SheetNames.includes('Data SPP')) db.spp = XLSX.utils.sheet_to_json(wb.Sheets['Data SPP']).map((r, i) => ({ id: Date.now() + 1000 + i, nis: String(r['NIS'] || ''), nama: r['Nama Murid'] || '-', kelas: r['Kelas'] || '-', bulan: r['Bulan'] || r['Bulan SPP'] || 'Januari', tahun: Number(r['Tahun']) || 2026, nominal: Number(r['Nominal (Rp)'] || r['Nominal'] || 50000), status: (r['Status']) === 'Lunas' ? 'Lunas' : 'Belum', tanggalBayar: null, kasId: null }));
                 if (wb.SheetNames.includes('Data Murid')) db.murid = XLSX.utils.sheet_to_json(wb.Sheets['Data Murid']).map(r => ({ nis: String(r['NIS'] || ''), nama: r['Nama Murid'] || '-', kelas: r['Kelas'] || '-' })).filter(m => m.nis);
                 saveData(); toast('Import berhasil!');
             } catch (err) { toast('Gagal baca file.', 'error'); } e.target.value = '';
@@ -884,7 +951,7 @@
         document.getElementById('editModal').classList.remove('hidden');
     }
 
-    // Override saveEdit to handle 'new' from mobile FAB
+    // Override saveEdit untuk 'new' mobile FAB
     const originalSaveEdit = saveEdit;
     saveEdit = function(e) {
         e.preventDefault(); const data = Object.fromEntries(new FormData(e.target).entries());
